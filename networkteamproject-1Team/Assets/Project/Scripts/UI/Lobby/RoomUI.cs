@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
+using VFX;
 
 /// <summary>
 /// 룸(방) 내부 UI. 플레이어 슬롯 + 레디/나가기 버튼 + 상태 메시지
