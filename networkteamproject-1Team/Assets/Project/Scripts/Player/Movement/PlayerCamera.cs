@@ -33,6 +33,9 @@ namespace Player
         public float YawAngle => _yaw;
         public Transform ViewPoint => _activeViewPoint;
         
+        // TODO: 추후 인풋 핸들러 기반으로 변경
+        public bool IsInputEnabled { get; set; } = false;  // 카메라 회전 입력
+        
         public void SetupOwnerView()
         {
             if (_viewPointA == null)
@@ -103,6 +106,7 @@ namespace Player
         private void Update()
         {
             if (!_isOwnerView || !enabled) return;
+            if (!IsInputEnabled) return;
             HandleMouseInput();
         }
 
