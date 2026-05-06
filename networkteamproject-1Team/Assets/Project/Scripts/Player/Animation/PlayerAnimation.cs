@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
 {
     [RequireComponent(typeof(Animator))]
-    public class PlayerAnimation : MonoBehaviour
+    public class PlayerAnimation : NetworkBehaviour
     {
         // 애니메이션 파라미터 해싱
         // Animator Param Hashes
@@ -38,6 +39,7 @@ namespace Player
 
         void Update()
         {
+            if (!IsOwner) return;
             if (_movement == null) return;
             
             // 이동 관련 ( Layer 0 )
