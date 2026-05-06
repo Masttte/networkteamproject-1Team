@@ -669,8 +669,21 @@ PlayerAnimation.OnNetworkSpawn에서 cullingMode 명시적 설정:
 - Owner: AlwaysAnimate (자기 캐릭터는 항상 동작, 백그라운드 포함)
 - Non-Owner: CullUpdateTransforms (시야 밖일 때 컬링, 성능 최적화)
 
-#### 학습 사항
-"NetworkVariable 동기화는 정상이지만 시각/물리 효과가 안 나타나는" 케이스의 원인은 종종 로컬 컴포넌트의 컬링/최적화 설정. 동기화 도구만 보지 말고 로컬 파이프라인 전체를 보는 시야 필요.
+### 사망 시 카메라 회전 처리 (폴리싱)
+
+#### 현상
+사망 모션 재생 중 카메라 위치는 헤드 본 추적되지만 회전은 마우스 룩만 반영. 캐릭터가 옆으로 쓰러져도 카메라는 정면 보고 있어 어색.
+
+#### 원인
+PlayerCamera.LateUpdate에서 위치는 `_activeHeadBone.TransformPoint`로 본 추적, 회전은 `Quaternion.Euler(_pitch, _yaw, 0f)`로 마우스 룩만 적용.
+
+#### 해결
+PlayerCamera에 SetFollowBoneRotation API 추가.
+- 살아있을 땐: 마우스 룩 (_pitch/_yaw) 그대로
+- 사망 시: 헤드 본 회전 따라감
+
+PlayerController가 PlayerCombat.OnStateChanged 구독 → Dead 진입 시 SetFollowBoneRotation(true) 호출.
+
 
 ---
 ## 작업 일지 양식

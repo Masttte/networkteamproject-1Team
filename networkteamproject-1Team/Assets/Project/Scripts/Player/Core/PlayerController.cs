@@ -79,6 +79,8 @@ namespace Player
             {
                 // 사망 시 모든 입력 비활성
                 _input.DisableInput(InputCategory.All);
+                // 카메라는 헤드본 추적
+                _camera.SetFollowBoneRotation(true);
             }
         }
     }
