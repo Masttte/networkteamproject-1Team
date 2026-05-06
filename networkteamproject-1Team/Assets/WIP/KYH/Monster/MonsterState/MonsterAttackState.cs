@@ -1,3 +1,4 @@
+using UnityEditor.Searcher;
 using UnityEngine;
 
 public class MonsterAttackState : IState
@@ -14,12 +15,16 @@ public class MonsterAttackState : IState
     {
         _monsterController.MonsterAI.Agent.ResetPath();
         _timer = 0f;
-        _monsterController.MonsterData.isAttacking = true;
+        AttackCheck();
     }
 
     public void Update()
     {
         _timer += Time.deltaTime;
+        
+        _monsterController.MonsterAttack.LookAtTarget();
+
+        if (_monsterController.MonsterData.isAttacking) return;
         
         if (_monsterController.MonsterAI.Target == null)
         {
@@ -33,10 +38,9 @@ public class MonsterAttackState : IState
             return;
         }
         
-        _monsterController.MonsterAttack.LookAtTarget();
-        
         if (_timer >= _monsterController.MonsterData.attackCooldown)
         {
+            AttackCheck();
             _monsterController.AttackAnimRandServerRpc();
             _monsterController.TriggerAttackClientRpc();
             _timer = 0;
@@ -45,6 +49,11 @@ public class MonsterAttackState : IState
 
     public void Exit()
     {
+    }
+
+    private void AttackCheck()
+    {
+        _monsterController.MonsterData.isAttacking = true;
         _monsterController.AttackCor();
     }
 }
