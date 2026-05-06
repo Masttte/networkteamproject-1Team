@@ -619,10 +619,33 @@ bool 하나로 표현 어려운 케이스 분명. → 비트 플래그 도입.
 - BattleManager.OnGameStart 구독 → 모든 입력 활성
 - PlayerCombat.OnStateChanged 구독 → 사망 시 모든 입력 + 카메라 비활성
 
-#### 면접 가치
+#### 구현 가치
 사망 처리 단순 bool 대신 [Flags] enum + 비트 플래그로 일반화. 카운트다운, 사망, 인벤토리, 상호작용 등 미래 시나리오까지 EnableInput/DisableInput 한 줄로 표현 가능한 구조.
 
 [참고: 플래그 구현](https://dev-junwoo.tistory.com/144)
+
+### 마우스 입력 시스템 통합
+
+#### 배경
+PlayerCamera가 `Mouse.current.delta.ReadValue()`로 InputSystem 직접 접근. 다른 입력은 BattleInputReader 거치는데 마우스 회전만 별도라 일관성 부족. 입력 활성/비활성 제어도 PlayerCamera 자체 IsInputEnabled 플래그로 처리되어 PlayerInputHandler의 비트 플래그와 분리됨.
+
+#### 변경
+- **BattleInputAction**: Look 액션 추가 (Action Type Value, Control Type Vector 2, Mouse Delta 바인딩)
+- **BattleInputReader**: `event Action<Vector2> onLook` + `OnLook(InputAction.CallbackContext)` 추가
+- **PlayerInputHandler**: `OnLook(Vector2)` 라우팅 추가, `InputCategory.Camera` 게이트 적용
+- **PlayerCamera**: `Mouse.current` 직접 접근 제거. `SetLookInput(Vector2)` 메서드로 외부 주입 받음. `IsInputEnabled` 프로퍼티 제거 (PlayerInputHandler가 게이트 처리)
+- **PlayerController**: `Initialize`에 `_camera` 매개변수 추가
+
+#### Look 입력 리셋 처리
+
+Mouse Delta는 누적값이 아니라 그 프레임의 이동량. 마우스 안 움직이면 onLook 발행 안 됨.
+
+→ PlayerCamera의 Update에서 입력 적용 후 `_lookInput = Vector2.zero` 리셋. 다음 프레임에 마우스 움직이지 않으면 회전 멈춤. 입력 비활성 시에도 자동 정지.
+
+#### 효과
+- 모든 입력이 BattleInputReader → PlayerInputHandler 단일 경로로 통일
+- `InputCategory.Camera`가 실제 활용되며 비트 플래그 일관성 확보
+- PlayerCamera는 입력 처리에서 분리되어 시점 표현(헤드 본 추적, 회전 적용)에만 집중
 
 
 

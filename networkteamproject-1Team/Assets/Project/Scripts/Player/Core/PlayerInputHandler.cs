@@ -8,10 +8,6 @@ namespace Player
     {
         None     = 0,
         Movement = 1 << 0,    // 이동 (WASD)
-        /// <summary>
-        /// 카메라 회전 (마우스). 현재는 PlayerCamera.IsInputEnabled로 별도 처리.
-        /// 미래 통합 시 PlayerInputHandler가 마우스 입력도 라우팅할 때 활용.
-        /// </summary>
         Camera   = 1 << 1,    // 카메라 회전 (마우스)
         Jump     = 1 << 2,    // 점프 (Space)
         Sprint   = 1 << 3,    // 달리기 (Shift)
@@ -40,21 +36,23 @@ namespace Player
         // 하위로 입력을 받는 모듈 선언
         private PlayerMovement _movement;
         private PlayerCombat _combat;
+        private PlayerCamera _camera;
         // 상호작용
         // private PlayerInteractor _interactor;
         // 카메라 관련 입력 추가시 생성
-        // private PlayerCamera _camera;
+        // 
         
         private InputCategory _enabledInputs = InputCategory.None;
         public InputCategory EnabledInputs => _enabledInputs;
         
         // 하위 모듈 생성자 할당 및 초기화
-        public void Initialize(PlayerMovement move, PlayerCombat cb)
+        public void Initialize(PlayerMovement move, PlayerCamera cam, PlayerCombat cb)
         {
             // 생성된 모듈 연결
             _movement = move;
+            _camera = cam;
             _combat = cb;
-            // _camera = c; _interactor = i;
+            // _interactor = i;
             BindEvents();
         }
         
@@ -76,6 +74,8 @@ namespace Player
                 _movement?.SetMoveInput(Vector2.zero);
             if((category & InputCategory.Sprint) !=0)
                 _movement?.SetSprint(false);
+            if((category & InputCategory.Camera) != 0)
+                _camera?.SetLookInput(Vector2.zero);
         }
         
         public bool IsEnabled(InputCategory category)
@@ -93,6 +93,7 @@ namespace Player
             _input.onJump          += OnJump; 
             _input.onSprintChanged += OnSprintChanged;
             _input.onAttack        += OnAttack;
+            _input.onLook          += OnLook;
             // _input.onStartInteract += OnInteractStart;
             // _input.onCanceledInteract += OnInteractCancel;
         }
@@ -106,6 +107,7 @@ namespace Player
             _input.onJump          -= OnJump;
             _input.onSprintChanged -= OnSprintChanged;
             _input.onAttack        -= OnAttack;
+            _input.onLook          -= OnLook;
             // _input.onStartInteract    -= OnInteractStart;
             // _input.onCanceledInteract -= OnInteractCancel;
         }
@@ -133,6 +135,12 @@ namespace Player
         {
             if(!IsEnabled(InputCategory.Combat)) return;
             _combat?.RequestAttack();
+        }
+
+        private void OnLook(Vector2 delta)
+        {
+            if(!IsEnabled(InputCategory.Camera)) return;
+            _camera?.SetLookInput(delta);
         }
         
         // private void OnInteractStart()
