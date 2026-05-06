@@ -108,7 +108,7 @@ namespace Battle
         }
         
         // =================추가======================= 
-        private void OnGeneratorCondition()
+        public void OnGeneratorCondition()
         {
             if (!IsServer) return;
             
@@ -134,7 +134,7 @@ namespace Battle
             
             if (spawnCount <= 0 || spawnCount > spawnPoints.Length)
             {
-                Debug.LogError("GameManager에서 설정한 spawnCount의 수가 0보다 작거나 스폰 포인트보다 많습니다.");
+                Debug.LogError("spawnCount의 수가 0보다 작거나 스폰 포인트보다 많습니다.");
 
                 return;
             }
