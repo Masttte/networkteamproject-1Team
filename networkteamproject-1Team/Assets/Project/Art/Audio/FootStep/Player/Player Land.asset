@@ -1,33 +1,23 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1233149941 &-5938137315626408342
+--- !u!1233149941 &-3990117673212378982
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_6_{-5938137315626408342}
-  m_AudioClip: {fileID: 8300000, guid: eb51664d9d8641a418347eb8ee0221b3, type: 3}
+  m_Name: Land 2_{-3990117673212378982}
+  m_AudioClip: {fileID: 8300000, guid: 233b581e68ceec44f9aebaf080452198, type: 3}
   m_Volume: 0
   m_Enabled: 1
---- !u!1233149941 &-5072386209247139755
+--- !u!1233149941 &2498162130732030774
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_2_{-5072386209247139755}
-  m_AudioClip: {fileID: 8300000, guid: 1cf848cd97a8c774b9fb4fefea47cbac, type: 3}
-  m_Volume: 0
-  m_Enabled: 1
---- !u!1233149941 &3150847973533915588
-AudioContainerElement:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_5_{3150847973533915588}
-  m_AudioClip: {fileID: 8300000, guid: 524d2501555e2aa42b62b947a1d2c89f, type: 3}
+  m_Name: Land 1_{2498162130732030774}
+  m_AudioClip: {fileID: 8300000, guid: 8106928f63be86746a96d6f82c624b6d, type: 3}
   m_Volume: 0
   m_Enabled: 1
 --- !u!1307931743 &6418180475301049370
@@ -36,19 +26,18 @@ AudioRandomContainer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _Hand_Hit
-  m_Volume: -2.3
+  m_Name: Player Land
+  m_Volume: -4.2
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -0.9815979, y: 0}
-  m_PitchRandomizationRange: {x: -29.447937, y: 29.447933}
+  m_VolumeRandomizationRange: {x: -6.871171, y: 0}
+  m_PitchRandomizationRange: {x: -419.6318, y: 0}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
-  - {fileID: -5072386209247139755}
-  - {fileID: 3150847973533915588}
-  - {fileID: -5938137315626408342}
+  - {fileID: 2498162130732030774}
+  - {fileID: -3990117673212378982}
   m_AvoidRepeatingLast: 0
   m_PlaybackMode: 2
   m_TriggerMode: 0
