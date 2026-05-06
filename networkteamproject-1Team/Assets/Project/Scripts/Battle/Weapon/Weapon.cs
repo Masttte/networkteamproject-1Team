@@ -86,8 +86,7 @@ namespace Battle
             if (targetNetObj.TryGetComponent(out IDamageable damageable))
                 damageable.TakeDamage(weaponSO.damage);
             
-            // AttackServerRpc(targetNetObj.NetworkObjectId, weaponSO.damage, hit.point);
-            AttackClientRpc(OwnerClientId, weaponSO.damage, targetNetObj.OwnerClientId, hit.point);
+            AttackClientRpc(hit.point);
         }
         
         // 서버에서 처리하니 ClientRpc로 모든 클라에게 전파 (Miss 사운드도 모두에게 들림)
@@ -117,11 +116,10 @@ namespace Battle
         }*/
         
         [ClientRpc]
-        void AttackClientRpc(ulong attackerId, int damage, ulong targetId, Vector3 hitPoint)
+        void AttackClientRpc(Vector3 hitPoint)
         {
             // 타격 위치 기준 3D 공간음 재생
             AudioManager.Instance.PlaySfxWet(weaponSO.attackHit, hitPoint);
-            Debug.Log($"[Weapon] 공격자={attackerId}, 피해자={targetId}, damage={damage}");
         }
     }
 }

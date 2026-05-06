@@ -14,7 +14,7 @@ public class AcPlayerSound : NetworkBehaviour
     }
     public void OnLand(AnimationEvent animationEvent)
     {
-        if (!IsOwner) return; // 착지 이벤트는 오너가 아니면 가끔 안돼서, 아예 오너만 받고 ClientRpc 연결
+        if (!IsOwner) return; // 착지 이벤트는 오너가 아니면 가끔 씹혀서, 아예 오너만 받고 ClientRpc 연결
         OnLandRpc();
     }
 
