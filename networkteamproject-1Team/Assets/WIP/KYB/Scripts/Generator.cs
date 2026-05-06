@@ -25,6 +25,11 @@ public class Generator : NetworkBehaviour, IInteractable
     [ClientRpc]
     private void ChangeToCompletedMaterialClientRpc()
     {
+        if (_renderer.material == completedMaterials)
+        {
+            return;
+        }
+        
         _renderer.material = completedMaterials;
         
         _pressAction.image.canvas.gameObject.SetActive(false);

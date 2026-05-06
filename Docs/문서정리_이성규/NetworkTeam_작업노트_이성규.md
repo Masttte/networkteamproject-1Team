@@ -285,7 +285,7 @@ public void OnSprint(InputAction.CallbackContext context)
 
 > **추후 폴리싱**: 상하 회전 시 카메라만 회전시키는 현재 방식에 캐릭터 Spine 본을 적정 수치로 IK 보정 추가하면 더 자연스러운 연출 가능 (다른 클라이언트가 봤을 때 위/아래 시선이 표현됨).
 
----
+## Day 7 - 2026-04-30
 
 ### PlayerCamera 보강 — Position Constraint → LateUpdate 직접 추적
 
@@ -318,7 +318,7 @@ Position Constraint 컴포넌트 제거 후 PlayerCamera의 LateUpdate에서 직
 ---
 
 ### TeamA Avatar 교체 방식 개선
-### 배경
+#### 배경
 플레이어 작업 중 팀원의 TeamA 코드에서 책임 분리 측면 개선 여지 발견. 해당 팀원과 협의 후 직접 수정 진행.
 
 #### 기존 방식의 문제
@@ -368,8 +368,169 @@ Position Constraint 컴포넌트 제거 후 PlayerCamera의 LateUpdate에서 직
 **[Trigger는 이벤트 기반]**  
 Attack, Hit, Death 같은 단발성 트리거는 PlayerCombat의 `NetworkVariable<PlayerCombatState>` 변경 시점에 `PlayStateAnimation(state)` 호출 방식으로 처리. 매 프레임 폴링이 아닌 호출 기반.
 
-공격 피격 사망 모션 추가
-믹사모에서 애니메이션 찾기.
+## Day 8 — 2026-05-04 (Week 2 Day 1)
+
+### 플레이어 전투 애니메이션 구현
+
+#### 모션 에셋 준비
+공격(Punching), 피격(Getting Hit), 사망(Dying Backwards) 모션을 Mixamo에서 설정 후 유니티로 임포트.
+
+#### Avatar Mask 결정
+이동하며 공격하는 연출이 필요하므로 상체 마스킹 레이어 필요.
+Avatar Mask는 Humanoid Rig의 본 추상화 기준으로 동작하므로 **A/B 모델 모두에 단일 마스크 적용 가능**. UpperBodyMask 한 개로 처리.
+
+#### Animator Layer 구성
+
+**Base Layer (Layer 0)**
+- 기존 Locomotion 애니메이터를 Sub State Machine으로 정리하여 가독성 확보
+- Dying Backwards (Any State 진입, 복귀 없음 — 사망은 영구 정지)
+
+![alt text](Resources/Base_Layer.png)
+
+**UpperBody Action Layer (Layer 1, Avatar Mask: 상체)**
+- Idle (기본 상태, 마스크가 활성된 상태에서 아무 동작도 적용하지 않음)
+- Punching (공격, Any State 진입 → Idle 복귀)
+- Getting Hit (피격, Any State 진입 → Idle 복귀)
+
+![alt text](Resources/UpperBodyAction_Layer.png)
+
+#### 시행착오 — 피격 위치 변경
+
+초기 설계: Hit/Death 모두 Base Layer (전신 반응)
+**문제 발견**: 이동 중 피격 시 다리 이동 애니가 끊겨 어색함
+**조정**: Hit는 UpperBody Layer로 이동 → 이동 중 피격 시 다리 애니 유지하면서 상체만 휘청거림
+**Death는 Base Layer 유지**: 사망은 전신 정지가 자연스러움
+
+#### 트랜지션 패턴
+- 상체 액션은 모두 **Any State에서 트리거로 진입** → 일관성 확보
+- 액션 종료 후 마스크가 활성된 상태에서 아무 동작도 적용하지 않은 Idle 상태로 트랜지션 (Layer 1만 비활성 효과)
+- Death는 영구 정지라 복귀 없음
+
+> **설계 결정 이유**: Any State 일괄 진입 패턴은 모든 상태에서 동일한 우선순위로 액션 트리거 가능하게 함. 추후 새 상체 액션(예: 도구 사용) 추가 시에도 같은 패턴으로 확장 가능.
+
+#### 시행착오 — 마우스 연타 시 모션 끊김
+
+연타 시 Punching 재생 도중 다시 처음부터 재생되는 현상 발견.
+
+**원인**: Action Layer의 Any State → Punching 트랜지션에서 "Can Transition To Self"가 활성 → Punching 재생 중에 트리거 다시 들어오면 자기 자신으로 또 진입.
+
+**해결**: "Can Transition To Self" 체크 해제. 코드 측에서도 NetworkVariable 동기화 지연 흡수 위해 RequestAttack에서 Weapon.IsReady 사전 체크.
+
+---
+
+### PlayerCombat 스크립트 작성
+
+#### 책임 분리
+- **PlayerCombat**: 상태 관리 / 애니메이션 호출 트리거 / 입력 차단 게이트
+- **Weapon (팀원)**: 실제 공격 판정 / 데미지 전파 / 사운드
+- **PlayerEntity (팀원)**: HP NetworkVariable / IDamageable 구현 / 사망 처리
+- **PlayerAnimation**: 상태 받아 애니 트리거
+
+이 책임 분리로 본인 코드는 **상태 결정만** 하면 되고, 판정/HP는 팀원 영역 활용.
+
+#### 팀원 코드 통합
+- **Weapon**: 팀원과 합의 후 onAttack 직접 구독 제거. PlayerCombat이 상태 체크 후 `_weapon.TryAttack()` 호출하는 구조로 변경. Weapon에 `IsReady` 프로퍼티 public 추가 (사전 체크용).
+- **PlayerEntity**: 별도 PlayerHealth 만들지 않고 `_playerEntity.CurHp.OnValueChanged`와 `onDeath` 이벤트 구독으로 Hit/Dead 상태 전이 트리거.
+
+#### PlayerCombatState Enum
+- Normal / Attacking / Hit / Dead
+- **Stunned 상태 제거** — 호러 게임 추격 분위기 위해 피격 시 입력 차단하지 않음. Hit는 애니메이션 표현 상태일 뿐, 이동/CanMove는 그대로 자유.
+
+#### 행동 게이트
+- `CanAct = (state == Normal)` — 새 공격은 Normal에서만
+- `CanMove = (state != Dead)` — 사망 외엔 항상 이동 가능 (Attacking/Hit 중에도)
+
+#### 권한 모델 — 클라 요청, 서버 승인
+- Owner 클라에서 사전 검증 후 ServerRpc로 요청
+- 서버가 상태 검증 + NetworkVariable 변경 + Weapon 호출
+- 모든 클라는 NetworkVariable.OnValueChanged로 자동 동기화 → PlayerAnimation 트리거
+
+#### Animation Event + UniTask 백업 하이브리드
+
+상태 복귀 방식 선택:
+
+**Animation Event 방식의 장점**
+- 모션 끝 시점 = 상태 종료 시점 (정확히 일치)
+- 모션 길이 변경 시 코드 수정 불필요
+- UniTask Delay + 취소 토큰 처리 단순
+
+**한계 — 이벤트 누락 케이스**
+- 다른 트리거로 애니 도중 다른 State 전이 시 끝 이벤트 발생 안 함
+- 상태가 Attacking에 영원히 머무를 위험
+
+**해결 — 하이브리드**
+
+### Weapon 영역 수정
+
+#### 발견 흐름
+
+PlayerCombat 작성 후 멀티 인스턴스 테스트 시 호스트는 공격이 정상 동작하지만 다른 클라이언트는 공격 모션만 나가고 실질적 공격(데미지/사운드)이 발생하지 않음.
+
+#### 원인 1 — Owner 한정 Ready 초기화
+
+Weapon 코드 분석:
+Owner만 OnGameStart 구독 → Owner만 Ready() 호출 → Owner의 _state만 Ready로 변경
+
+PlayerCombat이 ServerRpc 안에서 `_weapon.TryAttack()` 호출 → 서버 측 Weapon 인스턴스의 `_state` 확인.
+
+서버 입장에서 본 Weapon `_state`:
+- 호스트의 Weapon: 호스트가 Owner → `_state = Ready` ✅
+- 다른 클라의 Weapon: 서버는 그 Weapon의 Owner가 아니라서 `OnNetworkSpawn`에서 early return → `_state = State.None` ❌
+
+결과:
+- 호스트 클라 공격 요청 → 서버가 호스트 Weapon 인스턴스에서 TryAttack → `_state == Ready` 통과 → 공격 성공
+- 다른 클라 공격 요청 → 서버가 그 클라 Weapon 인스턴스에서 TryAttack → `_state == None` → 차단 → 공격 실패
+
+**해결**: `OnGameStart` 구독을 `IsOwner` 체크 위로 이동 → 모든 인스턴스에서 Ready 처리.
+
+#### 원인 2 — ServerRpc 권한 충돌
+
+`_state` 문제 해결 후 새로운 에러 발생:
+```
+Only the owner can invoke a ServerRpc that requires ownership!
+Battle.Weapon:AttackServerRpc
+```
+기존 Weapon은 Owner가 onAttack 직접 구독 → Owner 측에서 ServerRpc 호출 흐름.
+
+**본인 통합 후 흐름**:
+- Owner 클라 → SubmitAttackServerRpc (PlayerCombat) → 서버  
+- 서버 → _weapon.TryAttack() → AttackServerRpc 호출 시도  
+- 서버는 NetworkObject의 Owner가 아님 → 권한 거부  
+
+#### 해결책 검토
+
+**옵션 A — RequireOwnership = false**
+- AttackServerRpc, BlockedServerRpc에 `RequireOwnership = false` 추가
+- 두 줄 수정으로 즉시 동작
+- 서버가 자기에게 ServerRpc 보내는 형태가 되어 의미 약화
+- 클라 위조 가능성 (PlayerCombat이 게이트키퍼라 사실상 안전하지만)
+
+**옵션 B — 서버 직접 처리 구조로 재구성** (선택)
+- ServerRpc 제거, 서버 측 메서드 + ClientRpc 구조
+- 권한 흐름 명료: 서버 권한 = 서버 처리, ServerRpc는 클라→서버 호출 전용
+- 네트워크 메시지 1회 절감
+
+옵션 A로 동작 확인 후 옵션 B로 재구성. 팀원 영역 큰 변경이라 사전 합의 후 직접 정리 및 수정.
+
+#### 옵션 B 구현 변경 사항
+
+- `AttackServerRpc` 제거 → `AttackOnServer` 서버 직접 메서드
+- `BlockedServerRpc` 제거 → `BlockedClientRpc` 서버에서 직접 호출
+- Miss 사운드를 `BroadcastMissClientRpc`로 모든 클라 동기화
+- `TryAttack`에 `if (!IsServer) return` 가드 추가
+- `OnGameStart` 구독 IsOwner 위로 이동 (원인 1 해결 통합)
+
+> **시행착오 가치**: ServerRpc 권한 모델 + Owner-only 초기화 패턴이 서버 권한 통합 설계와 충돌하는 실전 케이스. 옵션 A(우회) vs 옵션 B(구조 정리) 비교를 통해 "동작 우선"과 "권한 모델 명료성"의 트레이드오프 학습.
+
+### 사본 → 공용 영역 통합
+
+본인 사본 환경(`Assets/WIP/LSG/`)에서 작업 진행하던 Player Proto 프리팹과 NetworkPrefabsList 항목을 공용 영역으로 이동:
+
+- `Player_Proto.prefab` → `Assets/Project/Prefabs/Player/` 영역
+- 네트워크 프리팹 등록 → 공용 DB 폴더
+
+명명 정비 후 이동하여 다른 팀원이 동일 프리팹 사용 가능.  
+기존 공용 폴더 Player 프리팹과의 통합/대체 협의는 추후 진행.
 
 ---
 

@@ -13,14 +13,28 @@ namespace Player
         private static readonly int AnimFreeFall    = Animator.StringToHash("FreeFall");
         private static readonly int AnimMotionSpeed = Animator.StringToHash("MotionSpeed");
         
+        // Action 파라미터 (Layer 1, 상체 Mask)
+        private static readonly int AnimAttack      = Animator.StringToHash("Attack");
+        private static readonly int AnimHit         = Animator.StringToHash("Hit");
+        // Death (Layer 0, 전신 정지)
+        private static readonly int AnimDeath       = Animator.StringToHash("Death");
+        
         private Animator _animator;
         private PlayerMovement _movement;
+        private PlayerCombat _combat;
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
             _movement = GetComponent<PlayerMovement>();
+            _combat = GetComponent<PlayerCombat>();
         }
+        
+        // Animator의 Animation Event에서 호출 (Punching 클립 끝 프레임)
+        public void OnAttackAnimEnd() => _combat?.OnAttackAnimEnd();
+    
+        // Animator의 Animation Event에서 호출 (Getting Hit 클립 끝 프레임)
+        public void OnHitAnimEnd() => _combat?.OnHitAnimEnd();
 
         void Update()
         {
@@ -45,10 +59,24 @@ namespace Player
         /// NetworkVariable.OnValueChanged 자동 동기화
         /// Layer 1 (상체) 트리거 처리.
         /// </summary>
-        public void PlayStateAnimation()
+        public void PlayStateAnimation(PlayerCombatState state)
         {
-            // TODO: 상태에 따른 애니메이터 처리 (Switch 문 활용)
             // Normal, 공격, 피격, 사망 상태.
+            switch (state)
+            {
+                case PlayerCombatState.Normal:
+                    // Action Layer Idle로 자동 트랜지션
+                    break;
+                case PlayerCombatState.Attacking:
+                    _animator.SetTrigger(AnimAttack);
+                    break;
+                case PlayerCombatState.Hit:
+                    _animator.SetTrigger(AnimHit);
+                    break;
+                case PlayerCombatState.Dead:
+                    _animator.SetTrigger(AnimDeath);
+                    break;
+            }
         }
     }
 }

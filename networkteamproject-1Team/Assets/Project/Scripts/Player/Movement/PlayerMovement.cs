@@ -22,7 +22,7 @@ namespace Player
         // 카메라 연결
         private PlayerCamera _camera;
         // 전투 연결
-        // private PlayerCombat _combat;
+        private PlayerCombat _combat;
         
         // 이동 연산에 사용되는 변수
         private Vector2 _moveInput;
@@ -44,7 +44,7 @@ namespace Player
         {
             _controller = GetComponent<CharacterController>();
             _camera = GetComponent<PlayerCamera>();
-            // _combat = GetComponent<PlayerCombat>();
+            _combat = GetComponent<PlayerCombat>();
         }
         
         // 설정
@@ -54,11 +54,12 @@ namespace Player
 
         private void Update()
         {
-            // ToDo: 상태에 따른 이동 제한 구현
+            // 사망 상태일시 입력 차단
+            bool canMove = _combat == null || _combat.CanMove;
             
             HandleRotation();
-            HandleJumpAndGravity(true);
-            HandleMove(true);
+            HandleJumpAndGravity(canMove);
+            HandleMove(canMove);
         }
         
         private void HandleRotation()

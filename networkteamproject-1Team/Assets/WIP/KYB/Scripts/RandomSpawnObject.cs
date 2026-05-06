@@ -46,7 +46,7 @@ namespace WIP.KYB.Scripts
         {
             // 서버에서 처리
             if (!IsServer) return;
-
+            
             if (spawnCount <= 0 || spawnCount > spawnPoints.Length)
             {
                 Debug.LogError("GameManager에서 설정한 spawnCount의 수가 0보다 작거나 스폰 포인트보다 많습니다.");

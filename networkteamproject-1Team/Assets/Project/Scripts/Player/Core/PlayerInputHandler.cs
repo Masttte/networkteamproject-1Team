@@ -20,17 +20,18 @@ namespace Player
         
         // 하위로 입력을 받는 모듈 선언
         private PlayerMovement _movement;
+        private PlayerCombat _combat;
         // 상호작용
-        // 전투
         // 카메라 관련 입력 추가시 생성
         // private PlayerCamera _camera;
         
         // 하위 모듈 생성자 할당 및 초기화
-        public void Initialize(PlayerMovement move)
+        public void Initialize(PlayerMovement move, PlayerCombat cb)
         {
             // 생성된 모듈 연결
             _movement = move;
-            // _camera = c; _combat = cb; _interactor = i;
+            _combat = cb;
+            // _camera = c; _interactor = i;
             BindEvents();
         }
         
@@ -41,6 +42,7 @@ namespace Player
             _input.onMove          += OnMove;
             _input.onJump          += OnJump; 
             _input.onSprintChanged += OnSprintChanged;
+            _input.onAttack        += OnAttack;
         }
         
         // 이동 관련 이벤트 할당 해제(메모리 누수 방지)
@@ -51,8 +53,7 @@ namespace Player
             _input.onMove          -= OnMove;
             _input.onJump          -= OnJump;
             _input.onSprintChanged -= OnSprintChanged;
-            
-            // _input.onAttack        -= OnAttack;
+            _input.onAttack        -= OnAttack;
             // _input.onStartInteract    -= OnInteractStart;
             // _input.onCanceledInteract -= OnInteractCancel;
         }
@@ -61,8 +62,10 @@ namespace Player
         private void OnMove(Vector2 v) => _movement?.SetMoveInput(v);
         private void OnJump() => _movement?.RequestJump();
         private void OnSprintChanged(bool b) => _movement?.SetSprint(b);
-        
-        // private void OnAttack() => _combat?.RequestAttack();
+        private void OnAttack()
+        {
+            _combat?.RequestAttack();
+        }
         // private void OnInteractStart() => _interactor?.OnInteractStart();
         // private void OnInteractCancel() => _interactor?.OnInteractCancel();
     }

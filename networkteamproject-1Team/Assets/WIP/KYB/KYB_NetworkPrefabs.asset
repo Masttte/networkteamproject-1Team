@@ -10,10 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e651dbb3fbac04af2b8f5abf007ddc23, type: 3}
-  m_Name: DefaultNetworkPrefabs
+  m_Name: KYB_NetworkPrefabs
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkPrefabsList
   IsDefault: 1
   List:
+  - Override: 0
+    Prefab: {fileID: 5584685400490049649, guid: ebcaf8c88812e1f4692edb3c7785f488, type: 3}
+    SourcePrefabToOverride: {fileID: 0}
+    SourceHashToOverride: 0
+    OverridingTargetPrefab: {fileID: 0}
   - Override: 0
     Prefab: {fileID: 3386462157017786818, guid: 2d15c02062df2f141b3a9d39aa562565, type: 3}
     SourcePrefabToOverride: {fileID: 0}
@@ -45,12 +50,17 @@ MonoBehaviour:
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
   - Override: 0
+    Prefab: {fileID: 6184062823718913633, guid: dea63e646619f7648bbc019b8e468316, type: 3}
+    SourcePrefabToOverride: {fileID: 0}
+    SourceHashToOverride: 0
+    OverridingTargetPrefab: {fileID: 0}
+  - Override: 0
     Prefab: {fileID: 7715287895704808701, guid: 22984e53faf959841b1dcdb60f254c14, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
   - Override: 0
-    Prefab: {fileID: 3813983170230886178, guid: 0d85739f181f5dd43a9f98f43c33ef7c, type: 3}
+    Prefab: {fileID: 6184062823718913633, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
@@ -61,6 +71,11 @@ MonoBehaviour:
     OverridingTargetPrefab: {fileID: 0}
   - Override: 0
     Prefab: {fileID: 2171767515655006717, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
+    SourcePrefabToOverride: {fileID: 0}
+    SourceHashToOverride: 0
+    OverridingTargetPrefab: {fileID: 0}
+  - Override: 0
+    Prefab: {fileID: 3813983170230886178, guid: 0d85739f181f5dd43a9f98f43c33ef7c, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
