@@ -623,7 +623,7 @@ PrefabInstance:
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _playerPrefabB
       value: 
-      objectReference: {fileID: 6184062823718913633, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
+      objectReference: {fileID: 6184062823718913633, guid: adafcf6940e536347806064ccbc7b4ed, type: 3}
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _startTeamBCount
       value: 1
@@ -1011,6 +1011,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 520141695906786605, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
+      propertyPath: _enabledCategories
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4849735774016670813, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
