@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
 {
     [RequireComponent(typeof(Animator))]
-    public class PlayerAnimation : MonoBehaviour
+    public class PlayerAnimation : NetworkBehaviour
     {
         // 애니메이션 파라미터 해싱
         // Animator Param Hashes
@@ -31,13 +32,17 @@ namespace Player
         }
         
         // Animator의 Animation Event에서 호출 (Punching 클립 끝 프레임)
-        public void OnAttackAnimEnd() => _combat?.OnAttackAnimEnd();
+        public void OnAttackAnimEnd() => _combat?.HandleAttackAnimEnd();
     
         // Animator의 Animation Event에서 호출 (Getting Hit 클립 끝 프레임)
-        public void OnHitAnimEnd() => _combat?.OnHitAnimEnd();
+        public void OnHitAnimEnd() => _combat?.HandleHitAnimEnd();
+        
+        // Animator의 Animation Event에서 호출 (Dying Backwards 클립 끝 프레임)
+        public void OnDeathAnimEnd() => _combat?.HandleDeathAnimEnd();
 
         void Update()
         {
+            if (!IsOwner) return;
             if (_movement == null) return;
             
             // 이동 관련 ( Layer 0 )
@@ -75,6 +80,7 @@ namespace Player
                     break;
                 case PlayerCombatState.Dead:
                     _animator.SetTrigger(AnimDeath);
+                    Debug.Log("Dead");
                     break;
             }
         }
