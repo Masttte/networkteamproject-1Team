@@ -48,7 +48,7 @@ public class PressAction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     // [Rpc(SendTo.Server, RequireOwnership = false)]
     private void StartPressServerRpc()
-    {
+    {   
         if (_isPressClear.Value) return;
         
         if (_coroutine != null) StopCoroutine(_coroutine);
