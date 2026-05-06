@@ -648,6 +648,13 @@ Mouse Delta는 누적값이 아니라 그 프레임의 이동량. 마우스 안 
 - PlayerCamera는 입력 처리에서 분리되어 시점 표현(헤드 본 추적, 회전 적용)에만 집중
 
 
+### 마우스 연타 시 공격 모션 중복 재생 차단
+
+NetworkVariable 동기화 지연 사이에 Owner가 추가 입력 시 ServerRpc가 중복 발송되어 모션이 재시작되는 현상 해결.
+
+- Owner 측에 _isAttackPending 플래그 추가
+- SubmitAttackServerRpc 발송 시 즉시 true, NetworkVariable이 Normal 복귀 시 false
+- CanAct 체크가 NetworkVariable 동기화 대기 동안 통과되는 케이스 차단
 
 ---
 ## 작업 일지 양식
