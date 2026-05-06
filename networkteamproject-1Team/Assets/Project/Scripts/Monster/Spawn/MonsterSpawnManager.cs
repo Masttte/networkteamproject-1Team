@@ -6,28 +6,28 @@ namespace Monster
 {
     public class MonsterSpawnManager : NetworkBehaviour
     {
-        [SerializeField] private GameObject _monsterPrefab;
+        [SerializeField] private GameObject _prisonPrefab;
         [SerializeField] private List<Transform> _spawnPoints = new List<Transform>();
     
         public override void OnNetworkSpawn()
         {
             if (!IsServer) return;
         
-            MonsterSpawn();
+            PrisonSpawn();
         }
 
         private void Init()
         {
         }
 
-        private void MonsterSpawn()
+        private void PrisonSpawn()
         {
-            if (_monsterPrefab == null || _spawnPoints == null || _spawnPoints.Count == 0) return;
+            if (_prisonPrefab == null || _spawnPoints == null || _spawnPoints.Count == 0) return;
         
             Shuffle(_spawnPoints);
             int rand = UnityEngine.Random.Range(0, _spawnPoints.Count);
         
-            GameObject monster = Instantiate(_monsterPrefab, _spawnPoints[rand].position, _spawnPoints[rand].rotation);
+            GameObject monster = Instantiate(_prisonPrefab, _spawnPoints[rand].position, _spawnPoints[rand].rotation);
             monster.GetComponent<NetworkObject>().Spawn();
         }
 

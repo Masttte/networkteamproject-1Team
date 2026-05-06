@@ -21,6 +21,8 @@ namespace Monster
 
         public void Update()
         {
+            if (!_monsterController.Prison.Unlocked) return;
+            
             _timer += Time.deltaTime;
         
             if (_timer > _monsterController.MonsterData.idleTime)

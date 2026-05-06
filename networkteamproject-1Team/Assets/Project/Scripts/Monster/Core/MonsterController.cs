@@ -20,7 +20,6 @@ namespace Monster
     {
         [field: SerializeField] public MonsterData MonsterData { get; set; }
         private StateMachine _state;
-        private LayerMask _layerMask;
         private Animator _anim;
         private PathSettingManager _path;
 
@@ -30,6 +29,7 @@ namespace Monster
         public NetworkVariable<int> attackRand = new NetworkVariable<int>(
             writePerm: NetworkVariableWritePermission.Server);
 
+        public Prison Prison { get; private set; }
         public MonsterAI MonsterAI { get; private set; }
         public MonsterAttack MonsterAttack { get; private set; }
 
@@ -69,7 +69,6 @@ namespace Monster
             MonsterAI = GetComponent<MonsterAI>();
             MonsterAttack = GetComponent<MonsterAttack>();
             _anim = GetComponentInChildren<Animator>();
-            _layerMask = LayerMask.GetMask("Player");
             _path = FindAnyObjectByType<PathSettingManager>();
             PathSet();
 
@@ -84,6 +83,11 @@ namespace Monster
                 _state.ChangeState(IdleState);
                 currentState.Value = StateType.Idle;
             }
+        }
+        
+        public void PrisonSet(Prison prison)
+        {
+            Prison = prison;
         }
 
         public Transform DetectPlayer()
@@ -185,7 +189,7 @@ namespace Monster
             if (_path.pathSettings.Count == 0) return;
             MonsterData.patrolPoints = _path.pathSettings;
         }
-
+        
         public void AttackCor()
         {
             StartCoroutine(Attacking());
