@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random; // 추가 
 
 public interface IDamageable
 {
@@ -18,8 +19,18 @@ namespace Battle
         public static BattleManager Instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init() => Instance = null;
-        public override void OnNetworkSpawn() => Instance = this;
 
+        public override void OnNetworkSpawn()
+        {
+            Instance = this;
+            // 추가
+            SpawnObjects(20);
+        }
+        
+        // RandomSpawnObject 스크립트에 있던 변수 BattleManager로 통합
+        public GameObject spawnObject;
+        public Transform[] spawnPoints;
+        
         [HideInInspector] public TeamManager tm;
         private void Awake() => tm = GetComponent<TeamManager>();
 
@@ -29,10 +40,21 @@ namespace Battle
         [Header("오디오")]
         public AudioResource countSound;
 
+        // 발전기 변수 추가
+        [Header("목표 발전기 수")] [SerializeField] private int generatorRequiredCount = 10; // 승리 조건에 대한 목표 발전기 개수
+
+        private NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
+            0,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
+        
         // 재시작 겸용
         public void StartGame()
         {
             if (!IsServer) return;
+
+            // 필요한 발전기 개수 초기화
+            _repairedGenerators.Value = 0;
 
             // 아직 살아있는 플레이어 제거
             for (int i = tm.activePlayers.Count - 1; i >= 0; i--) tm.activePlayers[i].NetworkObject.Despawn();
@@ -84,6 +106,56 @@ namespace Battle
                 DeclareResultRpc(TeamType.None);
             }
         }
+        
+        // =================추가======================= 
+        private void OnGeneratorCondition()
+        {
+            if (!IsServer) return;
+            
+            _repairedGenerators.Value++;
+            Debug.Log($"발전기 개수 진행도 업데이트: {_repairedGenerators.Value} / {generatorRequiredCount}");
+            
+            // A팀이 발전기를 모두 돌리면 즉시 게임 승리
+            if (_repairedGenerators.Value >= generatorRequiredCount)
+            {
+                Debug.Log("모든 발전기 가동 완료");
+                DeclareResultRpc(TeamType.A);
+            }
+        }
+        
+        /// <summary>
+        /// 오브젝트 랜덤으로 스폰해주는 메서드
+        /// </summary>
+        /// <param name="spawnCount">몇 개 생성될 것인지?</param>
+        public void SpawnObjects(int spawnCount)
+        {
+            // 서버에서 처리
+            if (!IsServer) return;
+            
+            if (spawnCount <= 0 || spawnCount > spawnPoints.Length)
+            {
+                Debug.LogError("GameManager에서 설정한 spawnCount의 수가 0보다 작거나 스폰 포인트보다 많습니다.");
+
+                return;
+            }
+            
+            // 원본 배열 복사
+            List<Transform> insPoint = new List<Transform>(spawnPoints);
+
+            for (int i = 0; i < spawnCount; i++)
+            {
+                if (insPoint.Count == 0) return;
+                
+                int randomIndex = Random.Range(0, insPoint.Count);
+                Transform selectedPoint = insPoint[randomIndex];
+                
+                GameObject spawn = Instantiate(spawnObject, selectedPoint.position, Quaternion.identity);
+                spawn.GetComponent<NetworkObject>().Spawn(); // Instantiate로 만든 오브젝트 네트워크 동기화
+                
+                insPoint.RemoveAt(randomIndex);
+            }
+        }
+        // ===============================================
 
         // 승리팀을 모든 클라이언트에 전파
         [Rpc(SendTo.Everyone)]
