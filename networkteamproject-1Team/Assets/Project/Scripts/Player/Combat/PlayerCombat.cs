@@ -35,7 +35,8 @@ namespace Player
         public bool CanMove => _state.Value != PlayerCombatState.Dead;
 
         public event Action<PlayerCombatState, PlayerCombatState> OnStateChanged;
-
+        public event Action OnDeathAnimFinished; 
+        
         private void Awake()
         {
             _weapon = GetComponent<Weapon>();
@@ -120,9 +121,17 @@ namespace Player
         
         // ===== Animation Event 콜백 (PlayerAnimation에서 이벤트 발행) =====
 
-        public void OnAttackAnimEnd() => AnimEndAction(PlayerCombatState.Attacking);
-        public void OnHitAnimEnd() => AnimEndAction(PlayerCombatState.Hit);
-        
+        public void HandleAttackAnimEnd() => AnimEndAction(PlayerCombatState.Attacking);
+        public void HandleHitAnimEnd() => AnimEndAction(PlayerCombatState.Hit);
+        public void HandleDeathAnimEnd()
+        {
+            if (!IsServer) return;
+            if (_state.Value != PlayerCombatState.Dead) return;
+            
+            Debug.Log("[PlayerCombat] HandleDeathAnimEnd");
+            OnDeathAnimFinished?.Invoke();
+        }
+
         private void AnimEndAction(PlayerCombatState state)
         {
             if (!IsServer) return;
