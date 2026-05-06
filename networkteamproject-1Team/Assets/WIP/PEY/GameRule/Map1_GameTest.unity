@@ -746,7 +746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05, g: 0.07, b: 0.12, a: 0.92}
+  m_Color: {r: 0.05, g: 0.07, b: 0.12, a: 0.46666667}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3140,11 +3140,11 @@ PrefabInstance:
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _playerPrefabA
       value: 
-      objectReference: {fileID: 297689902301139574, guid: d30f28d22fa10b14bb842905be5a327e, type: 3}
+      objectReference: {fileID: 6184062823718913633, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _playerPrefabB
       value: 
-      objectReference: {fileID: 297689902301139574, guid: 5aac3a8dabc9ab64ba4f0bd5fd7aa278, type: 3}
+      objectReference: {fileID: 6184062823718913633, guid: adafcf6940e536347806064ccbc7b4ed, type: 3}
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _startTeamBCount
       value: 1
@@ -3569,6 +3569,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6854382151281232354, guid: a8df2b642674935458578e103b8fa4d4, type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6854382151281232354, guid: a8df2b642674935458578e103b8fa4d4, type: 3}
+      propertyPath: 'NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d9ffe8d2294d604a91e833ccdde871c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

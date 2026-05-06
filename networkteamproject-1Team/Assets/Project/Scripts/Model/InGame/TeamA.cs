@@ -57,4 +57,19 @@ public class TeamA : TeamBase
 
         _rootAnimator.avatar = _monsterAvatar;
     }
+
+    protected override void UpdateNameText(string newName)
+    {
+        nameText.text = newName;
+
+        // 내가B면 A팀(괴물)을 빨간색으로 표시
+        if (LocalManager.Instance.IamB)
+        {
+            nameText.color = Color.red;
+        }
+        else
+        {
+            nameText.color = Color.white;
+        }
+    }
 }

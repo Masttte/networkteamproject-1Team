@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Battle;
 using Cysharp.Threading.Tasks;
+using Battle;
 
 // 플레이어 스폰과 팀 배정 담당
 // 팀 데이터는 각 TeamBase.Team (NetworkVariable) 에 보관
@@ -65,9 +65,9 @@ public class TeamManager : NetworkBehaviour
     {
         if (clientsTimedOut != null && clientsTimedOut.Count > 0)
         {
-            Debug.LogWarning($"[TeamManager] {clientsTimedOut.Count}명 씬 로드 timeout 발생");
             ShowTimeoutClientRpc(clientsTimedOut.Count);
-            LobbyManager.Instance.ReturnToRoomAsync().Forget();
+            LobbyManager.Instance.LeaveSessionAsync().Forget();
+            SceneManager.LoadScene(0);
             return;
         }
 
@@ -81,7 +81,7 @@ public class TeamManager : NetworkBehaviour
         for (int i = 0; i < shuffled.Count; i++)
             teamMap[shuffled[i]] = i < teamBCount ? TeamType.B : TeamType.A;
 
-        // 팀에 맞는 프리팹으로 스폰 후 PlayerRoleBase에 팀 주입
+        // 팀에 맞는 프리팹으로 스폰 후 TeamBase에 팀 주입
         for (int i = 0; i < clientsCompleted.Count; i++)
         {
             ulong clientId = clientsCompleted[i];

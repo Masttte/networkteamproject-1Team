@@ -6,11 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Project/Scenes/TitleScene.unity
-    guid: c3c23d896d04ec147a1d2ec9e81bdd31
-  - enabled: 1
-    path: Assets/Project/Scenes/LobbyScene.unity
-    guid: b1a9eed7673c1e148a15c77a4ba54e21
+    path: Assets/Project/Scenes/Title.unity
+    guid: ac17c2b92179fb24692ad772668272e0
   - enabled: 1
     path: Assets/WIP/PEY/GameRule/Map1_GameTest.unity
     guid: 28df31dab58931548bf2941b21b81076

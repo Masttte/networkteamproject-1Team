@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSO
   Name: "\uC8FC\uBA39"
   damage: 30
-  range: 1.56
+  range: 1.45
   cooltime: 0.75
   attackMiss: {fileID: 6418180475301049370, guid: 0347b71b04d3be0489cb61b65f1f8fd3, type: 2}
   attackHit: {fileID: 6418180475301049370, guid: 4522cd85bbd73e54d93fa09a44238576, type: 2}
