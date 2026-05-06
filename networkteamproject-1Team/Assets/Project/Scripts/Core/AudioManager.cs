@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public enum AudioMixerType { Master, BGM, SFX }
+public enum AudioMixerType { Master, Music, SFX }
 
 public class AudioManager : MonoBehaviour
 {
@@ -106,10 +106,10 @@ public class AudioManager : MonoBehaviour
     // 버튼 클릭 이벤트에 연결할 함수들
     public void Mute()
     {
-        Instance.SetAudioMute(AudioMixerType.BGM);
+        Instance.SetAudioMute(AudioMixerType.Music);
     }
     public void ChangeVolume(float volume)
     {
-        Instance.SetAudioVolume(AudioMixerType.BGM, volume);
+        Instance.SetAudioVolume(AudioMixerType.Music, volume);
     }
 }

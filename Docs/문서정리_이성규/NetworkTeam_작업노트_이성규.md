@@ -368,7 +368,7 @@ Position Constraint 컴포넌트 제거 후 PlayerCamera의 LateUpdate에서 직
 **[Trigger는 이벤트 기반]**  
 Attack, Hit, Death 같은 단발성 트리거는 PlayerCombat의 `NetworkVariable<PlayerCombatState>` 변경 시점에 `PlayStateAnimation(state)` 호출 방식으로 처리. 매 프레임 폴링이 아닌 호출 기반.
 
-## Day 8 — 2026-05-04 (Week 2 Day 1)
+## Day 8 — 2026-05-04
 
 ### 플레이어 전투 애니메이션 구현
 
@@ -532,7 +532,41 @@ Battle.Weapon:AttackServerRpc
 명명 정비 후 이동하여 다른 팀원이 동일 프리팹 사용 가능.  
 기존 공용 폴더 Player 프리팹과의 통합/대체 협의는 추후 진행.
 
----
+## Day 9 — 2026-05-06
+
+### 발걸음 사운드 동기화 안 되는 문제 해결
+
+#### 현상
+다른 플레이어의 발걸음 사운드가 안 들림. 공격 사운드는 정상.
+
+#### 원인
+발걸음은 AcPlayerSound가 Animation Event(OnFootstep)로 재생 → 걷기 애니가 재생되어야 발생.
+
+NetworkAnimator는 파라미터 동기화 중이지만, PlayerAnimation.Update가 모든 인스턴스에서 동작하면서 다른 클라 시점에 _movement.CurrentSpeed=0으로 동기화 값을 매 프레임 덮어씀 → 걷기 애니 미재생 → Animation Event 미발생.
+
+공격 사운드는 Weapon이 ClientRpc로 직접 전파해서 영향 없음.
+
+#### 해결
+PlayerAnimation을 NetworkBehaviour로 변경 후 Update에 IsOwner 가드 추가.
+- Owner만 자기 파라미터 세팅
+- 다른 클라는 NetworkAnimator 동기화 값 유지
+- PlayStateAnimation은 IsOwner 가드 없음 (트리거는 모든 클라 직접 호출)
+
+> 동기화 도구가 있어도 로컬 Update의 권한 분리가 안 되면 동기화 값을 덮어쓸 수 있음.
+
+### 사망 모션 끝 시점을 알리는 이벤트 추가
+
+- PlayerAnimation: OnDeathAnimEnd Animation Event 콜백
+- PlayerCombat: OnDeathAnimEnd 이벤트 (서버 발행)
+- Dying Backwards 클립 끝 프레임 Animation Event 등록
+
+### 활용
+배틀 매니저 영역에서 이벤트 구독해 Despawn 시점 또는 추가 연출 트리거 가능.
+이번 작업은 이벤트 발행까지만, Despawn 처리 변경은 팀원 영역.
+
+AnimEndAction은 Normal로 복귀하는 메서드라 Death엔 안 맞음 (Dead는 영구 상태). 별도 처리
+
+플레이어 엔티티 수정 액션 구독
 
 ---
 ## 작업 일지 양식

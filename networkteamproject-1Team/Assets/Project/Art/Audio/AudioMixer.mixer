@@ -34,7 +34,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BGM
+  m_Name: Music
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: c128d5283aa9fef4498591d061d2f377
   m_Children: []
@@ -64,7 +64,7 @@ AudioMixerController:
   m_UpdateMode: 0
   m_ExposedParameters:
   - guid: 790c9022641a16f42b4896552128d15a
-    name: BGM
+    name: Music
   - guid: a4acffb6983780b4f8330f3e7f19afd2
     name: Master
   - guid: aa3e1b1f88513f24f840cdbd83c28822

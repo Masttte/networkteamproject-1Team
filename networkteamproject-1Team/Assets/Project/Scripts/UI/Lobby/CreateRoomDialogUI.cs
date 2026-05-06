@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 using TMPro;
 
 /// <summary>
@@ -7,13 +8,9 @@ using TMPro;
 /// </summary>
 public class CreateRoomDialogUI : MonoBehaviour
 {
-    [SerializeField] GameObject _panel;
     [SerializeField] TMP_InputField _roomNameInput;
     [SerializeField] TMP_Text _warningText;
     [SerializeField] Button _confirmButton;
-    [SerializeField] Button _cancelButton;
-
-    bool _isProcessing;
 
     private void OnEnable()
     {
@@ -25,46 +22,20 @@ public class CreateRoomDialogUI : MonoBehaviour
         UnbindButtonEvents();
     }
 
-    /// <summary>
-    /// 팝업 열기
-    /// </summary>
-    public void Open()
-    {
-        _panel.SetActive(true);
-        ResetFields();
-    }
-
-    /// <summary>
-    /// 팝업 닫기
-    /// </summary>
-    public void Close()
-    {
-        _panel.SetActive(false);
-    }
-
     private void BindButtonEvents()
     {
         _confirmButton.onClick.AddListener(OnConfirmClicked);
-        _cancelButton.onClick.AddListener(Close);
     }
 
     private void UnbindButtonEvents()
     {
         _confirmButton.onClick.RemoveListener(OnConfirmClicked);
-        _cancelButton.onClick.RemoveListener(Close);
-    }
-
-    private void ResetFields()
-    {
-        _roomNameInput.text = string.Empty;
-        _warningText.text = string.Empty;
-        _isProcessing = false;
-        _confirmButton.interactable = true;
     }
 
     private async void OnConfirmClicked()
     {
-        if (_isProcessing) return;
+        _confirmButton.interactable = false;
+        LobbyManager.Instance.SetPlayerName(LobbyManager.Instance.GetPlayerName());
 
         string roomName = _roomNameInput.text;
         if (string.IsNullOrWhiteSpace(roomName))
@@ -72,22 +43,15 @@ public class CreateRoomDialogUI : MonoBehaviour
             roomName = $"{LobbyManager.Instance.PlayerName}'s Room";
         }
 
-        _isProcessing = true;
-        _confirmButton.interactable = false;
         SetWarning("방 생성 중...");
-
         bool success = await LobbyManager.Instance.CreateSessionAsync(roomName);
 
-        _isProcessing = false;
-        if (success)
+        if (!success)
         {
-            Close();
-        }
-        else
-        {
-            _confirmButton.interactable = true;
             SetWarning("방 생성 실패. 다시 시도하세요.");
         }
+        await UniTask.Delay(1000);
+        _confirmButton.interactable = true;
     }
 
     private void SetWarning(string message)

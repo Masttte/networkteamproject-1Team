@@ -4,14 +4,13 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 씬 build index 매핑. Build Settings 의 Scenes In Build 순서와 반드시 일치해야 한다.
-///   0: TitleScene, 1: LobbyScene, 2: GameScene.
+///   0: TitleScene, 1~: GameScene
 /// 새 씬 추가 시 enum 값 + Build Settings 순서를 동시에 맞춘다
 /// </summary>
 public enum SceneId
 {
     Title = 0,
-    Lobby = 1,
-    Game = 2
+    Map1 = 1
 }
 
 /// <summary>

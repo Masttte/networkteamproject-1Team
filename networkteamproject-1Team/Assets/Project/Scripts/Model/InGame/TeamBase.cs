@@ -1,7 +1,8 @@
+using UnityEngine;
 using Unity.Collections;
 using Unity.Netcode;
-using UnityEngine;
 using TMPro;
+using Battle;
 
 public enum TeamType { None, A, B }
 
@@ -27,7 +28,7 @@ public abstract class TeamBase : NetworkBehaviour
 
         if (IsOwner)
         {
-            SetPlayerNameServerRpc(LobbyManager.Instance.PlayerName);
+            BattleManager.Instance.OnGameStart += SetPlayerName;
         }
     }
 
@@ -35,9 +36,17 @@ public abstract class TeamBase : NetworkBehaviour
     {
         Team.OnValueChanged -= OnTeamChanged;
         PlayerName.OnValueChanged -= OnPlayerNameChanged;
+
+        if (IsOwner)
+        {
+            BattleManager.Instance.OnGameStart -= SetPlayerName;
+        }
     }
 
-    // 서버에서 이름 바꾸면 OnValueChanged로 모든 클라이언트에서 자동 갱신 흐름
+    public void SetPlayerName()
+    {
+        SetPlayerNameServerRpc(LobbyManager.Instance.PlayerName);
+    }
     [ServerRpc]
     void SetPlayerNameServerRpc(string newName)
     {
@@ -47,7 +56,7 @@ public abstract class TeamBase : NetworkBehaviour
     {
         UpdateNameText(current.ToString());
     }
-    protected virtual void UpdateNameText(string newName) // B끼리는 빨간색으로 보이게 할거라 virtual
+    protected virtual void UpdateNameText(string newName)
     {
         nameText.text = newName;
     }
@@ -73,12 +82,12 @@ public abstract class TeamBase : NetworkBehaviour
         Camera cam = Camera.main;
         if (team == TeamType.B)
         {
-            cam.cullingMask |=  1 << LAYER_B;
+            cam.cullingMask |= 1 << LAYER_B;
             cam.cullingMask &= ~(1 << LAYER_A);
         }
         else
         {
-            cam.cullingMask |=  1 << LAYER_A;
+            cam.cullingMask |= 1 << LAYER_A;
             cam.cullingMask &= ~(1 << LAYER_B);
         }
     }
