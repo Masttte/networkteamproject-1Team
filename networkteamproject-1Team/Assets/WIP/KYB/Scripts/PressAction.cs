@@ -8,8 +8,6 @@ public class PressAction : NetworkBehaviour
 {
     public Image image;
     
-    public Action OnPressStart;
-    public Action OnPressCanceled;
     public Action IsPressAction;
     
     private Coroutine _coroutine;
@@ -25,11 +23,9 @@ public class PressAction : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
         );
-    
-    
+
+   [Range(1, 10)] [SerializeField] 
     private float _holdTime = 10f;
-    
-    
     
     public override void OnNetworkSpawn()
     {
@@ -43,35 +39,24 @@ public class PressAction : NetworkBehaviour
         _currentTime.OnValueChanged -= OnUpdateFillAmountUI;
     }
     
-    public void StartInteraction()
-    {
-        StartPressServerRpc();
-    }
-        
-    public void StopInteraction()
-    {
-        StopPressServerRpc();
-    }
-
+    public void StartInteraction() => StartPressServerRpc();
+    public void StopInteraction() => StopPressServerRpc();
+    
     /// <summary>
-    /// 상호작용 키 start되면 현재 돌고 있는 코루틴 종료
+    /// 상호작용 키가 start되면 현재 돌고 있는 코루틴 종료
     /// </summary>
     [ServerRpc(RequireOwnership = false)]
     // [Rpc(SendTo.Server, RequireOwnership = false)]
     private void StartPressServerRpc()
     {
-        if (_isPressClear.Value)
-        {
-            IsPressAction?.Invoke();
-            return;
-        }
+        if (_isPressClear.Value) return;
         
         if (_coroutine != null) StopCoroutine(_coroutine);
         _coroutine = StartCoroutine(StartPressCoroutine());
     }
 
     /// <summary>
-    /// 상호작용 키 cancel되면 현재 돌고 있는 코루틴 종료
+    /// 상호작용 키가 cancel되면 현재 돌고 있는 코루틴 종료
     /// </summary>
     [ServerRpc(RequireOwnership = false)]
     // [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -90,8 +75,6 @@ public class PressAction : NetworkBehaviour
     /// <returns></returns>
     private IEnumerator StartPressCoroutine()
     {
-        _holdTime = 10f;
-        
         while (_currentTime.Value < _holdTime)
         {
             _currentTime.Value += Time.deltaTime;
@@ -101,10 +84,9 @@ public class PressAction : NetworkBehaviour
 
         if (!_isPressClear.Value)
         {
+            _isPressClear.Value = true;
             IsPressAction?.Invoke();
         }
-        
-        _isPressClear.Value = true;
     }
     
     /// <summary>
@@ -113,8 +95,6 @@ public class PressAction : NetworkBehaviour
     /// <returns></returns>
     private IEnumerator DecreasePressCoroutine()
     {
-        _holdTime = 10f;
-        
         while (_currentTime.Value > 0f)
         {
             _currentTime.Value -= Time.deltaTime;
