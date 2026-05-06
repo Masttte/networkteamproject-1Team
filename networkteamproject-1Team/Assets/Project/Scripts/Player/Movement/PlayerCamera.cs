@@ -1,6 +1,5 @@
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -29,6 +28,9 @@ namespace Player
         private float _yaw;
         private float _pitch;
         private bool _isOwnerView;
+        
+        // 마우스 회전 입력값 (매 프레임 InputHandler가 주입, Update에서 적용 후 0으로 리셋)
+        private Vector2 _lookInput;
         
         public float YawAngle => _yaw;
         public Transform ViewPoint => _activeViewPoint;
@@ -99,11 +101,23 @@ namespace Player
             if (LocalManager.Instance != null)
                 LocalManager.Instance.OnIamBSet -= SwitchToB;
         }
-
+        
+        /// <summary>
+        /// PlayerInputHandler가 onLook 이벤트 받아 호출.
+        /// InputCategory.Camera 게이트 통과 후 주입.
+        /// </summary>
+        public void SetLookInput(Vector2 delta)
+        {
+            _lookInput = delta;
+        }
+        
         private void Update()
         {
             if (!_isOwnerView || !enabled) return;
-            HandleMouseInput();
+            
+            // _lookInput은 PlayerInputHandler가 게이트 체크 후 주입한 값
+            ApplyLookInput();
+            _lookInput = Vector2.zero;  // 입력 적용 후 리셋 (다음 프레임 마우스 멈추면 회전 정지)
         }
 
         private void LateUpdate()
@@ -116,12 +130,11 @@ namespace Player
             _activeViewPoint.position = _activeHeadBone.TransformPoint(_viewPointLocalOffset);
             _activeViewPoint.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
         }
-
-        private void HandleMouseInput()
+        
+        private void ApplyLookInput()
         {
-            Vector2 delta = Mouse.current.delta.ReadValue();
-            _yaw += delta.x * _mouseSensitivity;
-            _pitch -= delta.y * _mouseSensitivity;
+            _yaw += _lookInput.x * _mouseSensitivity;
+            _pitch -= _lookInput.y * _mouseSensitivity;
             _pitch = Mathf.Clamp(_pitch, _upClamp, _downClamp);
         }
     }
