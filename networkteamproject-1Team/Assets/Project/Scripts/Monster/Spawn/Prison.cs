@@ -48,6 +48,8 @@ namespace Monster
         private void SyncUnlockClientRpc()
         {
             Unlocked = true;
+            
+            Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
         }
         // ======추가======
 
