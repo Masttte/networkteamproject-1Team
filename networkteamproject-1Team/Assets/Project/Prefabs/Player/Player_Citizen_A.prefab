@@ -3622,7 +3622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2035916084
+  GlobalObjectIdHash: 2434627413
   InScenePlacedSourceGlobalObjectIdHash: 4046959855
   DeferredDespawnTick: 0
   Ownership: 1
@@ -3752,6 +3752,27 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  _vfxDuration: 0.61
+  _vfxEase: 15
+  _intensityInitial: 0
+  _intensityTarget: -0.99
+  _distortionInitial: 0
+  _distortionTarget: 0.32
+  _applyToGlitchInitial: 6.26
+  _applyToGlitchTarget: 16.4
+  _tintInitial: {r: 1, g: 1, b: 1, a: 1}
+  _tintTarget: {r: 1, g: 0, b: 0, a: 1}
+  _intensityDuration1: 3
+  _intensityDuration2: 0.2
+  _intensityDuration3: 10
+  _intensityEase1: 2
+  _intensityEase2: 8
+  _intensityEase3: 4
+  _intensityTarget1: -5
+  _intensityTarget2: 5
+  _deathTintHit: {r: 0.11, g: 0.11, b: 0.11, a: 1}
+  _deathTintDuration: 1
+  _deathTintEase: 5
 --- !u!114 &7845125661331331448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3950,7 +3971,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f805a3a699f67894f9c026f345524ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AcPlayerSound
+  ShowTopMostFoldoutHeaderGroup: 1
   _footStep: {fileID: 6418180475301049370, guid: 5db78ea202abebb449023b5247c15a27, type: 2}
+  _land: {fileID: 0}
 --- !u!1 &6240414296530918941
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ namespace Battle
     [RequireComponent(typeof(TeamManager))]
     public class BattleManager : NetworkBehaviour
     {
+        [SerializeField] bool noStartDelay; // 테스트 전용
+
         public static BattleManager Instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init() => Instance = null;
@@ -31,7 +33,7 @@ namespace Battle
         {
             Instance = this;
 
-            randomSpawnObject.SpawnObjects(20);
+            randomSpawnObject.SpawnObjects(spawnCount);
         }
         
 
@@ -69,7 +71,7 @@ namespace Battle
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
             AudioManager.Instance.PlaySfxDry(countSound);
-            await UniTask.Delay(3000); // 시작 딜레이 (임시로 짧게)
+            await UniTask.Delay(noStartDelay ? 0 : 3000); // 시작 딜레이 (임시로 짧게)
             OnGameStart?.Invoke();
             Debug.Log("게임을 시작하지");
         }
