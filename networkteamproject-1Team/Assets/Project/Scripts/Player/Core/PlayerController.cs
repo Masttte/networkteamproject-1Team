@@ -15,7 +15,7 @@ namespace Player
         private PlayerCamera       _camera;
         private PlayerAnimation    _animation;
         private PlayerCombat       _combat;
-        // private PlayerInteractor   _interactor;
+        private PlayerInteractor   _interactor;
         
         // 캐싱
         void Awake()
@@ -26,7 +26,7 @@ namespace Player
             _camera     = GetComponent<PlayerCamera>();
             _animation  = GetComponent<PlayerAnimation>();
             _combat     = GetComponent<PlayerCombat>();
-            // _interactor = GetComponent<PlayerInteractor>();
+            _interactor = GetComponent<PlayerInteractor>();
         }
 
         public override void OnNetworkSpawn()
@@ -46,10 +46,12 @@ namespace Player
             if (BattleManager.Instance != null)
                 BattleManager.Instance.OnGameStart += HandleGameStart;
             
-            // Owner만 모듈 간 의존성 주입 허용
-            _input.Initialize(_movement, _camera, _combat);
             // 자기 시점 처리 (ViewPoint)
-            _camera.SetupOwnerView();
+            _camera.SetupOwnerView(); // ← ViewPoint 활성화 먼저
+            // 카메라 ViewPoint를 Raycast 시작점으로 주입
+            _interactor.SetCamera(_camera);   // ← 카메라 자체를 주입하여 카메라에서
+            // Owner만 모듈 간 의존성 주입 허용
+            _input.Initialize(_movement, _camera, _combat, _interactor);
 
             _combat.OnStateChanged += HandleCombatStateChanged;
         }
@@ -79,6 +81,12 @@ namespace Player
             {
                 // 사망 시 모든 입력 비활성
                 _input.DisableInput(InputCategory.All);
+                // 카메라는 헤드본 추적
+                _camera.SetFollowBoneRotation(true);
+                
+                // 상호작용 중이었다면 강제 취소 (게이지 멈춤)
+                if (_interactor.IsInteracting)
+                    _interactor.OnInteractCancel();
             }
         }
     }
