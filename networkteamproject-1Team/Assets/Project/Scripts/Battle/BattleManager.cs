@@ -31,7 +31,7 @@ namespace Battle
         {
             Instance = this;
 
-            randomSpawnObject.SpawnObjects(20);
+            randomSpawnObject.SpawnObjects(spawnCount);
         }
         
 
