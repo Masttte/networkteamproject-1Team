@@ -66,9 +66,46 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        if (_playerInputHandler != null)
+        {
+            _playerInputHandler.EnableInput(PauseBlock);
+        }
         
-        
+        pauseMenu.SetActive(false);
+        confirmPanel.SetActive(false);
+        isPaused = false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
+    private void OnSettingsClicked()
+    {
+        // TODO: 설정 패널 완성되면 여기에 연결
+        Debug.Log("[설정 버튼] - 추후 연결 예정");
+    }
 
+    private void OnQuitClicked()
+    {
+        confirmPanel.SetActive(true);
+    }
+
+    private void OnConfirmYes()
+    {
+        if (_playerInputHandler != null)
+        {
+            _playerInputHandler.EnableInput(PauseBlock);
+        }
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        // yes 눌렀을때 메인 화면(씬)으로 바꿔주기
+        // SceneLoader.Instance.LoadMainMenu();
+    }
+
+    private void OnConfirmNo()
+    {
+        confirmPanel.SetActive(false);
+    }
 }
