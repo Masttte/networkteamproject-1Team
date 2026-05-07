@@ -18,6 +18,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
     
+    private PlayerInputHandler _playerInputHandler;
+    private const InputCategory PauseBlock = InputCategory.All;
     private bool isPaused = false;
 
     private void Start()
@@ -49,9 +51,23 @@ public class PauseMenu : MonoBehaviour
 
     private void Pause()
     {
+        if (_playerInputHandler != null)
+        {
+            _playerInputHandler.DisableInput(PauseBlock);
+        }
+
         pauseMenu.SetActive(true);
         confirmPanel.SetActive(false);
         isPaused = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void Resume()
+    {
+        
+        
     }
 
 
