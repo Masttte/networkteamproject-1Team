@@ -29,7 +29,7 @@ namespace VolFx
         [InspectorName("Spread")]
         public ClampedFloatParameter _channelShiftSpread = new ClampedFloatParameter(0f, 0f, 1f);
         [InspectorName("Tint")] 
-        public ColorParameter _glitchTint = new ColorParameter(Color.white, false); // 글리치 색조 컨트롤 추가
+        public ColorParameter _glitchTint = new ColorParameter(Color.white, true); // 글리치 색조 컨트롤 추가
 
         // =======================================================================
         public bool IsActive() => active && (_intensity != 0f); //_intensity가 0이 아닐때 효과 발동

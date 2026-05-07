@@ -2,10 +2,12 @@ using Player;
 using Unity.Netcode;
 using UnityEngine;
 using LitMotion;
-using LitMotion.Extensions;
+
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
 using VolFx;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace Battle
 {
@@ -31,9 +33,6 @@ namespace Battle
         [SerializeField] float _applyToGlitchInitial = 6.26f;
         [SerializeField] float _applyToGlitchTarget = 15f;
 
-        [SerializeField] Color _tintInitial = Color.white;
-        [SerializeField] Color _tintTarget = Color.red;
-
         [Header("Death VFX Settings")]
         [SerializeField] float _intensityDuration1 = 3f;
         [SerializeField] float _intensityDuration2 = 0.2f;
@@ -55,7 +54,6 @@ namespace Battle
         MotionHandle _intensityHandle;
         MotionHandle _distortionHandle;
         MotionHandle _glitchHandle;
-        MotionHandle _tintHandle;
 
         MotionHandle _deathSequenceHandle;
 
@@ -89,11 +87,6 @@ namespace Battle
             if (IsOwner)
             {
                 CurHp.OnValueChanged -= HandleHpChanged;
-                if (_intensityHandle.IsActive()) _intensityHandle.Cancel();
-                if (_distortionHandle.IsActive()) _distortionHandle.Cancel();
-                if (_glitchHandle.IsActive()) _glitchHandle.Cancel();
-                if (_tintHandle.IsActive()) _tintHandle.Cancel();
-                if (_deathSequenceHandle.IsActive()) _deathSequenceHandle.Cancel();
             }
         }
 
@@ -108,44 +101,43 @@ namespace Battle
 
         void PlayHitVFX()
         {
+            PlayHitVFXAsync().Forget();
+        }
+
+        async UniTaskVoid PlayHitVFXAsync()
+        {
+            await UniTask.Delay(300);
+            
             // Intensity
-            _screenVFX._intensity.value = _intensityTarget;
-            _intensityHandle = LMotion.Create(_intensityTarget, _intensityInitial, _vfxDuration)
+            _intensityHandle = LMotion.Create(_intensityInitial, _intensityTarget, _vfxDuration)
                 .WithEase(_vfxEase)
                 .Bind(x => _screenVFX._intensity.value = x);
 
             // Distortion Scale
-            _screenVFX._distortionScale.value = _distortionTarget;
-            _distortionHandle = LMotion.Create(_distortionTarget, _distortionInitial, _vfxDuration)
+            _distortionHandle = LMotion.Create(_distortionInitial, _distortionTarget, _vfxDuration)
                 .WithEase(_vfxEase)
                 .Bind(x => _screenVFX._distortionScale.value = x);
 
             // Apply To Glitch
-            _screenVFX._applyToGlitch.value = _applyToGlitchTarget;
-            _glitchHandle = LMotion.Create(_applyToGlitchTarget, _applyToGlitchInitial, _vfxDuration)
+            _glitchHandle = LMotion.Create(_applyToGlitchInitial, _applyToGlitchTarget, _vfxDuration)
                 .WithEase(_vfxEase)
                 .Bind(x => _screenVFX._applyToGlitch.value = x);
-
-            // Distort Tint
-            _screenVFX._distortYTint.value = _tintTarget;
-            _tintHandle = LMotion.Create(_tintTarget, _tintInitial, _vfxDuration)
-                .WithEase(_vfxEase)
-                .Bind(x => _screenVFX._distortYTint.value = x);
         }
 
         void PlayDeathVFX()
         {
-            if (_screenVFX == null) return;
-
             // 진행중이던 일반 피격 효과 다 끄기
             if (_intensityHandle.IsActive()) _intensityHandle.Cancel();
             if (_distortionHandle.IsActive()) _distortionHandle.Cancel();
             if (_glitchHandle.IsActive()) _glitchHandle.Cancel();
-            if (_tintHandle.IsActive()) _tintHandle.Cancel();
+
 
             var builder = LSequence.Create();
 
-            // _intensity 조절 시퀀스 (0 -> Target1(-5) -> Target2(5) -> 0)
+            // 딜레이: _deathVFXDelay 만큼 대기
+            builder.Append(LMotion.Create(0f, 0f, 0.3f).Bind(_ => { }));
+
+            // _intensity 조절 시퀀스
             builder.Append(LMotion.Create(0f, _intensityTarget1, _intensityDuration1)
                 .WithEase(_intensityEase1)
                 .Bind(x => _screenVFX._intensity.value = x));
@@ -158,14 +150,14 @@ namespace Battle
                 .WithEase(_intensityEase3)
                 .Bind(x => _screenVFX._intensity.value = x));
 
-            // _distortYTint(색조) 조절 시퀀스 (White -> 어둡게 -> White)
-            builder.Insert(0f, LMotion.Create(_tintInitial, _deathTintHit, _deathTintDuration * 0.3f)
+            // _glitchTint 색조 시퀀스 (white -> 어둡게 -> dark)
+            builder.Append(LMotion.Create(Color.white, _deathTintHit, _deathTintDuration * 0.3f)
                 .WithEase(_deathTintEase)
-                .Bind(x => _screenVFX._distortYTint.value = x));
+                .Bind(x => _screenVFX._glitchTint.value = x));
 
-            builder.Insert(_deathTintDuration * 0.3f, LMotion.Create(_deathTintHit, _tintInitial, _deathTintDuration * 0.7f)
+            builder.Insert(_deathTintDuration * 0.3f, LMotion.Create(_deathTintHit, Color.black, _deathTintDuration * 0.7f)
                 .WithEase(_deathTintEase)
-                .Bind(x => _screenVFX._distortYTint.value = x));
+                .Bind(x => _screenVFX._glitchTint.value = x));
 
             _deathSequenceHandle = builder.Run();
         }
@@ -191,17 +183,6 @@ namespace Battle
         void YouDied()
         {
             PlayDeathVFX();
-        }
-
-        private void Update()
-        {
-            //Debug.Log(_screenVFX._intensity.value);
-
-            // 테스트 용 코드 shift 버튼 누르면 자해
-            if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
-            {
-                CurHp.Value--;
-            }
         }
     }
 }

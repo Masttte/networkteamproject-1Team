@@ -3752,20 +3752,19 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  _hitVFXDelay: 0.3
   _vfxDuration: 0.61
   _vfxEase: 15
-  _intensityInitial: 0
-  _intensityTarget: -0.99
-  _distortionInitial: 0
-  _distortionTarget: 0.32
-  _applyToGlitchInitial: 6.26
-  _applyToGlitchTarget: 16.4
-  _tintInitial: {r: 1, g: 1, b: 1, a: 1}
-  _tintTarget: {r: 1, g: 0, b: 0, a: 1}
+  _intensityInitial: -0.99
+  _intensityTarget: 0
+  _distortionInitial: 0.32
+  _distortionTarget: 0
+  _applyToGlitchInitial: 16.4
+  _applyToGlitchTarget: 6.26
   _intensityDuration1: 3
   _intensityDuration2: 0.2
-  _intensityDuration3: 10
-  _intensityEase1: 2
+  _intensityDuration3: 5
+  _intensityEase1: 11
   _intensityEase2: 8
   _intensityEase3: 4
   _intensityTarget1: -5
