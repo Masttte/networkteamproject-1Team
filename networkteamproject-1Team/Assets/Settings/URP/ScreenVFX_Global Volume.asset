@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: ScreenVFX_Global Volume
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
+  components:
+  - {fileID: 3954484239667563116}
+--- !u!114 &3954484239667563116
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f5684ee70077744aaefd36a98eaf50, type: 3}
+  m_Name: CustomScreenVol
+  m_EditorClassIdentifier: Assembly-CSharp::VolFx.CustomScreenVol
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 2.35
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 6.26
+  _distortYTint:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0.18364668, b: 1, a: 1}
+  _fps:
+    m_OverrideState: 1
+    m_Value: 24
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0.008
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: -6.87
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0.226
+  _glitchTint:
+    m_OverrideState: 1
+    m_Value: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
