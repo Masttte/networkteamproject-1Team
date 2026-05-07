@@ -23,8 +23,23 @@ public class SettingMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bgmValueText;
     [SerializeField] private TextMeshProUGUI sfxValueText;
     
+    [Header("마우스 감도")]
+    [SerializeField] private Slider sensitivitySlider;
+    [SerializeField] private TextMeshProUGUI sensitivityValueText;
+    
+    [Header("전체화면")]
+    [SerializeField] private Toggle fullscreenToggle;
     
     
+    private const string KEY_BGM = "vol_bgm";
+    private const string KEY_SFX = "vol_sfx";
+    private const string KEY_SENS = "sensitivity";
     
-    
+    private bool isPaused = false;
+
+    private void Start()
+    {
+        
+    }
+
 }
