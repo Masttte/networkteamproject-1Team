@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.InputSystem;
 
 public class TutorialKeyGuide : MonoBehaviour
 {
@@ -51,9 +52,8 @@ public class TutorialKeyGuide : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlaying()) return;
 
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Keyboard.current.f1Key.wasPressedThisFrame)
         {
-            
             ToggleGuide();
         }
     }
