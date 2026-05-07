@@ -65,11 +65,6 @@ public class GameManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);  // 씬 변경에도 파괴 안되게 하기
     }
 
-    public override void OnNetworkSpawn()
-    {
-        RandomSpawnObject.Instance.SpawnObjects(10);
-    }
-
 
     // [현재 게임 상태]
     public GameState CurrentState { get; private set; } = GameState.Lobby;

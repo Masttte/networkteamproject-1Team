@@ -33,6 +33,8 @@ namespace Player
         public bool CanAct => _state.Value == PlayerCombatState.Normal;
         // 플레이어는 죽지 않은 상태라면 언제든지 이동 가능
         public bool CanMove => _state.Value != PlayerCombatState.Dead;
+        
+        private bool _isAttackPending;
 
         public event Action<PlayerCombatState, PlayerCombatState> OnStateChanged;
         public event Action OnDeathAnimFinished; 
@@ -75,6 +77,9 @@ namespace Player
             if (_playerEntity == null) return;
             if(!CanAct) return;
             if (!_weapon.IsReady) return;  // Weapon 쿨타임 체크
+            if (_isAttackPending) return;  // 클라 측 즉시 차단
+            
+            _isAttackPending = true;
     
             Debug.Log("[PlayerCombat] RequestAttack");
             SubmitAttackServerRpc();
@@ -164,6 +169,10 @@ namespace Player
         {
             _playerAnimation.PlayStateAnimation(next);
             OnStateChanged?.Invoke(prev, next);
+            
+            // Owner 측 Pending 해제
+            if (IsOwner && next == PlayerCombatState.Normal)
+                _isAttackPending = false;
         }
     }
 }

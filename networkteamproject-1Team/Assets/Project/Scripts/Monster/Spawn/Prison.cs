@@ -19,7 +19,37 @@ namespace Monster
             
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
+            
+            // ======추가======
+            if (IsServer)
+            {
+                _pressAction.IsPressAction += UnlockPrison;
+            }
         }
+
+        public override void OnNetworkDespawn()
+        {
+            if (IsServer && _pressAction != null)
+            {
+                _pressAction.IsPressAction -= UnlockPrison;
+            }
+        }
+
+        private void UnlockPrison()
+        {
+            if (Unlocked) return;
+            
+            Unlocked = true;
+            SyncUnlockClientRpc();
+        }
+
+        // 클라이언트들도 true로 바꿔주는 메서드
+        [ClientRpc]
+        private void SyncUnlockClientRpc()
+        {
+            Unlocked = true;
+        }
+        // ======추가======
 
         private void MonsterSpawn()
         {
