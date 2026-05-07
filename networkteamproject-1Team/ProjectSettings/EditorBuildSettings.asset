@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/Title.unity
     guid: ac17c2b92179fb24692ad772668272e0
   - enabled: 1
+    path: Assets/Project/Scenes/Game.unity
+    guid: a8f4356b8ac193a4eb11fed2d016bc94
+  - enabled: 1
     path: Assets/WIP/PEY/GameRule/Map1_GameTest.unity
     guid: 28df31dab58931548bf2941b21b81076
   - enabled: 1
