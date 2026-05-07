@@ -684,6 +684,47 @@ PlayerCamera에 SetFollowBoneRotation API 추가.
 
 PlayerController가 PlayerCombat.OnStateChanged 구독 → Dead 진입 시 SetFollowBoneRotation(true) 호출.
 
+## Day 10 — 2026-05-07
+
+### TeamB(마피아) 프리팹 구조 정비
+
+#### 팀원 최신 코드 반영
+- TeamBase: PlayerName 동기화를 OnNetworkSpawn에서 BattleManager.OnGameStart 시점으로 이동
+- TeamA.UpdateNameText 오버라이드: B 시점에서 A팀 이름표 빨간색 표시 (마피아 시야 일관성)
+- TeamB: 단일 사람 모델 (모델 토글 없음)
+
+#### 게임 디자인 정리
+- A 시점 (Average Layer): 사람들은 사람으로, 진짜 괴물(AI)은 괴물로 → 평범한 호러
+- B 시점 (Beautiful Layer): 사람들이 모두 괴물로, 진짜 괴물만 사람으로 → 시야 왜곡, 마피아는 시각으로 사람 구분 불가
+- B팀 플레이어(마피아)는 단일 사람 모델, 모델 토글 없음
+
+#### 프리팹 구조
+
+**PlayerA (TeamA)**:
+```
+PlayerA (Layer: Player)
+├─ A 모델 (Layer: Average)    — A 시점에서 보임 (사람)
+├─ B 모델 (Layer: Beautiful)  — B 시점에서 보임 (괴물)
+├─ AttackPoint, ViewPoint_A, ViewPoint_B 등
+```
+
+**PlayerB (TeamB)**:
+```
+PlayerB (Layer: Player)
+├─ A 모델 (Layer: Beautiful 외 무관) — 모두에게 사람으로 보임
+├─ AttackPoint, ViewPoint_A
+└─ ViewPoint_B 미사용
+```
+
+#### PlayerCamera 인스펙터 할당
+- PlayerA: ViewPoint A/B와 Head Bone A/B 각각 별도 할당
+- PlayerB: ViewPoint A/B 둘 다 ViewPoint_A 할당, Head Bone A/B 둘 다 Head 할당
+  - SwitchToB 호출되어도 동일 위치 재할당이라 동작 무해
+  - 코드 수정 없이 인스펙터만으로 처리
+
+### 플레이어 인터렉터 개발
+
+
 
 ---
 ## 작업 일지 양식
