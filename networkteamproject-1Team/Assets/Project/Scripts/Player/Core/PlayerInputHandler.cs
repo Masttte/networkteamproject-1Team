@@ -37,22 +37,19 @@ namespace Player
         private PlayerMovement _movement;
         private PlayerCombat _combat;
         private PlayerCamera _camera;
-        // 상호작용
-        // private PlayerInteractor _interactor;
-        // 카메라 관련 입력 추가시 생성
-        // 
+        private PlayerInteractor _interactor;
         
         private InputCategory _enabledInputs = InputCategory.None;
         public InputCategory EnabledInputs => _enabledInputs;
         
         // 하위 모듈 생성자 할당 및 초기화
-        public void Initialize(PlayerMovement move, PlayerCamera cam, PlayerCombat cb)
+        public void Initialize(PlayerMovement move, PlayerCamera cam, PlayerCombat cb, PlayerInteractor i)
         {
             // 생성된 모듈 연결
             _movement = move;
             _camera = cam;
             _combat = cb;
-            // _interactor = i;
+            _interactor = i;
             BindEvents();
         }
         
@@ -94,8 +91,8 @@ namespace Player
             _input.onSprintChanged += OnSprintChanged;
             _input.onAttack        += OnAttack;
             _input.onLook          += OnLook;
-            // _input.onStartInteract += OnInteractStart;
-            // _input.onCanceledInteract += OnInteractCancel;
+            _input.onStartInteract += OnInteractStart;
+            _input.onCanceledInteract += OnInteractCancel;
         }
         
         // 이동 관련 이벤트 할당 해제(메모리 누수 방지)
@@ -108,8 +105,8 @@ namespace Player
             _input.onSprintChanged -= OnSprintChanged;
             _input.onAttack        -= OnAttack;
             _input.onLook          -= OnLook;
-            // _input.onStartInteract    -= OnInteractStart;
-            // _input.onCanceledInteract -= OnInteractCancel;
+            _input.onStartInteract    -= OnInteractStart;
+            _input.onCanceledInteract -= OnInteractCancel;
         }
         
         // 이벤트 할당 함수
@@ -143,13 +140,16 @@ namespace Player
             _camera?.SetLookInput(delta);
         }
         
-        // private void OnInteractStart()
-        // {
-        //     if (!IsEnabled(InputCategory.Interact)) return;
-        //     _interactor?.OnInteractStart();
-        // }
+        private void OnInteractStart()
+        { 
+            if (!IsEnabled(InputCategory.Interact)) return;
+            _interactor?.OnInteractStart();
+        }
         
-        // private void OnInteractStart() => _interactor?.OnInteractStart();
-        // private void OnInteractCancel() => _interactor?.OnInteractCancel();
+        private void OnInteractCancel()
+        { 
+            if (!IsEnabled(InputCategory.Interact)) return;
+            _interactor?.OnInteractCancel();
+        }
     }
 }

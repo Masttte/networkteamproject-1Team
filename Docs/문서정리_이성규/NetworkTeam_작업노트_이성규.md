@@ -722,7 +722,68 @@ PlayerB (Layer: Player)
   - SwitchToB 호출되어도 동일 위치 재할당이라 동작 무해
   - 코드 수정 없이 인스펙터만으로 처리
 
-### 플레이어 인터렉터 개발
+### PlayerInteractor 구현
+
+#### 배경
+팀원이 IInteractable 인터페이스 + PressAction(Hold 게이지) + Generator(발전기 상호작용) 구현. 본인 영역에선 IInteractable 객체 감지 + 입력 라우팅만 담당하면 됨.
+
+#### IInteractable 동작 흐름 (팀원 영역 분석)
+
+```
+E 누름 → InteractStart → PressAction.StartPressServerRpc → 서버 코루틴
+  → 매 프레임 _currentTime.Value 증가 (NetworkVariable 동기화)
+  → UI fillAmount 모든 클라 갱신
+  → _holdTime 도달 → IsPressAction 발행
+  → Generator.OnPressCompleted → _isRepaired = true (시각적 완료)
+
+E 뗌 → InteractStop → DecreasePressCoroutine → 게이지 0으로 감소
+```
+
+→ Hold 처리는 IInteractable 측 책임. PlayerInteractor는 Start/Stop 라우팅만.
+
+#### IInteractor 인터페이스 폐기
+
+이전에 미리 정의한 IInteractor (IsInteracting / OwnerClientId / OriginPosition / OriginForward / OnInteractTick)는 팀원 IInteractable이 활용 안 함. 사용처 없는 추상화는 부담만 늘림 → 주석 처리 후 미래 재검토용 보존.
+
+#### PlayerInteractor 구조
+
+**필드**
+- 감지 거리, Raycast 대상 레이어, Raycast 시작점 폴백
+- _currentTarget: 현재 시야 타겟 (매 프레임 갱신)
+- _activeInteraction: 누르고 있는 활성 상호작용 (잠금)
+- PlayerCamera 참조
+
+**메서드 섹션**
+- 외부 주입 API (SetDetectOrigin / SetCamera)
+- 입력 진입점 (OnInteractStart / OnInteractCancel)
+- Raycast 기반 DetectTarget
+
+#### _currentTarget / _activeInteraction 분리
+
+상호작용 중 시야가 다른 곳을 향해도 누르고 있는 대상은 유지되어야 자연스러움.
+- 매 프레임 갱신되는 시야 타겟과 잠금된 활성 상호작용을 분리
+- InteractStart 시점에 _currentTarget을 _activeInteraction으로 잠금
+- InteractCancel 시점에 _activeInteraction 해제
+
+#### B 시점 전환 대응
+
+PlayerCamera는 본인이 B팀일 때 SwitchToB로 ViewPoint 동적 변경 (`_viewPointA → _viewPointB`). PlayerInteractor가 Transform 직접 캐싱하면 전환 후 갱신 안 됨.
+
+해결: PlayerCamera 참조를 받고 매 프레임 `_camera.ViewPoint` 조회. 카메라가 자기 ViewPoint 상태를 알고 있으니 이벤트 구독 패턴보다 단순.
+
+> **설계 결정**: 이전 발걸음 사운드 동기화 케이스에서 "동기화 도구가 있어도 로컬 권한 분리가 필요"를 학습. 이번엔 "동적 변경되는 참조는 캐싱 X, 매 프레임 조회"로 동일 원칙 적용.
+
+#### 통합
+
+- PlayerController.OnNetworkSpawn: `SetupOwnerView()` 이후 `SetCamera(_camera)` 주입 → ViewPoint 활성화 이후 시점이라 안전
+- PlayerInputHandler.Initialize 시그니처에 _interactor 추가
+- onStartInteract / onCanceledInteract 라우팅 (InputCategory.Interact 게이트)
+- InputCategory.Interact는 BattleManager.OnGameStart에서 InputCategory.All로 활성됨
+
+#### 효과
+- 팀원 IInteractable 그대로 활용 (영역 책임 존중)
+- 시야 변경 / B 시점 전환 등 동적 환경 자연스럽게 대응
+- 입력 시스템(비트 플래그)에 자연스럽게 통합
 
 
 
