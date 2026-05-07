@@ -37,8 +37,13 @@ namespace Monster
 
         private void UnlockPrison()
         {
-            if (Unlocked) return;
+            if (Unlocked)
+            {
+                Debug.Log("이미 몬스터가 풀려났다.");
+                return;
+            }
             
+            Debug.Log("몬스터가 풀려났다!!!!");
             Unlocked = true;
             SyncUnlockClientRpc();
         }
@@ -62,6 +67,7 @@ namespace Monster
 
         public void InteractStart()
         {
+            Debug.Log("상호작용 키 눌림");
             _pressAction.StartInteraction();
         }
 
