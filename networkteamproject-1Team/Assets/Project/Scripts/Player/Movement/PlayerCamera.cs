@@ -28,12 +28,15 @@ namespace Player
         private float _yaw;
         private float _pitch;
         private bool _isOwnerView;
+        // 본 추적 허용 여부
+        private bool _followBoneRotation;
         
         // 마우스 회전 입력값 (매 프레임 InputHandler가 주입, Update에서 적용 후 0으로 리셋)
         private Vector2 _lookInput;
         
         public float YawAngle => _yaw;
         public Transform ViewPoint => _activeViewPoint;
+        public void SetFollowBoneRotation(bool follow) => _followBoneRotation = follow;
         
         public void SetupOwnerView()
         {
@@ -128,7 +131,11 @@ namespace Player
             
             // 캡처한 오프셋 기준으로 헤드 본 위치 추적
             _activeViewPoint.position = _activeHeadBone.TransformPoint(_viewPointLocalOffset);
-            _activeViewPoint.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+            
+            // 본 추적 허용시 헤드 본의 회전값을 추적
+            _activeViewPoint.rotation = _followBoneRotation
+                ? _activeHeadBone.rotation
+                : Quaternion.Euler(_pitch, _yaw, 0f);
         }
         
         private void ApplyLookInput()

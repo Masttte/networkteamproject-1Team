@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2059705544896303651}
   - component: {fileID: -1467537008743170300}
   - component: {fileID: 1074796108599209511}
+  - component: {fileID: -2305538403133480862}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -214,6 +215,20 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &-2305538403133480862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7715287895704808701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffbee2e274850cf4daa7e72a45f3f539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Monster.PathSettingManager
+  pathSettings:
+  - {x: 3, y: 3, z: 3}
 --- !u!1001 &4913428428207363877
 PrefabInstance:
   m_ObjectHideFlags: 0
