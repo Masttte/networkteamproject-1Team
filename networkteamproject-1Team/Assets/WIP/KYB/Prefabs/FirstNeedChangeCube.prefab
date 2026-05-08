@@ -21,7 +21,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5510642993947924474
 Transform:
@@ -156,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressAction
   ShowTopMostFoldoutHeaderGroup: 1
   image: {fileID: 8772477823365308880}
+  _holdTime: 10
 --- !u!114 &8445450357338151736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +214,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &4994194016680769773
 RectTransform:
@@ -289,7 +290,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &7793436337204329808
 RectTransform:

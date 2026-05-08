@@ -8,8 +8,6 @@ namespace WIP.KYB.Scripts
 {
     public class RandomSpawnObject : NetworkBehaviour
     {
-        private static RandomSpawnObject instance;
-        
         [Header("소환할 프리팹")]
         public GameObject generatorPrefab;
         public GameObject prisonPrefab;
@@ -66,7 +64,11 @@ namespace WIP.KYB.Scripts
 
         private void SpawnNetworkObject(GameObject prefab, Transform spawnTransform)
         {
-            if (prefab == null || spawnTransform == null) return;
+            if (prefab == null || spawnTransform == null)
+            {
+                Debug.Log("프리팹이나 스폰 Transform이 Null입니다.");
+                return;
+            }
 
             GameObject spawn = Instantiate(prefab, spawnTransform.position, spawnTransform.rotation);
             NetworkObject networkObj = spawn.GetComponent<NetworkObject>();
@@ -78,7 +80,7 @@ namespace WIP.KYB.Scripts
         
         // 스폰된 오브젝트 싹 다 정리
         private void ClearSpawnedObjects()
-        {
+        {   
             if (!IsServer) return;
             
             foreach (var obj in _spawnedObject)
