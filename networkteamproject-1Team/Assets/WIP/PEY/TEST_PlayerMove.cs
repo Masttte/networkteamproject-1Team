@@ -25,9 +25,6 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
     public float jumpCooldown = 1.5f;
     float _lastJumpTime;
 
-    [Header("Audio")]
-    [SerializeField] AudioResource _footStep;
-
     // 컴포넌트
     Animator _ac;
     CharacterController _controller;
@@ -200,15 +197,5 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
         _pitch = Mathf.Clamp(_pitch, _upClamp, _downClamp);
 
         _cameraPos.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-    }
-
-    // 애니메이션 이벤트 리시버 (추후 사운드 재생 시)
-    private void OnFootstep(AnimationEvent animationEvent)
-    {
-        AudioManager.Instance.PlaySfxWet(_footStep, this.transform.position);
-    }
-
-    private void OnLand(AnimationEvent animationEvent)
-    {
     }
 }

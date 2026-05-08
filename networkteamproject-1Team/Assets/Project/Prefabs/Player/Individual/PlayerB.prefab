@@ -536,6 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4983a0f3794b2ab4ba1da1eff7f54507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerAnimation
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!114 &7433849430021500996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f805a3a699f67894f9c026f345524ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AcPlayerSound
+  _land: {fileID: 6418180475301049370, guid: c6fc365a0314ba74a83d85cb514aa4f2, type: 2}
   _footStep: {fileID: 6418180475301049370, guid: 5db78ea202abebb449023b5247c15a27, type: 2}
 --- !u!1 &476844750653222409
 GameObject:
