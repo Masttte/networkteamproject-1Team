@@ -6,8 +6,6 @@ namespace Battle
 {
     public class Weapon : NetworkBehaviour
     {
-        static readonly Collider[] s_AttackResults = new Collider[16];
-
         public enum State
         {
             None, Ready,//Empty, Reloading,
@@ -41,7 +39,7 @@ namespace Battle
             // 모든 인스턴스에서 OnGameStart 구독
             BattleManager.Instance.OnGameStart += Ready;
             if (!IsOwner) return;
-            
+
             input.Enable();
         }
         public override void OnNetworkDespawn()
@@ -55,72 +53,32 @@ namespace Battle
 
         public bool IsReady => _state == State.Ready
                                && Time.time >= _lastAttackTime + weaponSO.cooltime;
-        
+
         // 서버에서만 호출. PlayerCombat이 ServerRpc 안에서 호출.
         public void TryAttack()
         {
             if (!IsServer) return;       // 서버 전용
             if (!IsReady) return;
-    
+
             _lastAttackTime = Time.time;
             Attack();
         }
-        
+
         // AttackOnServer
         public void Attack()
         {
-            var origin = _attackPoint.position;
-            var forward = transform.forward;
-            var hitCount = Physics.OverlapSphereNonAlloc(origin, weaponSO.range, s_AttackResults);
-
-            Collider bestCollider = null;
-            float bestDistance = float.MaxValue;
-            var halfAngle = weaponSO.angle * 0.5f;
-
-            for (var i = 0; i < hitCount; i++)
+            // 아무것도 못 맞춤: Miss
+            if (!Physics.SphereCast(_attackPoint.position, weaponSO.radius, transform.forward, out RaycastHit hit, weaponSO.range))
             {
-                var candidate = s_AttackResults[i];
-                s_AttackResults[i] = null;
-
-                if (candidate == null)
-                    continue;
-
-                if (candidate.transform == transform || candidate.transform.IsChildOf(transform))
-                    continue;
-
-                var closestPoint = candidate.ClosestPointOnBounds(origin);
-                var toTarget = closestPoint - origin;
-                var distance = toTarget.magnitude;
-
-                var dirToTarget = distance > 0.001f ? toTarget.normalized : (candidate.bounds.center - origin).normalized;
-
-                if (distance > weaponSO.range)
-                    continue;
-
-                if (Vector3.Angle(forward, dirToTarget) > halfAngle)
-                    continue;
-
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    bestCollider = candidate;
-                }
-
-            }
-
-            if (bestCollider == null)
-            {
-                BroadcastMissClientRpc(origin);
+                BroadcastMissClientRpc(_attackPoint.position);
                 return;
             }
 
-            var hitPoint = bestCollider.ClosestPoint(origin);
-            
             // 맞았지만 NetworkObject가 없음: Blocked (히트 위치로 전파)
-            NetworkObject targetNetObj = bestCollider.GetComponent<NetworkObject>();
+            NetworkObject targetNetObj = hit.collider.GetComponent<NetworkObject>();
             if (targetNetObj == null)
             {
-                BlockedClientRpc(hitPoint);
+                BlockedClientRpc(hit.point);
                 return;
             }
 
@@ -129,21 +87,21 @@ namespace Battle
             {
                 if (damageable.IsDead) return;
                 damageable.TakeDamage(weaponSO.damage);
+                AttackClientRpc(hit.point);
             }
-            
-            AttackClientRpc(hitPoint);
         }
-        
+
         // 서버에서 처리하니 ClientRpc로 모든 클라에게 전파 (Miss 사운드도 모두에게 들림)
         [ClientRpc]
         void BroadcastMissClientRpc(Vector3 attackPoint)
         {
             AudioManager.Instance.PlaySfxWet(weaponSO.attackMiss, attackPoint);
         }
-        
+
         [ClientRpc]
         void BlockedClientRpc(Vector3 hitPoint) => AudioManager.Instance.PlaySfxWet(weaponSO.attackBlocked, hitPoint);
-        
+
+
         [ClientRpc]
         void AttackClientRpc(Vector3 hitPoint)
         {
