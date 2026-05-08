@@ -12,9 +12,9 @@ namespace Monster
         {
             for (int i = 0; i < pathSettings.Count; i++)
             {
-                Gizmos.color = new Color(1, 0, 0, 0.7f);
+                Gizmos.color = new Color(1, 0, 0, 1.0f);
                 Vector3 pos = pathSettings[i];
-                Gizmos.DrawSphere(pos, 0.2f);
+                Gizmos.DrawSphere(pos, 1.0f);
             }
         }
     }

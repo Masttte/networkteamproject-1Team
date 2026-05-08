@@ -17,14 +17,13 @@ namespace Monster
             _pressAction = GetComponent<PressAction>();
             Unlocked = false;
             
+            if (!IsServer) return;
+            
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
             
-            // ======추가======
-            if (IsServer)
-            {
-                _pressAction.IsPressAction += UnlockPrison;
-            }
+            _pressAction.IsPressAction += UnlockPrison;
+            
         }
 
         public override void OnNetworkDespawn()
