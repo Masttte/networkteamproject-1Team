@@ -75,7 +75,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawnManager
   ShowTopMostFoldoutHeaderGroup: 1
   _prisonPrefab: {fileID: 4592518776790323498, guid: ca6bf5f6fb846a14d9d8863e51d45920, type: 3}
-  _spawnPoints: []
+  _spawnPoints:
+  - {fileID: 0}
 --- !u!1 &6883251364412533778
 GameObject:
   m_ObjectHideFlags: 0
