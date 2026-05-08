@@ -6,6 +6,8 @@ namespace Battle
 {
     public class Weapon : NetworkBehaviour
     {
+        static readonly Collider[] s_AttackResults = new Collider[16];
+
         public enum State
         {
             None, Ready,//Empty, Reloading,
@@ -67,27 +69,69 @@ namespace Battle
         // AttackOnServer
         public void Attack()
         {
-            // 아무것도 못 맞춤: Miss
-            if (!Physics.Raycast(_attackPoint.position, transform.forward, out RaycastHit hit, weaponSO.range))
+            var origin = _attackPoint.position;
+            var forward = transform.forward;
+            var hitCount = Physics.OverlapSphereNonAlloc(origin, weaponSO.range, s_AttackResults);
+
+            Collider bestCollider = null;
+            float bestDistance = float.MaxValue;
+            var halfAngle = weaponSO.angle * 0.5f;
+
+            for (var i = 0; i < hitCount; i++)
             {
-                BroadcastMissClientRpc(_attackPoint.position);
+                var candidate = s_AttackResults[i];
+                s_AttackResults[i] = null;
+
+                if (candidate == null)
+                    continue;
+
+                if (candidate.transform == transform || candidate.transform.IsChildOf(transform))
+                    continue;
+
+                var closestPoint = candidate.ClosestPointOnBounds(origin);
+                var toTarget = closestPoint - origin;
+                var distance = toTarget.magnitude;
+
+                var dirToTarget = distance > 0.001f ? toTarget.normalized : (candidate.bounds.center - origin).normalized;
+
+                if (distance > weaponSO.range)
+                    continue;
+
+                if (Vector3.Angle(forward, dirToTarget) > halfAngle)
+                    continue;
+
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestCollider = candidate;
+                }
+
+            }
+
+            if (bestCollider == null)
+            {
+                BroadcastMissClientRpc(origin);
                 return;
             }
+
+            var hitPoint = bestCollider.ClosestPoint(origin);
             
             // 맞았지만 NetworkObject가 없음: Blocked (히트 위치로 전파)
-            NetworkObject targetNetObj = hit.collider.GetComponent<NetworkObject>();
+            NetworkObject targetNetObj = bestCollider.GetComponent<NetworkObject>();
             if (targetNetObj == null)
             {
-                BlockedClientRpc(hit.point);
+                BlockedClientRpc(hitPoint);
                 return;
             }
 
             // 네트워크 오브젝트에 명중 (히트 위치로 전파): Hit
-            if (targetNetObj.TryGetComponent(out IDamageable damageable))
+            if (targetNetObj.TryGetComponent(out PlayerEntity damageable))
+            {
+                if (damageable.IsDead) return;
                 damageable.TakeDamage(weaponSO.damage);
+            }
             
-            // AttackServerRpc(targetNetObj.NetworkObjectId, weaponSO.damage, hit.point);
-            AttackClientRpc(OwnerClientId, weaponSO.damage, targetNetObj.OwnerClientId, hit.point);
+            AttackClientRpc(hitPoint);
         }
         
         // 서버에서 처리하니 ClientRpc로 모든 클라에게 전파 (Miss 사운드도 모두에게 들림)
@@ -97,31 +141,14 @@ namespace Battle
             AudioManager.Instance.PlaySfxWet(weaponSO.attackMiss, attackPoint);
         }
         
-        // BlockedServerRpc 제거 (ClientRpc만 남김, 서버에서 직접 호출)
-        /*[ServerRpc(RequireOwnership = false)]
-        void BlockedServerRpc(Vector3 hitPoint) => BlockedClientRpc(hitPoint);*/
-        
-        
         [ClientRpc]
         void BlockedClientRpc(Vector3 hitPoint) => AudioManager.Instance.PlaySfxWet(weaponSO.attackBlocked, hitPoint);
-
-        // AttackServerRpc 제거 (서버 직접 처리로 대체)
-        /*[ServerRpc(RequireOwnership = false)]
-        void AttackServerRpc(ulong targetId, int damage, Vector3 hitPoint)
-        {
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetId, out var targetNetObj);
-            if (targetNetObj.TryGetComponent(out IDamageable damageable))
-                damageable.TakeDamage(damage);
-
-            AttackClientRpc(OwnerClientId, damage, targetNetObj.OwnerClientId, hitPoint);
-        }*/
         
         [ClientRpc]
-        void AttackClientRpc(ulong attackerId, int damage, ulong targetId, Vector3 hitPoint)
+        void AttackClientRpc(Vector3 hitPoint)
         {
             // 타격 위치 기준 3D 공간음 재생
             AudioManager.Instance.PlaySfxWet(weaponSO.attackHit, hitPoint);
-            Debug.Log($"[Weapon] 공격자={attackerId}, 피해자={targetId}, damage={damage}");
         }
     }
 }
