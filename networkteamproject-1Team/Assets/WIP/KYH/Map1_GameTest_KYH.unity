@@ -1760,9 +1760,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc81b7eaf34a2a849bd1c7659e04d48c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  _spatialBlend: 0.9
+  _minDistance: 0.5
+  _maxDistance: 49
   audioMixer: {fileID: 24100000, guid: fcd354daf01904f4ebd08479ee6f1ae1, type: 2}
   bgmSource: {fileID: 0}
-  sfxSources:
+  wetSfxSources:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1771,6 +1774,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  drySfxSource: {fileID: 0}
 --- !u!4 &663814700
 Transform:
   m_ObjectHideFlags: 0
@@ -2074,10 +2081,6 @@ PrefabInstance:
     - target: {fileID: 7715287895704808701, guid: 22984e53faf959841b1dcdb60f254c14, type: 3}
       propertyPath: m_Name
       value: Monster
-      objectReference: {fileID: 0}
-    - target: {fileID: 7715287895704808701, guid: 22984e53faf959841b1dcdb60f254c14, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4953,7 +4956,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.06666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: e7fc974786a43f146b31657b355a7f22, type: 2}
   m_BuildHeightMesh: 0

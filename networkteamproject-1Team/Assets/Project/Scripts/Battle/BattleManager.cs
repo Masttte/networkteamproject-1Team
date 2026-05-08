@@ -31,8 +31,6 @@ namespace Battle
         public override void OnNetworkSpawn()
         {
             Instance = this;
-
-            randomSpawnObject.SpawnObjects(spawnCount);
         }
         
         
@@ -51,12 +49,9 @@ namespace Battle
             NetworkVariableWritePermission.Server);
         
         // 재시작 겸용
-        public void StartGame()
+        public void StartGame() // 로비없이 실행하는 테스트 코드
         {
             if (!IsServer) return;
-
-            // 필요한 발전기 개수 초기화
-            _repairedGenerators.Value = 0;
 
             // 아직 살아있는 플레이어 제거
             for (int i = tm.activePlayers.Count - 1; i >= 0; i--) tm.activePlayers[i].NetworkObject.Despawn();
@@ -69,6 +64,13 @@ namespace Battle
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
             AudioManager.Instance.PlaySfxDry(countSound);
+
+            // ----- 발전기 배치 -----
+            // 필요한 발전기 개수 초기화
+            if (IsServer) _repairedGenerators.Value = 0;
+            // 발전기 스폰 (서버에서 실행)
+            randomSpawnObject.SpawnObjects(spawnCount); 
+
             await UniTask.Delay(noStartDelay ? 0 : 3000); // 시작 딜레이 (임시로 짧게)
             OnGameStart?.Invoke();
             Debug.Log("게임을 시작하지");

@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 9117631106032428181}
   - component: {fileID: 4430097749207557187}
   - component: {fileID: 4748053811678077192}
+  - component: {fileID: -5860407533462193135}
   m_Layer: 12
   m_Name: Prison
   m_TagString: Untagged
@@ -123,6 +124,27 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   image: {fileID: 2802766458685972286}
   _holdTime: 3
+--- !u!65 &-5860407533462193135
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4592518776790323498}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6353307892156025713
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +258,6 @@ GameObject:
   - component: {fileID: 6768887813923350616}
   - component: {fileID: 658556229595099995}
   - component: {fileID: 8337114872648997384}
-  - component: {fileID: 189411262787184505}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -316,27 +337,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &189411262787184505
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6438780745036974731}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7879344934631966007
 GameObject:
   m_ObjectHideFlags: 0
