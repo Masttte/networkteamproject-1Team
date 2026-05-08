@@ -35,11 +35,9 @@ public class TeamManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         if (!IsServer) return;
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
-        {
-            NetworkManager.Singleton.SceneManager.OnLoadComplete -= OnClientLoadedScene;
-            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SpawnAllPlayers;
-        }
+
+        NetworkManager.Singleton.SceneManager.OnLoadComplete -= OnClientLoadedScene;
+        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SpawnAllPlayers;
     }
 
     void OnClientLoadedScene(ulong clientId, string sceneName, LoadSceneMode mode)
@@ -105,8 +103,8 @@ public class TeamManager : NetworkBehaviour
 
             Debug.Log($"[TeamManager] Player {clientId} ({team})");
         }
-            // 게임 시작
-            GameStartRpc();
+        // 게임 시작
+        GameStartRpc();
     }
     public void SpawnAllPlayers() // 테스트용 간편 호출
     {

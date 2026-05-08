@@ -96,11 +96,11 @@ namespace Battle
 
         void PlayHitVFX()
         {
-            PlayHitVFXAsync().Forget();
+            //PlayHitVFXAsync().Forget();
         }
 
-        async UniTaskVoid PlayHitVFXAsync()
-        {
+        //async UniTaskVoid PlayHitVFXAsync()
+        //{
             //await UniTask.Delay(300);
 
             //// Intensity
@@ -117,7 +117,7 @@ namespace Battle
             //_glitchHandle = LMotion.Create(_applyToGlitchInitial, _applyToGlitchTarget, _vfxDuration)
             //    .WithEase(_vfxEase)
             //    .Bind(x => _screenVFX._applyToGlitch.value = x);
-        }
+        //}
 
         void PlayDeathVFX()
         {
