@@ -6,7 +6,7 @@ namespace Battle
 {
     public class Weapon : NetworkBehaviour
     {
-        static readonly Collider[] s_AttackResults = new Collider[8];
+        static readonly Collider[] s_AttackResults = new Collider[16];
 
         public enum State
         {

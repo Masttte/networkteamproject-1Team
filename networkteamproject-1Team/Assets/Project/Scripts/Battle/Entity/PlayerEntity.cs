@@ -2,12 +2,10 @@ using Player;
 using Unity.Netcode;
 using UnityEngine;
 using LitMotion;
-
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
 using VolFx;
 using Cysharp.Threading.Tasks;
-using System.Threading;
 
 namespace Battle
 {
@@ -54,7 +52,6 @@ namespace Battle
         MotionHandle _intensityHandle;
         MotionHandle _distortionHandle;
         MotionHandle _glitchHandle;
-
         MotionHandle _deathSequenceHandle;
 
         public override void OnNetworkSpawn()
@@ -125,12 +122,6 @@ namespace Battle
 
         void PlayDeathVFX()
         {
-            // 진행중이던 일반 피격 효과 다 끄기
-            if (_intensityHandle.IsActive()) _intensityHandle.Cancel();
-            if (_distortionHandle.IsActive()) _distortionHandle.Cancel();
-            if (_glitchHandle.IsActive()) _glitchHandle.Cancel();
-
-
             var builder = LSequence.Create();
 
             // 딜레이: _deathVFXDelay 만큼 대기
