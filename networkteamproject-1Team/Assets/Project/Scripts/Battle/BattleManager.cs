@@ -24,15 +24,15 @@ namespace Battle
 
         [Header("스폰 시스템 연결")]
         [SerializeField] private RandomSpawnObject randomSpawnObject;
-
-        [SerializeField] private int spawnCount = 20; // 스폰할 발전기 개수
+        [SerializeField] private int spawnCount; // 스폰할 발전기 개수
         
         [Header("목표 발전기 수")] 
-        [SerializeField] private int generatorRequiredCount = 10; // 승리 조건에 대한 목표 발전기 개수
+        [SerializeField] private int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
         public override void OnNetworkSpawn()
         {
             Instance = this;
         }
+        
         
         [HideInInspector] public TeamManager tm;
         private void Awake() => tm = GetComponent<TeamManager>();
@@ -43,7 +43,7 @@ namespace Battle
         [Header("오디오")]
         public AudioResource countSound;
 
-        public NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
+        private NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
             0,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);

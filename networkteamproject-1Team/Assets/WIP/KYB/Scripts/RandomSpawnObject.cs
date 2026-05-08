@@ -16,6 +16,12 @@ namespace WIP.KYB.Scripts
         public Transform[] spawnPoints; // 나머지 스폰포인트 (랜덤으로 돌릴 포인트)
 
         private List<NetworkObject> _spawnedObject = new List<NetworkObject>();
+
+        public override void OnNetworkSpawn()
+        {
+            
+        }
+        
         
         /// <summary>
         /// 오브젝트 랜덤으로 스폰해주는 메서드
@@ -27,7 +33,7 @@ namespace WIP.KYB.Scripts
             if (!IsServer) return;
             
             // 기존에 스폰되었던 애들 DeSpawn()
-            ClearSpawnedObjects();
+            // ClearSpawnedObjects();
             
             if (spawnCount <= 0 || spawnCount > spawnPoints.Length)
             {
@@ -78,6 +84,7 @@ namespace WIP.KYB.Scripts
             _spawnedObject.Add(networkObj);
         }
         
+        /*
         // 스폰된 오브젝트 싹 다 정리
         private void ClearSpawnedObjects()
         {   
@@ -90,5 +97,6 @@ namespace WIP.KYB.Scripts
             
             _spawnedObject.Clear();
         }
+        */
     }
 }
