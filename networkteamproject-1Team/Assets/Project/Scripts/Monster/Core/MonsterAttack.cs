@@ -48,11 +48,5 @@ namespace Monster
             Quaternion rotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
         }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position + _monsterController.MonsterData.offset, transform.forward * _monsterController.MonsterData.attackRange);
-        }
     }
 }
