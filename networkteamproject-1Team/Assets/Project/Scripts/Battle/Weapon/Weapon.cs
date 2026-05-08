@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -61,16 +62,22 @@ namespace Battle
             if (!IsReady) return;
 
             _lastAttackTime = Time.time;
-            Attack();
+            Attack().Forget();
         }
 
         // AttackOnServer
-        public void Attack()
+        public async UniTaskVoid Attack()
         {
-            // 아무것도 못 맞춤: Miss
+            // 일단 미스음부터 다 재생
+            BroadcastMissClientRpc(_attackPoint.position);
+
+            // 0.2~0.3초 후에 판정 시작 (애니메이션 타이밍 맞추기)
+            await UniTask.Delay(235);
+
+            // SphereCast로 여유있는 판정
             if (!Physics.SphereCast(_attackPoint.position, weaponSO.radius, transform.forward, out RaycastHit hit, weaponSO.range))
             {
-                BroadcastMissClientRpc(_attackPoint.position);
+                // 아무것도 못 맞춤: Miss
                 return;
             }
 
