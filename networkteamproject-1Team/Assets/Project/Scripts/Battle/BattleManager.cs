@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using Cysharp.Threading.Tasks;
-using Random = UnityEngine.Random; // 추가 
+using WIP.KYB.Scripts;
 
 public interface IDamageable
 {
@@ -16,20 +16,27 @@ namespace Battle
     [RequireComponent(typeof(TeamManager))]
     public class BattleManager : NetworkBehaviour
     {
+        [SerializeField] bool noStartDelay; // 테스트 전용
+
         public static BattleManager Instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init() => Instance = null;
 
+        [Header("스폰 시스템 연결")]
+        [SerializeField] private RandomSpawnObject randomSpawnObject;
+
+        [SerializeField] private int spawnCount = 20; // 스폰할 발전기 개수
+        
+        [Header("목표 발전기 수")] 
+        [SerializeField] private int generatorRequiredCount = 10; // 승리 조건에 대한 목표 발전기 개수
         public override void OnNetworkSpawn()
         {
             Instance = this;
-            // 추가
-            SpawnObjects(20);
+
+            randomSpawnObject.SpawnObjects(spawnCount);
         }
         
-        // RandomSpawnObject 스크립트에 있던 변수 BattleManager로 통합
-        public GameObject spawnObject;
-        public Transform[] spawnPoints;
+
         
         [HideInInspector] public TeamManager tm;
         private void Awake() => tm = GetComponent<TeamManager>();
@@ -40,10 +47,7 @@ namespace Battle
         [Header("오디오")]
         public AudioResource countSound;
 
-        // 발전기 변수 추가
-        [Header("목표 발전기 수")] [SerializeField] private int generatorRequiredCount = 10; // 승리 조건에 대한 목표 발전기 개수
-
-        private NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
+        public NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
             0,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
@@ -67,7 +71,7 @@ namespace Battle
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
             AudioManager.Instance.PlaySfxDry(countSound);
-            await UniTask.Delay(2000); // 시작 딜레이 (임시로 짧게)
+            await UniTask.Delay(noStartDelay ? 0 : 3000); // 시작 딜레이 (임시로 짧게)
             OnGameStart?.Invoke();
             Debug.Log("게임을 시작하지");
         }
@@ -107,7 +111,6 @@ namespace Battle
             }
         }
         
-        // =================추가======================= 
         public void OnGeneratorCondition()
         {
             if (!IsServer) return;
@@ -122,40 +125,6 @@ namespace Battle
                 DeclareResultRpc(TeamType.A);
             }
         }
-        
-        /// <summary>
-        /// 오브젝트 랜덤으로 스폰해주는 메서드
-        /// </summary>
-        /// <param name="spawnCount">몇 개 생성될 것인지?</param>
-        public void SpawnObjects(int spawnCount)
-        {
-            // 서버에서 처리
-            if (!IsServer) return;
-            
-            if (spawnCount <= 0 || spawnCount > spawnPoints.Length)
-            {
-                Debug.LogError("spawnCount의 수가 0보다 작거나 스폰 포인트보다 많습니다.");
-
-                return;
-            }
-            
-            // 원본 배열 복사
-            List<Transform> insPoint = new List<Transform>(spawnPoints);
-
-            for (int i = 0; i < spawnCount; i++)
-            {
-                if (insPoint.Count == 0) return;
-                
-                int randomIndex = Random.Range(0, insPoint.Count);
-                Transform selectedPoint = insPoint[randomIndex];
-                
-                GameObject spawn = Instantiate(spawnObject, selectedPoint.position, Quaternion.identity);
-                spawn.GetComponent<NetworkObject>().Spawn(); // Instantiate로 만든 오브젝트 네트워크 동기화
-                
-                insPoint.RemoveAt(randomIndex);
-            }
-        }
-        // ===============================================
 
         // 승리팀을 모든 클라이언트에 전파
         [Rpc(SendTo.Everyone)]

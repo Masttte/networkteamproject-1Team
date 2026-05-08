@@ -17,14 +17,13 @@ namespace Monster
             _pressAction = GetComponent<PressAction>();
             Unlocked = false;
             
+            if (!IsServer) return;
+            
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
             
-            // ======추가======
-            if (IsServer)
-            {
-                _pressAction.IsPressAction += UnlockPrison;
-            }
+            _pressAction.IsPressAction += UnlockPrison;
+            
         }
 
         public override void OnNetworkDespawn()
@@ -37,8 +36,13 @@ namespace Monster
 
         private void UnlockPrison()
         {
-            if (Unlocked) return;
+            if (Unlocked)
+            {
+                Debug.Log("이미 몬스터가 풀려났다.");
+                return;
+            }
             
+            Debug.Log("몬스터가 풀려났다!!!!");
             Unlocked = true;
             SyncUnlockClientRpc();
         }
@@ -48,6 +52,8 @@ namespace Monster
         private void SyncUnlockClientRpc()
         {
             Unlocked = true;
+            
+            Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
         }
         // ======추가======
 
@@ -60,6 +66,7 @@ namespace Monster
 
         public void InteractStart()
         {
+            Debug.Log("상호작용 키 눌림");
             _pressAction.StartInteraction();
         }
 

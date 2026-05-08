@@ -30,7 +30,23 @@ namespace Player
             _movement = GetComponent<PlayerMovement>();
             _combat = GetComponent<PlayerCombat>();
         }
-        
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsOwner)
+            {
+                // 자신의 캐릭터는 백그라운드에서도 무조건 연산
+                // 포커싱 중이거나 그려지지 않는 판정에서 애니메이션 업데이트가 일어나지 않고 컬링되어
+                // 피격에 반응하지 않거나 애니메이션에 따라 카메리가 따라 움직이지 못하는 문제 방지
+                _animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            }
+            else
+            {
+                // 다른 캐릭터는 오너에 시야에 안보일때 컬링
+                _animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
+            }
+        }
+
         // Animator의 Animation Event에서 호출 (Punching 클립 끝 프레임)
         public void OnAttackAnimEnd() => _combat?.HandleAttackAnimEnd();
     
