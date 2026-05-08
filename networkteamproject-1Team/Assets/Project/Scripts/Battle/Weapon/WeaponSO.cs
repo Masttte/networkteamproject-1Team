@@ -7,6 +7,7 @@ public class WeaponSO : ScriptableObject
     public string Name;
     public int damage;
     public float range;
+    [Range(0f, 180f)] public float angle = 45f;
     public float cooltime;
 
     [Header("오디오")]

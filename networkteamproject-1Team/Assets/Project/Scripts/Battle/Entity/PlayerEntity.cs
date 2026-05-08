@@ -72,10 +72,12 @@ namespace Battle
 
             if (IsOwner)
             {
-                CurHp.OnValueChanged += HandleHpChanged;
+                var go = GameObject.FindWithTag("VFX");
+                if (go == null) return; 
 
-                var go = GameObject.FindWithTag("GameController");
-                if (go.TryGetComponent<Volume>(out _volume)) _volume.profile.TryGet(out _screenVFX);
+                _volume = go.GetComponentInChildren<Volume>();
+                _volume.profile.TryGet(out _screenVFX);
+                CurHp.OnValueChanged += HandleHpChanged; // 볼륨이 있어야 구독
             }
         }
 
@@ -84,16 +86,13 @@ namespace Battle
             base.OnNetworkDespawn();
             onDeath -= AlertDeath;
             if (IsServer) _combat.OnDeathAnimFinished -= FinalizeDeath;
-            if (IsOwner)
-            {
-                CurHp.OnValueChanged -= HandleHpChanged;
-            }
+            if (IsOwner) CurHp.OnValueChanged -= HandleHpChanged;
         }
 
         void HandleHpChanged(int prev, int next)
         {
             //오너만 구독함, Hp가 줄어드는 경우만 있음
-            if ( CurHp.Value > 0) // 살아있을때만 피격 연출
+            if (CurHp.Value > 0) // 살아있을때만 피격 연출
             {
                 PlayHitVFX();
             }
@@ -107,7 +106,7 @@ namespace Battle
         async UniTaskVoid PlayHitVFXAsync()
         {
             await UniTask.Delay(300);
-            
+
             // Intensity
             _intensityHandle = LMotion.Create(_intensityInitial, _intensityTarget, _vfxDuration)
                 .WithEase(_vfxEase)

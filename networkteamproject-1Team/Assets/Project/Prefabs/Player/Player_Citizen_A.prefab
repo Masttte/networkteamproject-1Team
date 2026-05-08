@@ -2352,7 +2352,7 @@ Transform:
   m_GameObject: {fileID: 3675808014924375153}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2519999, z: 0.35499954}
+  m_LocalPosition: {x: 0.154, y: 1.2519999, z: 0.059}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3752,7 +3752,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  _hitVFXDelay: 0.3
   _vfxDuration: 0.61
   _vfxEase: 15
   _intensityInitial: -0.99
@@ -3972,7 +3971,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AcPlayerSound
   ShowTopMostFoldoutHeaderGroup: 1
   _footStep: {fileID: 6418180475301049370, guid: 5db78ea202abebb449023b5247c15a27, type: 2}
-  _land: {fileID: 0}
+  _land: {fileID: 6418180475301049370, guid: c6fc365a0314ba74a83d85cb514aa4f2, type: 2}
 --- !u!1 &6240414296530918941
 GameObject:
   m_ObjectHideFlags: 0
