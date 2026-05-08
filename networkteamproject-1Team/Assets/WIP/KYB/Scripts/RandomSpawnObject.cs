@@ -8,8 +8,6 @@ namespace WIP.KYB.Scripts
 {
     public class RandomSpawnObject : NetworkBehaviour
     {
-        private static RandomSpawnObject instance;
-        
         [Header("소환할 프리팹")]
         public GameObject generatorPrefab;
         public GameObject prisonPrefab;
@@ -78,7 +76,7 @@ namespace WIP.KYB.Scripts
         
         // 스폰된 오브젝트 싹 다 정리
         private void ClearSpawnedObjects()
-        {
+        {   
             if (!IsServer) return;
             
             foreach (var obj in _spawnedObject)

@@ -103,7 +103,7 @@ namespace KYB
             if (Physics.Raycast(ray, out hit, interactionDistance))
             {
                 // 부딪힌 물체에 IInteractable이 가능한지 확인
-                IInteractable target = hit.collider.GetComponent<IInteractable>();
+                IInteractable target = hit.collider.GetComponentInParent<IInteractable>();
 
                 if (target != null)
                 {
