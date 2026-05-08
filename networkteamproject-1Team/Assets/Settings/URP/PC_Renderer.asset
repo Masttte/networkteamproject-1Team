@@ -85,8 +85,7 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
   - {fileID: -419658504642847907}
-  - {fileID: -4378743656159778564}
-  m_RendererFeatureMap: ad6b866f10d7b46c5d9bca3fd0122dfafce81924d8933bc3
+  m_RendererFeatureMap: ad6b866f10d7b46c5d9bca3fd0122dfa
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

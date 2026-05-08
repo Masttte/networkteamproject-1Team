@@ -92,7 +92,6 @@ namespace Battle
                 var toTarget = closestPoint - origin;
                 var distance = toTarget.magnitude;
 
-                // origin이 콜라이더 내부에 있는 경우(distance == 0) 중심 방향으로 판정
                 var dirToTarget = distance > 0.001f ? toTarget.normalized : (candidate.bounds.center - origin).normalized;
 
                 if (distance > weaponSO.range)
@@ -142,24 +141,8 @@ namespace Battle
             AudioManager.Instance.PlaySfxWet(weaponSO.attackMiss, attackPoint);
         }
         
-        // BlockedServerRpc 제거 (ClientRpc만 남김, 서버에서 직접 호출)
-        /*[ServerRpc(RequireOwnership = false)]
-        void BlockedServerRpc(Vector3 hitPoint) => BlockedClientRpc(hitPoint);*/
-        
-        
         [ClientRpc]
         void BlockedClientRpc(Vector3 hitPoint) => AudioManager.Instance.PlaySfxWet(weaponSO.attackBlocked, hitPoint);
-
-        // AttackServerRpc 제거 (서버 직접 처리로 대체)
-        /*[ServerRpc(RequireOwnership = false)]
-        void AttackServerRpc(ulong targetId, int damage, Vector3 hitPoint)
-        {
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetId, out var targetNetObj);
-            if (targetNetObj.TryGetComponent(out IDamageable damageable))
-                damageable.TakeDamage(damage);
-
-            AttackClientRpc(OwnerClientId, damage, targetNetObj.OwnerClientId, hitPoint);
-        }*/
         
         [ClientRpc]
         void AttackClientRpc(Vector3 hitPoint)
