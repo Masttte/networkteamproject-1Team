@@ -64,7 +64,11 @@ namespace WIP.KYB.Scripts
 
         private void SpawnNetworkObject(GameObject prefab, Transform spawnTransform)
         {
-            if (prefab == null || spawnTransform == null) return;
+            if (prefab == null || spawnTransform == null)
+            {
+                Debug.Log("프리팹이나 스폰 Transform이 Null입니다.");
+                return;
+            }
 
             GameObject spawn = Instantiate(prefab, spawnTransform.position, spawnTransform.rotation);
             NetworkObject networkObj = spawn.GetComponent<NetworkObject>();
