@@ -733,11 +733,11 @@ PrefabInstance:
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _playerPrefabA
       value: 
-      objectReference: {fileID: 6184062823718913633, guid: 8de53801d133d4e4096e6efa3b8081ae, type: 3}
+      objectReference: {fileID: 6184062823718913633, guid: 46d525044b92d1d4a91fa61b166fd42f, type: 3}
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _playerPrefabB
       value: 
-      objectReference: {fileID: 6184062823718913633, guid: adafcf6940e536347806064ccbc7b4ed, type: 3}
+      objectReference: {fileID: 6184062823718913633, guid: 94f7e1dab9097764bb0297750e1010e4, type: 3}
     - target: {fileID: 3441935513908701369, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: _startTeamBCount
       value: 1
