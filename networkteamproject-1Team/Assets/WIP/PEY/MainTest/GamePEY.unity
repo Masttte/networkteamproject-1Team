@@ -14740,6 +14740,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1738066246}
     m_Modifications:
+    - target: {fileID: 538942666010042304, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
+      propertyPath: _ringIntervalMax
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 538942666010042304, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
+      propertyPath: _ringIntervalMin
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 544432666660590226, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 952893098
@@ -14795,6 +14803,10 @@ PrefabInstance:
     - target: {fileID: 5347118173126108879, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
       propertyPath: MinDistance
       value: 0.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347118173126108879, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5347118173126108879, guid: c9d718cd9c2a30e4aa33df8efdcd2178, type: 3}
       propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value

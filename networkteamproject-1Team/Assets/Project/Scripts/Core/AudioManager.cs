@@ -20,7 +20,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource bgmSource;
     //public AudioSource scapeSource; // 한종류가 항상 재생중이라 주석 처리중
-    public AudioSource[] wetSfxSources = new AudioSource[11]; int sfxIndex; // 배열 갯수만큼 소리 제한
+    public AudioSource[] wetSfxSources = new AudioSource[16]; int sfxIndex; // 배열 갯수만큼 소리 제한
     public AudioSource drySfxSource; // 리버브 없는 효과음 (예: UI 사운드)
 
 #if UNITY_EDITOR
