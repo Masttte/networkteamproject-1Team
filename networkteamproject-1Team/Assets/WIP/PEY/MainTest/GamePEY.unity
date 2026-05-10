@@ -1537,24 +1537,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a83f7f804691448b53e24f546b36b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VFX.VFXManager
-  _vfxDuration: 0.5
-  _vfxEase: 5
+  _vfxDuration: 0.61
+  _vfxEase: 6
   _intensityInitial: 0
-  _intensityTarget: 1
-  _distortionInitial: 0
-  _distortionTarget: 2
-  _applyToGlitchInitial: 6.26
-  _applyToGlitchTarget: 15
+  _intensityTarget: -0.88
+  _distortionInitial: 0.32
+  _distortionTarget: 0
+  _applyToGlitchInitial: 16.4
+  _applyToGlitchTarget: 6.26
+  _alertPulseDuration: 0.11
+  _alertIntensityPeak: 3.79
+  _alertDistortionPeak: 7
+  _alertPulseInterval: 0.13
+  _alertRiseEase: 22
+  _alertFallEase: 26
   _intensityDuration1: 3
   _intensityDuration2: 0.2
-  _intensityDuration3: 1
-  _intensityEase1: 2
+  _intensityDuration3: 6
+  _intensityEase1: 5
   _intensityEase2: 8
   _intensityEase3: 4
-  _intensityTarget1: -5
-  _intensityTarget2: 5
-  _deathTintHit: {r: 0.11, g: 0.11, b: 0.11, a: 1}
-  _deathTintDuration: 1
+  _intensityTarget1: -4.86
+  _intensityTarget2: 4.58
+  _deathTint: {r: 0.14, g: 0.14, b: 0.14, a: 1}
   _deathTintEase: 5
 --- !u!1 &243237310
 GameObject:
@@ -3599,9 +3604,13 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6854382151281232354, guid: a8df2b642674935458578e103b8fa4d4, type: 3}
-      propertyPath: 'NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]'
+      propertyPath: 'NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: ecb0366e3444d8f4b9954e230147eb6b, type: 2}
+    - target: {fileID: 6854382151281232354, guid: a8df2b642674935458578e103b8fa4d4, type: 3}
+      propertyPath: 'NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 63ea3ee57cec1424582bbe469118f988, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14450,6 +14459,8 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 242191564}
+  - {fileID: 1738066246}
   - {fileID: 1409011967}
   - {fileID: 2056303671}
   - {fileID: 1169209366}
@@ -14474,5 +14485,3 @@ SceneRoots:
   - {fileID: 2093832148}
   - {fileID: 449460943}
   - {fileID: 329696280}
-  - {fileID: 242191564}
-  - {fileID: 1738066246}

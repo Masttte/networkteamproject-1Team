@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using Player;
+using VFX;
 
 namespace Interactable
 {
@@ -103,10 +104,11 @@ namespace Interactable
             await UniTask.Delay(500);
             AudioResource clip = isTeamB ? _teamBAnswerClip : _teamAAnswerClip;
             AudioManager.Instance.PlaySfxDry(clip);
+            if (!isTeamB) { VFXManager.Instance.PlayAlertVFX(); }
 
-            // 클립 길이 -500 만큼 대기
+            // 클립 길이 만큼 대기
             float clipLength = AudioManager.Instance.drySfxSource.clip.length;
-            await UniTask.Delay((int)(clipLength * 1000) - 500);
+            await UniTask.Delay((int)(clipLength * 1000) - 560); // 살짝 빨리 풀리기
 
             input.EnableInput(InputCategory.Movement); // 이동 복구
         }
