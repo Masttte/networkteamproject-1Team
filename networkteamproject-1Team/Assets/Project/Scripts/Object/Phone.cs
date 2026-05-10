@@ -4,7 +4,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using Player;
-using VFX;
 
 namespace Interactable
 {
@@ -19,10 +18,10 @@ namespace Interactable
         [Header("B팀 수신 메시지 (우호적?)")]
         [SerializeField] AudioResource _teamBAnswerClip;
 
-        [Header("벨 울리는 간격 (초)")]
+        [Header("벨 언제 울릴지 (초)")]
         [SerializeField] int _ringIntervalMin = 20;
         [SerializeField] int _ringIntervalMax = 40;
-        int _ringMs = 15578;
+        int _ringMs = 15578; // 벨소리 길이. 하드코딩 중
 
         AudioSource _ringSource; // 벨소리 전용 (Stop() 가능하도록)
         CancellationTokenSource _ringCts; // 서버 전용 루프 취소용

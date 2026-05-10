@@ -156,14 +156,14 @@ public class VFXManager : MonoBehaviour
         _deathSequenceHandle = builder.Run();
     }
 
-    private void OnDisable()
-    {
-        _colorHandel.Cancel();
-        _intensityHandle.Cancel();
-        _distortionHandle.Cancel();
-        _glitchHandle.Cancel();
-        _alertIntensityHandle.Cancel();
-        _alertDistortionHandle.Cancel();
-        _deathSequenceHandle.Cancel();
-    }
+    //private void OnDisable()
+    //{
+    //    _colorHandel.Cancel();
+    //    _intensityHandle.Cancel();
+    //    _distortionHandle.Cancel();
+    //    _glitchHandle.Cancel();
+    //    _alertIntensityHandle.Cancel();
+    //    _alertDistortionHandle.Cancel();
+    //    _deathSequenceHandle.Cancel();
+    //}
 }

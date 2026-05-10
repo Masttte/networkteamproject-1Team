@@ -62,7 +62,8 @@ namespace Battle
         }
         void YouDied()
         {
-            VFXManager.Instance.PlayDeathVFX();
+            if (VFXManager.Instance != null) // 방어코드중
+                VFXManager.Instance.PlayDeathVFX();
         }
     }
 }
