@@ -7,6 +7,8 @@ namespace Monster
     {
         private MonsterController _monsterController;
 
+        [SerializeField] AudioResource _attackA;
+        [SerializeField] AudioResource _attackB;
         [SerializeField] AudioResource _footStep;
 
         private void Awake()
@@ -17,12 +19,12 @@ namespace Monster
         public void OnAttackHit()
         {
             _monsterController.OnAttackHit();
-            Debug.LogWarning("몬스터 어택!");
+            if (LocalManager.Instance.IamB) AudioManager.Instance.PlaySfxWet(_attackB, transform.position);
+            else AudioManager.Instance.PlaySfxWet(_attackA, transform.position);
         }
 
         public void OnFootStep()
         {
-            Debug.LogWarning("몬스터 핡!");
             AudioManager.Instance.PlaySfxWet(_footStep, transform.position);
         }
     }

@@ -1,33 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1233149941 &-7783549308088763773
+--- !u!1233149941 &-3436760662488436952
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: monster footstep6_{-7783549308088763773}
-  m_AudioClip: {fileID: 8300000, guid: 48b55db2e883af542859eac4b120bcc8, type: 3}
+  m_Name: Ghoul Attack Sound 3_{-3436760662488436952}
+  m_AudioClip: {fileID: 8300000, guid: 3ea8d8c3731bbd8469a88a9cabcbc7ce, type: 3}
   m_Volume: 0
   m_Enabled: 1
---- !u!1233149941 &1128262150377747715
+--- !u!1233149941 &516125274540044078
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: monster footstep5_{1128262150377747715}
-  m_AudioClip: {fileID: 8300000, guid: 5103f60fd104b014b94867b1ff5dbd42, type: 3}
+  m_Name: Ghoul Attack Sound 1_{516125274540044078}
+  m_AudioClip: {fileID: 8300000, guid: b6d251e9c9f38384299b407db7339c0d, type: 3}
   m_Volume: 0
   m_Enabled: 1
---- !u!1233149941 &2747320412429824382
+--- !u!1233149941 &5074884583213934560
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: monster footstep7_{2747320412429824382}
-  m_AudioClip: {fileID: 8300000, guid: 778ac685b14a509478f4e0f6fb8d736d, type: 3}
+  m_Name: Ghoul Attack Sound 2_{5074884583213934560}
+  m_AudioClip: {fileID: 8300000, guid: f2156b85f855d024aba65b5643818919, type: 3}
   m_Volume: 0
   m_Enabled: 1
 --- !u!1307931743 &6418180475301049370
@@ -36,25 +36,25 @@ AudioRandomContainer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _Monster1 Footstep
+  m_Name: _Monster1 Attack
   m_Volume: 0
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -1.963191, y: 0}
-  m_PitchRandomizationRange: {x: 0, y: 103.06738}
+  m_VolumeRandomizationRange: {x: 0, y: 0}
+  m_PitchRandomizationRange: {x: -88.34352, y: 88.34353}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
-  - {fileID: 1128262150377747715}
-  - {fileID: -7783549308088763773}
-  - {fileID: 2747320412429824382}
+  - {fileID: 516125274540044078}
+  - {fileID: 5074884583213934560}
+  - {fileID: -3436760662488436952}
   m_AvoidRepeatingLast: 0
-  m_PlaybackMode: 1
+  m_PlaybackMode: 2
   m_TriggerMode: 0
   m_AutomaticTriggerMode: 1
   m_LoopMode: 2
-  m_VolumeRandomizationEnabled: 1
+  m_VolumeRandomizationEnabled: 0
   m_PitchRandomizationEnabled: 1
   m_AutomaticTriggerTimeRandomizationEnabled: 0
   m_LoopCountRandomizationEnabled: 0
