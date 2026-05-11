@@ -12,10 +12,16 @@ public class MonsterView : MonoBehaviour
     // 몬스터 풀려났다는 것을 알림
     public void NotifyMonster(bool isUnlocked)
     {
+        Debug.Log("알리다.");
+        
         if (isUnlocked)
         {
             notifyMonster.text = "괴물이 풀려났다!";
             notifyMonster.color = Color.darkRed;
+        }
+        else
+        {
+            
         }
     }
 }

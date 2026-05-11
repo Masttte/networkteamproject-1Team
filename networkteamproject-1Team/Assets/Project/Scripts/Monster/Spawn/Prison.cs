@@ -10,9 +10,8 @@ namespace Monster
         [SerializeField] private Transform _monsterSpawnPoint;
         
         private PressAction _pressAction;
-        public bool Unlocked { get; private set; }
 
-        public static event Action<Prison> OnPrisonSpawned; // << 추가
+        public static event Action<Prison> OnPrisonSpawned;
 
         public NetworkVariable<bool> isUnlocked = new NetworkVariable<bool>(
             false,
@@ -23,7 +22,7 @@ namespace Monster
         {
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
-            Unlocked = false;
+            isUnlocked.Value = false;
             
             if (!IsServer) return;
             
@@ -41,29 +40,38 @@ namespace Monster
                 _pressAction.IsPressAction -= UnlockPrison;
             }
         }
-
+        
         private void UnlockPrison()
         {
-            if (Unlocked)
+            if (isUnlocked.Value)
             {
-                Debug.Log("이미 몬스터가 풀려났다.");
+                Debug.Log("이미 몬스터가 풀려났다");
                 return;
             }
+
+            if (IsServer)
+            {
+                SyncUnlock();
+            }
+            else
+            {
+                UnlockServerRpc();
+            }
             
-            Debug.Log("몬스터가 풀려났다!!!!");
-            Unlocked = true;
-            SyncUnlockClientRpc();
         }
 
-        // 클라이언트들도 true로 바꿔주는 메서드
-        [ClientRpc]
-        private void SyncUnlockClientRpc()
+        [ServerRpc(RequireOwnership = false)]
+        private void UnlockServerRpc()
         {
-            Unlocked = true;
-            
+            SyncUnlock();
+        }
+
+        private void SyncUnlock()
+        {
+            isUnlocked.Value = true;
             Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
         }
-        // ======추가======
+
 
         private void MonsterSpawn()
         {
@@ -74,7 +82,6 @@ namespace Monster
 
         public void InteractStart()
         {
-            Debug.Log("상호작용 키 눌림");
             _pressAction.StartInteraction();
         }
 

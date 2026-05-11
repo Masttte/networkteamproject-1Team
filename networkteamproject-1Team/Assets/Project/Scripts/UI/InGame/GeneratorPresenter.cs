@@ -2,12 +2,12 @@ using Battle;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GeneratorPresenter : NetworkBehaviour
+public class GeneratorPresenter : MonoBehaviour
 {
     [SerializeField] private BattleManager _battleManager;
     [SerializeField] private GeneratorView _view;
     
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
         _battleManager.repairedGenerators.OnValueChanged += OnGeneratorValue;
         
@@ -17,7 +17,7 @@ public class GeneratorPresenter : NetworkBehaviour
         _view.NecessaryGenerator(initGeneratorValue, necessaryGeneratorCount);
     }
     
-    public override void OnNetworkDespawn()
+    private void OnDestroy()
     {
         _battleManager.repairedGenerators.OnValueChanged -= OnGeneratorValue;
     }

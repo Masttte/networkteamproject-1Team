@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/WIP/KYB/Scenes/Game_UITestScene.unity
     guid: 812cb7205da6b0b4aa5e28e0dbe4034d
+  - enabled: 1
+    path: Assets/WIP/KYB/Scenes/Game_2_UITest.unity
+    guid: 60ac917500a795446972c9a3f27b75ae
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: a986ca7082d39504f89279fc1d242f7d, type: 3}
   m_UseUCBPForAssetBundles: 0
