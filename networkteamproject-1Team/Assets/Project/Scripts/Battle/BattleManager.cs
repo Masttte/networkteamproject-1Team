@@ -27,7 +27,7 @@ namespace Battle
         [SerializeField] private int spawnCount; // 스폰할 발전기 개수
         
         [Header("목표 발전기 수")] 
-        [SerializeField] private int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
+        public int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
         public override void OnNetworkSpawn()
         {
             Instance = this;
@@ -43,7 +43,7 @@ namespace Battle
         [Header("오디오")]
         public AudioResource countSound;
 
-        private NetworkVariable<int> _repairedGenerators = new NetworkVariable<int>(
+        public NetworkVariable<int> repairedGenerators = new NetworkVariable<int>(
             0,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
@@ -67,7 +67,7 @@ namespace Battle
 
             // ----- 발전기 배치 -----
             // 필요한 발전기 개수 초기화
-            if (IsServer) _repairedGenerators.Value = 0;
+            if (IsServer) repairedGenerators.Value = 0;
             // 발전기 스폰 (서버에서 실행)
             randomSpawnObject.SpawnObjects(spawnCount); 
 
@@ -115,11 +115,11 @@ namespace Battle
         {
             if (!IsServer) return;
             
-            _repairedGenerators.Value++;
-            Debug.Log($"발전기 개수 진행도 업데이트: {_repairedGenerators.Value} / {generatorRequiredCount}");
+            repairedGenerators.Value++;
+            Debug.Log($"발전기 개수 진행도 업데이트: {repairedGenerators.Value} / {generatorRequiredCount}");
             
             // A팀이 발전기를 모두 돌리면 즉시 게임 승리
-            if (_repairedGenerators.Value >= generatorRequiredCount)
+            if (repairedGenerators.Value >= generatorRequiredCount)
             {
                 Debug.Log("모든 발전기 가동 완료");
                 DeclareResultRpc(TeamType.A);

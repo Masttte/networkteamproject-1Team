@@ -8,11 +8,11 @@ public class AcPlayerSound : NetworkBehaviour
     [SerializeField] AudioResource _footStep;
     [SerializeField] AudioResource _land;
 
-    public void OnFootstep(AnimationEvent animationEvent)
+    public void OnFootstep()
     {
         AudioManager.Instance.PlaySfxWet(_footStep, this.transform.position);
     }
-    public void OnLand(AnimationEvent animationEvent)
+    public void OnLand()
     {
         if (!IsOwner) return; // 착지 이벤트는 오너가 아니면 가끔 씹혀서, 아예 오너만 받고 ClientRpc 연결
         OnLandRpc();

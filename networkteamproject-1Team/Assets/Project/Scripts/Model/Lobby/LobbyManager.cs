@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Michsky.UI.Dark;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -25,11 +24,10 @@ public class LobbyManager : MonoBehaviour
     const int JOIN_RETRY_DELAY_MS = 500;
 
     ISession _session;
+    ISession _exitSession; // 나갈떄 참조용
     string _playerName = "Player";
     bool _isStartingGame;
-    bool _isQuitting;
     float _lastGameEndRealtime = float.NegativeInfinity;
-    Coroutine _restartCooldownRoutine;
 
     /// <summary>
     /// 로비/게임 시작 흐름의 설정값 ScriptableObject
@@ -87,28 +85,20 @@ public class LobbyManager : MonoBehaviour
     private void OnDestroy()
     {
         Application.wantsToQuit -= OnWantsToQuit;
-
-        if (Instance == this) Instance = null;
     }
 
     // leave 완료까지 종료 보류, 완료 후 Application.Quit() 재호출
     private bool OnWantsToQuit()
     {
-        if (_session == null || _isQuitting) return true;
-        _isQuitting = true;
         LeaveAndQuitAsync().Forget();
         return false;
     }
 
     private async UniTaskVoid LeaveAndQuitAsync()
-    {
-        try
+    {;
+        if (_exitSession != null)
         {
-            await _session.LeaveAsync();
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning($"LobbyManager: quit-leave 실패: {e.Message}");
+            await _exitSession.LeaveAsync();
         }
         Application.Quit();
     }
@@ -145,7 +135,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"LobbyManager: 목록 조회 실패: {e.Message}");
+            Debug.LogWarning($"LobbyManager: 목록 조회 실패: {e.Message}");
             return new List<ISessionInfo>();
         }
     }
@@ -178,6 +168,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 BindSessionEvents(_session);
                 OnSessionUpdated?.Invoke(_session);
+                _exitSession = _session; // 생성 직후 세션 참조 (강종 leave용)
                 return true;
             }
             catch (Exception e) when (attempt < JOIN_MAX_RETRY && IsTransientNgoError(e))
@@ -227,7 +218,7 @@ public class LobbyManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"LobbyManager: 참여 실패: {e.Message}");
+                Debug.LogWarning($"LobbyManager: 참여 실패: {e.Message}");
                 return false;
             }
         }
@@ -267,7 +258,7 @@ public class LobbyManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"LobbyManager: 코드 참여 실패: {e.Message}");
+                Debug.LogWarning($"LobbyManager: 코드 참여 실패: {e.Message}");
                 return false;
             }
         }
@@ -295,7 +286,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"LobbyManager: 빠른 참여 실패: {e.Message}");
+            Debug.LogWarning($"LobbyManager: 빠른 참여 실패: {e.Message}");
             return false;
         }
     }
@@ -313,7 +304,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"LobbyManager: 레디 갱신 실패: {e.Message}");
+            Debug.LogWarning($"LobbyManager: 레디 갱신 실패: {e.Message}");
         }
     }
 
@@ -357,7 +348,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"LobbyManager: 호스트 게임 시작 실패: {e.Message}");
+            Debug.LogWarning($"LobbyManager: 호스트 게임 시작 실패: {e.Message}");
             _isStartingGame = false;
             return false;
         }
@@ -427,7 +418,7 @@ public class LobbyManager : MonoBehaviour
             await UniTask.Yield();
         }
 
-        Debug.LogError($"LobbyManager: 세션 진입 후 NGO 비정상 상태: {_session?.Network.State} - 강제 leave");
+        Debug.LogWarning($"LobbyManager: 세션 진입 후 NGO 비정상 상태: {_session?.Network.State} - 강제 leave");
         ISession failed = _session;
         _session = null;
         if (failed != null)

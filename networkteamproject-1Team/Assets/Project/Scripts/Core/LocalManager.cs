@@ -35,21 +35,16 @@ public partial class LocalManager : MonoBehaviour
 
     private void OnClientDisconnect(ulong clientId)
     {
-
-        // 자기 자신이 해제된 경우 = 서버와의 연결이 끊김 = Host 이탈
-        if (clientId != NetworkManager.Singleton.LocalClientId)
+        if (clientId != NetworkManager.Singleton.LocalClientId) // 내 아이디가 아닌경우
         {
-            Debug.Log("[LocalManager] 누군가 연결이 해제되었습니다."); //서버만 로그 뜨는 중
             return;
         }
         else
         {
             Debug.Log("[LocalManager] 서버와의 연결이 끊겼습니다."); // 자신 또는 서버 연결 해제 시
             if (LobbyManager.Instance.darkUIPanelMain != null) LobbyManager.Instance.CloseDarkUI();
-
             LobbyManager.Instance.LeaveSessionAsync().Forget();
         }
-
         // TODO: 연결해제 UI 처리
 
         //NetworkManager.Singleton.Shutdown();
