@@ -3752,25 +3752,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  _vfxDuration: 0.61
-  _vfxEase: 15
-  _intensityInitial: -0.99
-  _intensityTarget: 0
-  _distortionInitial: 0.32
-  _distortionTarget: 0
-  _applyToGlitchInitial: 16.4
-  _applyToGlitchTarget: 6.26
-  _intensityDuration1: 3
-  _intensityDuration2: 0.2
-  _intensityDuration3: 5
-  _intensityEase1: 11
-  _intensityEase2: 8
-  _intensityEase3: 4
-  _intensityTarget1: -5
-  _intensityTarget2: 5
-  _deathTintHit: {r: 0.11, g: 0.11, b: 0.11, a: 1}
-  _deathTintDuration: 1
-  _deathTintEase: 5
 --- !u!114 &7845125661331331448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4348,6 +4329,7 @@ GameObject:
   - component: {fileID: 4575425359928549008}
   - component: {fileID: 6437029072200910689}
   - component: {fileID: 6896144108512243135}
+  - component: {fileID: 5713380723340877129}
   m_Layer: 0
   m_Name: NameText
   m_TagString: Untagged
@@ -4363,7 +4345,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7031906156230938315}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0.023}
+  m_LocalPosition: {x: 0, y: 0, z: 0.048}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4518,6 +4500,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6437029072200910689}
   m_maskType: 0
+--- !u!114 &5713380723340877129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7031906156230938315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 278618cdff90f0a46bb416d156c4bc06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.WorldSpaceNameBillboard
 --- !u!1 &7095090921323906384
 GameObject:
   m_ObjectHideFlags: 0
