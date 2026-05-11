@@ -69,6 +69,9 @@ public class TeamManager : NetworkBehaviour
             return;
         }
 
+        // clientsCompleted.Count의 수가 6명 이상일 경우, _startTeamBCount 수를 2로 늘리는 식으로 유연하게 조정 가능
+        if (clientsCompleted.Count >= 6) _startTeamBCount = 2;
+
         activePlayers.Clear();
         // 셔플로 팀 배정 결정
         List<ulong> shuffled = new List<ulong>(clientsCompleted);
