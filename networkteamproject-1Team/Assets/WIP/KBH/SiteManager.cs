@@ -4,7 +4,7 @@ public class SiteManager : MonoBehaviour
 {
     public void OnClick_OpenOurURL()
     {
-        Application.OpenURL(" ");       // 깃 사이트
+        Application.OpenURL("https://github.com/Kyungil-smart/networkteamproject-1Team");       // 깃 사이트
     }
     
     public void OnClick_OpenItchioURL()
