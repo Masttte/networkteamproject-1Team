@@ -640,6 +640,7 @@ GameObject:
   - component: {fileID: 2144106788}
   - component: {fileID: 2144106789}
   - component: {fileID: 2144106790}
+  - component: {fileID: 2144106791}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -769,6 +770,7 @@ MonoBehaviour:
   sensitivitySlider: {fileID: 1130645048}
   sensitivityValueText: {fileID: 1180498939}
   pauseMenu: {fileID: 0}
+  settings: {fileID: 40086015}
 --- !u!114 &2144106789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,6 +798,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374169f7077d9cb4b89828196ae16dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SiteManager
+--- !u!114 &2144106791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144106782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2194d8542cf2c4b876cf35112651d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CanvasDebugger
 --- !u!1001 &1292438806105947990
 PrefabInstance:
   m_ObjectHideFlags: 0
