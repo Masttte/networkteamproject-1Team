@@ -25,6 +25,7 @@ public class SettingMenu : MonoBehaviour
     private const float MAX_SENSITIVITY = 1500f;
     
     [SerializeField] private PauseMenu pauseMenu;
+    [SerializeField] private GameObject settings;
     
     private const string KEY_DISPLAY = "display";
     private const string KEY_MASTER = "vol_master";
@@ -148,8 +149,8 @@ public class SettingMenu : MonoBehaviour
     }
 
     private void CloseSetting()
-    {
-        gameObject.SetActive(false);
+    { 
+        settings.SetActive(false);
 
         if (pauseMenu != null)
         {
