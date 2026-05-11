@@ -14,7 +14,7 @@ public class MonsterView : MonoBehaviour
     {
         if (isUnlocked)
         {
-            notifyMonster.text = "Monster is unlocked!";
+            notifyMonster.text = "괴물이 풀려났다!";
             notifyMonster.color = Color.darkRed;
         }
     }

@@ -10,6 +10,11 @@ public class GeneratorPresenter : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         _battleManager.repairedGenerators.OnValueChanged += OnGeneratorValue;
+        
+        int initGeneratorValue = _battleManager.repairedGenerators.Value;
+        int necessaryGeneratorCount = _battleManager.generatorRequiredCount;
+        
+        _view.NecessaryGenerator(initGeneratorValue, necessaryGeneratorCount);
     }
     
     public override void OnNetworkDespawn()
