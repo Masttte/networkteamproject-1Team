@@ -19,6 +19,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
     
+    [SerializeField] private GameObject settingsPanel;
+    
     private PlayerInputHandler _playerInputHandler;
     private const InputCategory PauseBlock = InputCategory.All;
     private bool isPaused = false;
@@ -82,8 +84,20 @@ public class PauseMenu : MonoBehaviour
 
     private void OnSettingsClicked()
     {
-        // TODO: 설정 패널 완성되면 여기에 연결
-        Debug.Log("[설정 버튼] - 추후 연결 예정");
+        pauseMenu.SetActive(false);
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+    }
+
+    public void OpenPausePanel()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+            pauseMenu.SetActive(true);
+        }
     }
 
     private void OnQuitClicked()
