@@ -15,5 +15,10 @@ namespace Monster
         {
             _monsterController.OnAttackHit();
         }
+
+        public void OnFootStep()
+        {
+            
+        }
     }
 }
