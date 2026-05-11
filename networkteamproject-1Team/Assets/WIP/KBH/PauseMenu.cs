@@ -40,8 +40,6 @@ public class PauseMenu : MonoBehaviour
 
     private void Update()
     {
-        if (settingsPanel != null && settingsPanel.activeSelf) return;
-        
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (confirmPanel.activeSelf)
@@ -70,8 +68,15 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void Resume()
+    private void Resume()
     {
+        if (settingsPanel != null && settingsPanel.activeSelf)
+        {
+            settingsPanel.SetActive(false);
+            pauseMenu.SetActive(true);
+            return;
+        }
+
         if (_playerInputHandler != null)
         {
             _playerInputHandler.EnableInput(PauseBlock);
@@ -99,8 +104,8 @@ public class PauseMenu : MonoBehaviour
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
-            pauseMenu.SetActive(true);
         }
+        pauseMenu.SetActive(true);
     }
 
     private void OnQuitClicked()
