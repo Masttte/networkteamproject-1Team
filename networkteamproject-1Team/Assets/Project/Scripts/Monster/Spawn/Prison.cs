@@ -12,8 +12,16 @@ namespace Monster
         private PressAction _pressAction;
         public bool Unlocked { get; private set; }
 
+        public static event Action<Prison> OnPrisonSpawned; // << 추가
+
+        public NetworkVariable<bool> isUnlocked = new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
+
         public override void OnNetworkSpawn()
         {
+            OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
             Unlocked = false;
             
