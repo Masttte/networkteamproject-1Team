@@ -73,12 +73,6 @@ public class SettingMenu : MonoBehaviour
         LoadSettings();
     }
 
-    private void Update()
-    {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
-            CloseSetting();
-    }
-
     private void OnDisplayChanged(int index)
     {
         bool ifFullscreen = (index == 1);
