@@ -12,6 +12,11 @@ namespace Monster
         private PressAction _pressAction;
         public bool Unlocked { get; private set; }
 
+        public NetworkVariable<bool> isUnlocked = new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
+
         public override void OnNetworkSpawn()
         {
             _pressAction = GetComponent<PressAction>();
