@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2817493046
+  GlobalObjectIdHash: 1628084957
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -270,16 +270,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: a5cdf36da85e081459a1a77317a2a5f6, type: 2}
-    - target: {fileID: 3490026887111630760, guid: e0a2ae8d8ae1c1f4b83e337da0b6f6b4, type: 3}
-      propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'Character1_RightFoot'\n\tTransform 'Character1_LeftShoulder'\n\tTransform
-        'right_eye1'\n\tTransform 'Character1_RightShoulder'\n\tTransform 'Character1_Head'\n\tTransform
-        'Character1_Neck'\n\tTransform 'Character1_RightLeg'\n\tTransform 'Character1_Hips'\n\tTransform
-        'Character1_LeftForeArm'\n\tTransform 'left_eye'\n\tand more ...\n\tFrom
-        animation clip 'idle4'\n\tFrom animation clip 'walk4'"
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

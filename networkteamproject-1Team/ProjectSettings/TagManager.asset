@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Monster
   - VFX
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - IamB
   - Water
   - UI
   - Player
@@ -20,7 +21,7 @@ TagManager:
   - Average
   - Beautiful
   - Interactable
-  - 
+  - Wall
   - 
   - 
   - 

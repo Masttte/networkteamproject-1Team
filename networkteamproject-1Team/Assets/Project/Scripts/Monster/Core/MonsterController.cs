@@ -47,6 +47,7 @@ namespace Monster
                 MonsterAI.enabled = false;
             }
 
+            attackRand.OnValueChanged += OnAttackRandChanged;
             currentState.OnValueChanged += OnStateChanged;
             OnStateChanged(currentState.Value, currentState.Value);
         }
@@ -60,6 +61,7 @@ namespace Monster
 
         public override void OnNetworkDespawn()
         {
+            attackRand.OnValueChanged -= OnAttackRandChanged;
             currentState.OnValueChanged -= OnStateChanged;
         }
 
@@ -148,24 +150,14 @@ namespace Monster
                     break;
                 case StateType.Attack:
                     _anim.SetFloat("MoveSpeed", 0f);
-                    AttackAnimRandServerRpc();
                     _anim.SetTrigger("Attack");
                     break;
             }
         }
 
-        [ServerRpc]
-        public void AttackAnimRandServerRpc()
+        private void OnAttackRandChanged(int oldValue, int newValue)
         {
-            attackRand.Value = UnityEngine.Random.Range(0, 2);
-
-            AnimRandClientRpc(attackRand.Value);
-        }
-
-        [ClientRpc]
-        public void AnimRandClientRpc(int rand)
-        {
-            _anim.SetInteger("AttackRand", rand);
+            _anim.SetInteger("AttackRand", newValue);
         }
 
         [ClientRpc]

@@ -32,7 +32,7 @@ MonoBehaviour:
         serializedVersion: 2
         m_Bits: 4294967291
   m_SceneGUIDs:
-  - 4c213a6e0041fb04e86ff2b6795f6dad
+  - fb046d953bedb8949b6a3af3240fe5f8
   obsoleteScenesToNotBake: []
   m_LightingScenarios:
   - Default
@@ -152,7 +152,7 @@ MonoBehaviour:
         hasMinMax: 1
         hasOnlyBiggerBricks: 0
   m_SerializedPerSceneCellList:
-  - sceneGUID: 4c213a6e0041fb04e86ff2b6795f6dad
+  - sceneGUID: fb046d953bedb8949b6a3af3240fe5f8
     cellList: 0000000009000000030000000c000000010000000a000000040000000d000000
   cellSharedDataAsset:
     m_AssetGUID: 2210fc3c5c8b8644cb54d918a02b7ccb
@@ -356,7 +356,7 @@ MonoBehaviour:
   renderingLayerMasks: []
   m_SceneBakeData:
     m_Keys:
-    - 4c213a6e0041fb04e86ff2b6795f6dad
+    - fb046d953bedb8949b6a3af3240fe5f8
     m_Values:
     - hasProbeVolume: 1
       bakeScene: 1
