@@ -896,6 +896,96 @@ PlayerCamera는 본인이 B팀일 때 SwitchToB로 ViewPoint 동적 변경 (`_vi
 
 호러 톤 + 필름 질감으로 분위기 보강. 게임 디자인상 시야 왜곡과는 별개로 전체 톤 통일 효과.
 
+### 성능 프로파일링 — 룩뎁 적용 후
+
+#### 렌더 프로파일링
+![alt text](Resources/Profiling_Render_Stats.png)
+
+| 항목 | 수치 |
+|---|---|
+| SetPass Calls | 86 |
+| Draw Calls | 792 |
+| Batches | 790 |
+| Triangles | 528.1k |
+| Vertices | 585.0k |
+| Render Textures | **199 / 1.85 GB** |
+| Used Textures | 421 / 475.2 MB |
+| Shadow Casters | 0 |
+
+#### 메모리 프로파일링
+![alt text](Resources/Profiling_Memory_Breakdown.png)
+
+| 항목 | 메모리 |
+|---|---|
+| Total Committed | 5.86 GB |
+| Graphics & Driver | 3.01 GB |
+| Textures (2354개) | 3.11 GB |
+| Managed Heap | 0.77 GB |
+
+#### 분석
+
+**런타임 성능 확보의 대가**
+
+라이팅을 전부 Baked로 처리하고 APV / Reflection Probe / Shadow Map 캐시 등으로 런타임 라이팅 계산을 메모리에 미리 저장하는 트레이드오프. Render Textures 1.85GB가 그 결과.
+
+| 항목 | 트레이드오프 |
+|---|---|
+| Realtime Light 사용 시 | CPU/GPU 부담 ↑ / 메모리 ↓ |
+| Baked Light + Probe 사용 시 | 런타임 부담 ↓ / 메모리 ↑ |
+
+개발 게임은 호러 분위기 + PC 빌드 환경이라 **메모리 비용을 감수하고 런타임 성능 확보** 결정 합리적. Shadow Casters 0이 베이크 적용 효과 그대로 드러남.
+
+#### 짚을 점
+
+- PC 빌드 기준 5.86GB Total Committed는 허용 범위
+- 모바일/콘솔 빌드 시엔 Render Textures 1.85GB 축소 필요 (해상도 조정, Probe 수 감소)
+- Textures 2354개 / 3.11GB는 Day 2에 -66% 감소 작업한 결과 위에 추가 텍스처 누적된 상태
+
+> 룩뎁 작업의 메모리 비용은 본질적 트레이드오프. 회피보다는 인지 후 플랫폼별 전략 결정이 답.
+
+### 프로젝트 세팅 최적화
+
+Project Auditor에서 발견한 추가 최적화 항목들 적용.
+
+#### Texture Streaming Mipmap 활성화
+
+밉맵 텍스처가 다수 사용되는 환경이라 Texture Streaming 기능 활성화.
+
+> 카메라 거리에 따라 mipmap 동적 로드 → 멀리 있는 오브젝트는 낮은 해상도 사용 → 메모리 ↓.
+> 디스크 I/O 약간 ↑ 트레이드오프 있지만, 본인 게임처럼 넓은 맵 + 다수 텍스처 환경에 적합.
+
+#### Prebake Collision Meshes 활성화
+
+물리 사용하는 프로젝트에서 콜리전 메시를 미리 베이킹.
+
+| 항목 | 트레이드오프 |
+|---|---|
+| 빌드 시간 | ↑ |
+| 빌드 사이즈 | ↑ |
+| 런타임 로딩/초기화 | ↓ |
+
+런타임 시점에 베이킹하는 비용을 빌드 단계로 이동. 릴리즈 빌드 + 프로파일링 빌드에 권장.
+
+#### Splash Screen 비활성화
+
+UI 에셋에서 자체 Splash Screen 구현되어 있어 Unity 기본 Splash Screen 중복 비활성화.
+
+> Player Settings의 Show Splash Screen 활성 시 첫 씬 로딩 시간 증가. 자체 구현 있으면 중복 제거가 답.
+
+#### Async Upload 버퍼 설정
+
+GPU로 텍스처/메시 데이터 업로드 속도 향상을 위한 비동기 업로드 설정 조정.
+
+| 항목 | 기본값 | 변경값 |
+|---|---|---|
+| Buffer Size | 16 MB | **32 MB** |
+| Time Slice | 2 ms | **4 ms** |
+
+대용량 텍스처 로딩 시 GPU 업로드 속도 향상. 해당 프로젝트처럼 텍스처 다수 + 넓은 맵 환경에 효과 큼.
+
+> Buffer Size는 메가바이트 단위라 메모리 여유 있는 PC 빌드 환경에서만 안전하게 증가 가능. 모바일 빌드 시 기본값 유지 권장.
+
+
 
 ---
 ## 작업 일지 양식
