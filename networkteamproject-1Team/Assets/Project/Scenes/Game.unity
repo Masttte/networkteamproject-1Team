@@ -5,11 +5,11 @@ OcclusionCullingSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_OcclusionBakeSettings:
-    smallestOccluder: 1
+    smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 1ab91d9f168685d47b6f6fa1d394aed4
-  m_OcclusionCullingData: {fileID: 36300000, guid: b25538bcc2a5c49498efa258a05ecd5e, type: 2}
+  m_SceneGUID: a8f4356b8ac193a4eb11fed2d016bc94
+  m_OcclusionCullingData: {fileID: 36300000, guid: d3d6c736e66ab1a479478e080b70e9d1, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -1230,7 +1230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &329696277
 MonoBehaviour:
   m_ObjectHideFlags: 0

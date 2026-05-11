@@ -868,6 +868,33 @@ PlayerCamera는 본인이 B팀일 때 SwitchToB로 ViewPoint 동적 변경 (`_vi
 
 > 룩뎁은 본인 시각 + 팀원 피드백을 같이 고려해야 좋은 결과. 한 명의 눈만으로는 익숙해져서 못 보는 부분 존재.
 
+#### 룩뎁 라이팅 비교
+
+이전 버전 라이팅 비주얼
+![alt text](Resources/Before_Lighting_Visual.png)
+
+최신 버전 라이팅 비주얼
+![alt text](Resources/After_Lighting_Visual.png)
+
+색온도 영역별 차별화 + Area Light + 메인 홀/지하실 대비 강화로 호러 톤 + 공간 위계 확보.
+
+### 오클루전 베이킹 조정
+
+기존 Smallest Occluder = 1 베이킹 시 플레이어 시선에서 오브젝트가 부자연스럽게 가려져 꺼지는 현상 확인.
+
+**조정**: Smallest Occluder = 5로 변경 후 재베이킹.
+
+기본값 5 정도로 크게 잡아도 성능상 큰 이슈 없음. 작은 값일수록 정밀 컬링이지만 시각 부자연스러움 증가 트레이드오프.
+
+### PP 보강 — Film Grain
+
+팀원과 합의하에 기본 시야에 Film Grain 효과 추가:
+- Type: Medium 6
+- 강도: 1
+
+![alt text](Resources/Film_Grain.jpg)
+
+호러 톤 + 필름 질감으로 분위기 보강. 게임 디자인상 시야 왜곡과는 별개로 전체 톤 통일 효과.
 
 
 ---
