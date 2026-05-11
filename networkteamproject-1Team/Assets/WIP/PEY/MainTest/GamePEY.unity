@@ -5848,6 +5848,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Phone 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4132648201669917903, guid: cd36c94939c864643a31e604dfb60558, type: 3}
+      propertyPath: _ringIntervalMax
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 4132648201669917903, guid: cd36c94939c864643a31e604dfb60558, type: 3}
+      propertyPath: _ringIntervalMin
+      value: 115
+      objectReference: {fileID: 0}
     - target: {fileID: 4156433758025281949, guid: cd36c94939c864643a31e604dfb60558, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1931227600

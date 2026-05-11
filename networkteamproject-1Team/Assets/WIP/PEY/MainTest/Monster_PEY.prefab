@@ -314,6 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cdd53c9d96b5941bbe455602d9c819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster.MonsterAnimationEvents
+  _footStep: {fileID: 6418180475301049370, guid: 1e29126c6d907ee4591fa0cc6e0c7635, type: 2}
 --- !u!114 &8491288437887915475
 MonoBehaviour:
   m_ObjectHideFlags: 0
