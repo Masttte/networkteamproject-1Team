@@ -26,6 +26,7 @@ namespace Monster
 
             if (_monsterController.DistanceToPlayer() <= _monsterController.MonsterData.attackRange)
             {
+                _monsterController.attackRand.Value = UnityEngine.Random.Range(0, 2);
                 _monsterController.ChangeState(StateType.Attack);
             }
         }

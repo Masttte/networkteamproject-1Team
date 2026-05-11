@@ -41,8 +41,8 @@ namespace Monster
         
             if (_timer >= _monsterController.MonsterData.attackCooldown)
             {
-                AttackCheck();
-                _monsterController.AttackAnimRandServerRpc();
+                AttackCheck(); 
+                _monsterController.attackRand.Value = UnityEngine.Random.Range(0, 2);
                 _monsterController.TriggerAttackClientRpc();
                 _timer = 0;
             }
