@@ -5475,7 +5475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1867871494217144527, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_Intensity
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1867871494217144527, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_AreaSize.x
@@ -5631,7 +5631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2991576503509856491, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_Intensity
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2991576503509856491, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_AreaSize.x
@@ -5815,7 +5815,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3944741415970412079, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_Intensity
-      value: 2.3075
+      value: 4.36
       objectReference: {fileID: 0}
     - target: {fileID: 3944741415970412079, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_BounceIntensity
@@ -5823,7 +5823,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3944741415970412079, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_ColorTemperature
-      value: 6000
+      value: 6200
       objectReference: {fileID: 0}
     - target: {fileID: 4236188987093068515, guid: 9936bf8d3e70aaa4baceb15bd906e082, type: 3}
       propertyPath: m_Intensity
