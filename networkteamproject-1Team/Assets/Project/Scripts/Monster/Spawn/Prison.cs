@@ -22,9 +22,9 @@ namespace Monster
         {
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
-            isUnlock.Value = false;
             
             if (!IsServer) return;
+            isUnlock.Value = false;
             
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
