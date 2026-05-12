@@ -16,6 +16,7 @@ namespace Player
         private PlayerAnimation    _animation;
         private PlayerCombat       _combat;
         private PlayerInteractor   _interactor;
+        private PlayerInteractorUI _interactorUI;
         
         // 캐싱
         void Awake()
@@ -50,6 +51,12 @@ namespace Player
             _camera.SetupOwnerView(); // ← ViewPoint 활성화 먼저
             // 카메라 ViewPoint를 Raycast 시작점으로 주입
             _interactor.SetCamera(_camera);   // ← 카메라 자체를 주입하여 카메라에서
+            // 씬에서 PlayerInteractorUI 찾아서 캐싱 + 초기화
+            _interactorUI = FindAnyObjectByType<PlayerInteractorUI>();
+            if (_interactorUI != null)
+                _interactorUI.Init(_interactor);
+            else
+                Debug.LogWarning("[PlayerController] PlayerInteractorUI를 씬에서 찾을 수 없습니다.");
             // Owner만 모듈 간 의존성 주입 허용
             _input.Initialize(_movement, _camera, _combat, _interactor);
 

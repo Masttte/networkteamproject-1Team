@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -29,6 +30,8 @@ namespace Player
         
         public IInteractable CurrentTarget => _currentTarget;
         public bool IsInteracting => _activeInteraction != null;
+        
+        public event Action<IInteractable> OnTargetChanged;
         
         private void Awake()
         {
@@ -76,18 +79,23 @@ namespace Player
             Transform origin = _camera != null ? _camera.ViewPoint : _detectOrigin;
             if (origin == null) return;
             
+            IInteractable newTarget = null;
+            
             Ray ray = new Ray(origin.position, origin.forward);
             
             if (Physics.Raycast(ray, out RaycastHit hit, _interactRange, _interactableLayer))
             {
                 if (hit.collider.TryGetComponent(out IInteractable interactable))
                 {
-                    _currentTarget = interactable;
-                    return;
+                    newTarget = interactable;
                 }
             }
-            
-            _currentTarget = null;
+            // Raycast 실패 시에도 비교
+            if (newTarget != _currentTarget)
+            {
+                _currentTarget = newTarget;
+                OnTargetChanged?.Invoke(_currentTarget);
+            }
         }
     }
 }

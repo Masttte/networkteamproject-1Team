@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Monster
@@ -22,7 +23,7 @@ namespace Monster
         public void Update()
         {
             if (_monsterController.Prison == null) return;
-            if (!_monsterController.Prison.Unlocked) return;
+            if (!_monsterController.Prison.isUnlock.Value) return;
             
             _timer += Time.deltaTime;
         
@@ -34,6 +35,7 @@ namespace Monster
 
         public void Exit()
         {
+            if (_monsterController.Prison != null) _monsterController.Prison.gameObject.GetComponent<NetworkObject>().Despawn();
             _timer = 0f;
         }
     }

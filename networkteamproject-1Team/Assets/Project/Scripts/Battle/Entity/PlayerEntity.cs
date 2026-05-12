@@ -1,12 +1,15 @@
 using Player;
 using Unity.Netcode;
-using VFX;
+using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Battle
 {
     public class PlayerEntity : EntityBase
     {
         PlayerCombat _combat;
+
+        [SerializeField] AudioResource _deathSound;
 
         public override void OnNetworkSpawn()
         {
@@ -64,6 +67,8 @@ namespace Battle
         {
             if (VFXManager.Instance != null) // 방어코드중
                 VFXManager.Instance.PlayDeathVFX();
+
+            AudioManager.Instance.PlaySfxDry(_deathSound);
         }
     }
 }

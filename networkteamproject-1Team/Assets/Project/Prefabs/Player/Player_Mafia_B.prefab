@@ -3943,7 +3943,7 @@ GameObject:
   - component: {fileID: 6456544674719540424}
   - component: {fileID: 625369811163074688}
   - component: {fileID: 6907663841478801182}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Player_Mafia_B
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -4160,6 +4160,7 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  _deathSound: {fileID: 8300000, guid: 8958c8901749fb943bf943096f5115bf, type: 3}
 --- !u!114 &7845125661331331448
 MonoBehaviour:
   m_ObjectHideFlags: 0

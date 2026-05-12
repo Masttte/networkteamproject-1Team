@@ -10,11 +10,11 @@ namespace Monster
         [SerializeField] private Transform _monsterSpawnPoint;
         
         private PressAction _pressAction;
-        public bool Unlocked { get; private set; }
+        private MeshRenderer _monsterRenderer;
 
-        public static event Action<Prison> OnPrisonSpawned; // << 추가
+        public static event Action<Prison> OnPrisonSpawned;
 
-        public NetworkVariable<bool> isUnlocked = new NetworkVariable<bool>(
+        public NetworkVariable<bool> isUnlock = new NetworkVariable<bool>(
             false,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
@@ -23,9 +23,10 @@ namespace Monster
         {
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
-            Unlocked = false;
+            _monsterRenderer = GetComponentInChildren<MeshRenderer>();
             
             if (!IsServer) return;
+            isUnlock.Value = false;
             
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
@@ -41,29 +42,38 @@ namespace Monster
                 _pressAction.IsPressAction -= UnlockPrison;
             }
         }
-
+        
         private void UnlockPrison()
         {
-            if (Unlocked)
+            if (isUnlock.Value)
             {
-                Debug.Log("이미 몬스터가 풀려났다.");
+                Debug.Log("이미 몬스터가 풀려났다");
                 return;
             }
-            
-            Debug.Log("몬스터가 풀려났다!!!!");
-            Unlocked = true;
-            SyncUnlockClientRpc();
+
+            if (IsServer)
+            {
+                SyncUnlock();
+            }
+            else
+            {
+                UnlockServerRpc();
+            }
         }
 
-        // 클라이언트들도 true로 바꿔주는 메서드
-        [ClientRpc]
-        private void SyncUnlockClientRpc()
+        [ServerRpc(RequireOwnership = false)]
+        private void UnlockServerRpc()
         {
-            Unlocked = true;
-            
-            Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
+            SyncUnlock();
         }
-        // ======추가======
+
+        private void SyncUnlock()
+        {
+            isUnlock.Value = true;
+            Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
+            _monsterRenderer.enabled = false;
+        }
+
 
         private void MonsterSpawn()
         {
@@ -74,7 +84,6 @@ namespace Monster
 
         public void InteractStart()
         {
-            Debug.Log("상호작용 키 눌림");
             _pressAction.StartInteraction();
         }
 
