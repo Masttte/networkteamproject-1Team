@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1457734055
+  GlobalObjectIdHash: 2929833961
   InScenePlacedSourceGlobalObjectIdHash: 1628084957
   DeferredDespawnTick: 0
   Ownership: 1
@@ -153,13 +153,13 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <MonsterData>k__BackingField:
     patrolPoints: []
-    speed: 0
+    speed: 5
     offset: {x: 0, y: 1, z: 0}
-    idleTime: 5
-    chaseRange: 8
-    attackRange: 3.5
+    idleTime: 3.5
+    chaseRange: 100
+    attackRange: 3.64
     attackDamage: 40
-    attackCooldown: 2
+    attackCooldown: 1.5
     isAttacking: 0
   currentState:
     UpdateTraits:
@@ -336,7 +336,7 @@ MonoBehaviour:
   _monsterAvatar: {fileID: 9000000, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
   _isHelpLoop: 0
   _locked: {fileID: 8300000, guid: 2647b169f72da724bad3c85d595ab312, type: 3}
-  _talk: {fileID: 8300000, guid: 438f70cb51dc54c49b87935182e1901b, type: 3}
+  _talk: {fileID: 8300000, guid: dfcf7d31b40702c4e8a7a6c1f7f7309f, type: 3}
   _threat: {fileID: 8300000, guid: c3bd559fe6c068b479f5a5084bc64dd1, type: 3}
   _threatAudioMs: 23000
   _lockedIntervalMin: 7
@@ -363,7 +363,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 0.56
+  MinDistance: 1.49
   MaxDistance: 28.68
   Pan2D: 0
   rolloffMode: 0
@@ -448,6 +448,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 390106743141111680}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -486,6 +498,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8211034193695611740, guid: e216a571f0b824a4ea4a9ecc1bee62d2, type: 3}
       propertyPath: m_Layer
@@ -796,6 +812,18 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -834,6 +862,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8380149656077659870, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
       propertyPath: m_Layer
@@ -1006,6 +1038,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1674977050410591306, guid: f2b132adab8f2ee448795f96cc8180cc, type: 3}
       propertyPath: m_Layer

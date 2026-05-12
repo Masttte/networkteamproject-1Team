@@ -1,4 +1,5 @@
 using System.Threading;
+using Battle;
 using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
@@ -49,6 +50,16 @@ namespace Monster
         #region 아바타 설정
 
         protected override void OnNetworkPostSpawn()
+        {
+            BattleManager.Instance.OnGameStart += OnGameSetup;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            BattleManager.Instance.OnGameStart -= OnGameSetup;
+        }
+
+        private void OnGameSetup()
         {
             if (LocalManager.Instance.IamB)
                 ApplyNormalAvatar();
