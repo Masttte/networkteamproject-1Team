@@ -26,6 +26,8 @@ public class PauseMenu : MonoBehaviour
     private const InputCategory PauseBlock = InputCategory.All;
     private bool isPaused = false;
 
+    TutorialKeyGuide _TKG; //추가
+
     private void Start()
     {
         resumeButton.onClick.AddListener(Resume);
@@ -36,12 +38,16 @@ public class PauseMenu : MonoBehaviour
         
         pauseMenu.SetActive(false);
         confirmPanel.SetActive(false);
+
+        _TKG = GetComponent<TutorialKeyGuide>(); //추가
     }
 
     private void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
+            _TKG.CloseGuide(); //추가
+
             if (confirmPanel.activeSelf)
             {
                 OnConfirmNo();

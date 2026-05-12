@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 게임 씬 진입 후 다른 플레이어 합류를 기다리는 동안 표시되는 오버레이 UI
@@ -8,7 +9,9 @@ using Unity.Netcode;
 /// </summary>
 public class GameWaitingUI : NetworkBehaviour
 {
-    public static GameWaitingUI Instance { get; private set; }
+    public static GameWaitingUI Instance;
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void Init() => Instance = null;
 
     [SerializeField] GameObject _panel;
     [SerializeField] TMP_Text _statusText;
@@ -26,7 +29,7 @@ public class GameWaitingUI : NetworkBehaviour
     public override void OnDestroy()
     {
         base.OnDestroy();
-        if (Instance == this) Instance = null;
+        Instance = null;
     }
 
     public void UpdateWaitingText(int current, int expected)
@@ -40,8 +43,10 @@ public class GameWaitingUI : NetworkBehaviour
         _statusText.text = $"씬 로드 Timeout 발생! ({timeoutCount}명)";
     }
 
-    public void HideWaitingPanel()
+    public async UniTaskVoid HideWaitingPanel()
     {
+        _statusText.text = "<color=green>F1</color>키를 눌러 세력을 확인하세요";
+        await UniTask.Delay(3000);
         _panel.SetActive(false);
     }
 }
