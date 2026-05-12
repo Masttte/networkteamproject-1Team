@@ -33,7 +33,6 @@ public class MonsterPresenter : MonoBehaviour
 
     private void OnMonsterUnlocked(bool previousValue, bool newValue)
     {
-        Debug.Log("4");
         _view.NotifyMonster(newValue);
     }
 }

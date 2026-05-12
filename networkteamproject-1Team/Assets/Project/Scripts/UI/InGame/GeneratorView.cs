@@ -10,6 +10,6 @@ public class GeneratorView : MonoBehaviour
     
     public void NecessaryGenerator(int repairedNumber, int repairedCount)
     {
-        repairGenerator.text = $"{repairedNumber.ToString()} / {repairedCount.ToString()}";
+        repairGenerator.text = $"활성화된 발전기 개수 : {repairedNumber.ToString()} / {repairedCount.ToString()}";
     }
 }

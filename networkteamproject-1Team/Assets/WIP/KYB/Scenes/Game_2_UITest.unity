@@ -14393,6 +14393,14 @@ PrefabInstance:
 '
       objectReference: {fileID: 0}
     - target: {fileID: 8542823711326255146, guid: 47da796e3c89cc143a5765c460ab716f, type: 3}
+      propertyPath: m_margin.x
+      value: -228.24811
+      objectReference: {fileID: 0}
+    - target: {fileID: 8542823711326255146, guid: 47da796e3c89cc143a5765c460ab716f, type: 3}
+      propertyPath: m_margin.z
+      value: -209.5216
+      objectReference: {fileID: 0}
+    - target: {fileID: 8542823711326255146, guid: 47da796e3c89cc143a5765c460ab716f, type: 3}
       propertyPath: m_fontColor.a
       value: 1
       objectReference: {fileID: 0}
