@@ -1,7 +1,5 @@
-using System;
 using Battle;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIVisibilityManager : MonoBehaviour
 {
