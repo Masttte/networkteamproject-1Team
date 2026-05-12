@@ -19,24 +19,31 @@ namespace Monster
         [Header("Audio")]
         [SerializeField] AudioResource _locked;
         [SerializeField] AudioResource _talk;
+        [SerializeField] AudioResource _threat;
         AudioSource _source;
 
         [Header("Audio Timing")]
         [SerializeField] float _lockedIntervalMin = 7f;
         [SerializeField] float _lockedIntervalMax = 14f;
         [SerializeField] float _talkRange = 3f;
+        [SerializeField] float _threatRange = 5f;
 
         NetworkVariable<bool> _isTalked = new NetworkVariable<bool>(false);
-        CancellationTokenSource _lockedCts;
+        MonsterController _monsterController;
+
+        bool _wasBInRange;
+        bool _wasAInRange;
 
         static readonly int BLayer = 1 << 3;
+        static readonly int ALayer = 1 << 6;
 
-        #region 아바타 설정
         private void Awake()
         {
             _rootAnimator = GetComponent<Animator>();
             _source = GetComponent<AudioSource>();
+            _monsterController = GetComponent<MonsterController>();
         }
+        #region 아바타 설정
 
         protected override void OnNetworkPostSpawn()
         {
@@ -64,55 +71,51 @@ namespace Monster
         #region 오디오
         public override void OnNetworkSpawn()
         {
-            _isTalked.OnValueChanged += OnLockedChanged;
-
             if (IsServer)
             {
-                _lockedCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
-                LockedLoopAsync(_lockedCts.Token).Forget();
+                LockedLoopAsync().Forget();
             }
         }
 
-        public override void OnNetworkDespawn()
+        async UniTaskVoid LockedLoopAsync()
         {
-            _isTalked.OnValueChanged -= OnLockedChanged;
-            _lockedCts?.Cancel();
-            _lockedCts?.Dispose();
-        }
-
-        void OnLockedChanged(bool prev, bool next)
-        {
-            if (next && IsServer)
-                _lockedCts?.Cancel();
-        }
-
-        async UniTaskVoid LockedLoopAsync(CancellationToken ct)
-        {
-            while (!ct.IsCancellationRequested)
+            while (true)
             {
                 float delay = UnityEngine.Random.Range(_lockedIntervalMin, _lockedIntervalMax);
-                await UniTask.Delay((int)(delay * 1000), cancellationToken: ct);
-                if (ct.IsCancellationRequested) break;
+                await UniTask.Delay((int)(delay * 1000));
 
-                PlayLockedRpc();
+                if (_isTalked.Value || _monsterController.Prison.isUnlock.Value) break;
+
+                PlayHelpRpc();
             }
         }
 
         private void Update()
         {
-            if (!IsServer || _isTalked.Value) return;
+            if (!IsServer) return;
 
-            bool isBInRange = Physics.CheckSphere(transform.position, _talkRange, BLayer);
-
-            if (isBInRange)
+            // locked 상태일 때만 B팀 근접 대사 체크
+            if (!_monsterController.Prison.isUnlock.Value)
             {
-                _isTalked.Value = true;
-                PlayTalkRpc();
+                bool isBInRange = Physics.CheckSphere(transform.position, _talkRange, BLayer);
+                if (isBInRange && !_wasBInRange)
+                {
+                    PlayTalkRpc();
+                    _wasBInRange = true;
+                }
+            }
+
+            // 항상: A팀(위협 대상) 근접 체크
+            bool isAInRange = Physics.CheckSphere(transform.position, _threatRange, ALayer);
+            if (isAInRange && !_wasAInRange)
+            {
+                PlayThreatRpc();
+                _wasAInRange = true;
             }
         }
 
         [Rpc(SendTo.Everyone)]
-        void PlayLockedRpc()
+        void PlayHelpRpc()
         {
             if (!LocalManager.Instance.IamB) return;
             AudioManager.Instance.PlaySfxWet(_locked, transform.position);
@@ -121,9 +124,26 @@ namespace Monster
         [Rpc(SendTo.Everyone)]
         void PlayTalkRpc()
         {
+            if (IsServer) _isTalked.Value = true;
             if (!LocalManager.Instance.IamB) return;
+
             _source.resource = _talk;
             _source.Play();
+        }
+
+        [Rpc(SendTo.Everyone)]
+        void PlayThreatRpc()
+        {
+            if (LocalManager.Instance.IamB) return; // A팀에게만 재생
+            _source.resource = _threat;
+            _source.Play();
+            WaitAndPlayLockedAsync().Forget();
+        }
+        // 단순 기다리기
+        async UniTaskVoid WaitAndPlayLockedAsync()
+        {
+            await UniTask.Delay(23000); // 하드코딩 하면 그만이야~
+            _wasAInRange = false;
         }
         #endregion
     }
