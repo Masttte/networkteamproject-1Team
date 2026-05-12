@@ -2681,6 +2681,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: YOUDIED
       objectReference: {fileID: 0}
+    - target: {fileID: 2349811884050058250, guid: ce4f5e1ca9b48ed4c8be5e3e1221df7d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8835796708375281346, guid: ce4f5e1ca9b48ed4c8be5e3e1221df7d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
