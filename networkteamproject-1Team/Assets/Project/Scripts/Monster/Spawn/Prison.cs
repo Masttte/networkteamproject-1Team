@@ -10,6 +10,7 @@ namespace Monster
         [SerializeField] private Transform _monsterSpawnPoint;
         
         private PressAction _pressAction;
+        private MeshRenderer _monsterRenderer;
 
         public static event Action<Prison> OnPrisonSpawned;
 
@@ -22,6 +23,7 @@ namespace Monster
         {
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
+            _monsterRenderer = GetComponentInChildren<MeshRenderer>();
             isUnlock.Value = false;
             
             if (!IsServer) return;
@@ -57,7 +59,6 @@ namespace Monster
             {
                 UnlockServerRpc();
             }
-            
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -70,6 +71,7 @@ namespace Monster
         {
             isUnlock.Value = true;
             Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
+            _monsterRenderer.enabled = false;
         }
 
 
