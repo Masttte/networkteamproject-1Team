@@ -84,7 +84,7 @@ namespace Monster
                 float delay = UnityEngine.Random.Range(_lockedIntervalMin, _lockedIntervalMax);
                 await UniTask.Delay((int)(delay * 1000));
 
-                if (_isTalked.Value || _monsterController.Prison.Unlocked) break;
+                if (_isTalked.Value || _monsterController.Prison.isUnlock.Value) break;
 
                 PlayHelpRpc();
             }
@@ -95,7 +95,7 @@ namespace Monster
             if (!IsServer) return;
 
             // locked 상태일 때만 B팀 근접 대사 체크
-            if (!_monsterController.Prison.Unlocked)
+            if (!_monsterController.Prison.isUnlock.Value)
             {
                 bool isBInRange = Physics.CheckSphere(transform.position, _talkRange, BLayer);
                 if (isBInRange && !_wasBInRange)

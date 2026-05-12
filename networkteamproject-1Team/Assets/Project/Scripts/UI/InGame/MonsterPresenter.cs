@@ -20,15 +20,15 @@ public class MonsterPresenter : MonoBehaviour
 
         if (_prison != null)
         {
-            _prison.isUnlocked.OnValueChanged -= OnMonsterUnlocked;
+            _prison.isUnlock.OnValueChanged -= OnMonsterUnlocked;
         }
     }
 
     private void HandlePrisonSpawned(Prison prisonSpawned)
     {
-        Debug.Log(prisonSpawned.isUnlocked.Value);
+        Debug.Log(prisonSpawned.isUnlock.Value);
         _prison = prisonSpawned;
-        _prison.isUnlocked.OnValueChanged += OnMonsterUnlocked;
+        _prison.isUnlock.OnValueChanged += OnMonsterUnlocked;
     }
 
     private void OnMonsterUnlocked(bool previousValue, bool newValue)

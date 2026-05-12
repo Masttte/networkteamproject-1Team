@@ -13,7 +13,7 @@ namespace Monster
 
         public static event Action<Prison> OnPrisonSpawned;
 
-        public NetworkVariable<bool> isUnlocked = new NetworkVariable<bool>(
+        public NetworkVariable<bool> isUnlock = new NetworkVariable<bool>(
             false,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
@@ -22,7 +22,7 @@ namespace Monster
         {
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
-            isUnlocked.Value = false;
+            isUnlock.Value = false;
             
             if (!IsServer) return;
             
@@ -43,7 +43,7 @@ namespace Monster
         
         private void UnlockPrison()
         {
-            if (isUnlocked.Value)
+            if (isUnlock.Value)
             {
                 Debug.Log("이미 몬스터가 풀려났다");
                 return;
@@ -68,7 +68,7 @@ namespace Monster
 
         private void SyncUnlock()
         {
-            isUnlocked.Value = true;
+            isUnlock.Value = true;
             Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
         }
 
