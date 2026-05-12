@@ -54,7 +54,7 @@ public class WinPanel : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    private void GoToLobby()
+    public void GoToLobby()
     {
         LobbyManager.Instance.LeaveSessionAsync().Forget();
         SceneLoader.LoadLocal(0);
