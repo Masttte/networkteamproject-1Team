@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Monster
@@ -34,6 +35,7 @@ namespace Monster
 
         public void Exit()
         {
+            if (_monsterController.Prison != null) _monsterController.Prison.gameObject.GetComponent<NetworkObject>().Despawn();
             _timer = 0f;
         }
     }
