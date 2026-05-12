@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 9067660339830688799}
   - component: {fileID: 6260804204787944988}
   - component: {fileID: 98354363842161029}
+  - component: {fileID: 1555353094215050581}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -214,6 +215,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374169f7077d9cb4b89828196ae16dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SiteManager
+--- !u!114 &1555353094215050581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3124878029446266823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3e3f33de5c1c14e856bde52cd242e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinPanel
+  citizenWinPanel: {fileID: 2207028874589733963}
+  mafiaWinPanel: {fileID: 3410727009297367223}
+  fadeDuration: 2
 --- !u!1001 &2776690152502784816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -818,6 +834,34 @@ PrefabInstance:
     - target: {fileID: 1909725390400090514, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1555353094215050581}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToLobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WinPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419440687053476625, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7454829155686829688, guid: 406bf0bb3765fe84d8e2196f6a1f17c7, type: 3}
       propertyPath: m_IsActive
@@ -2472,10 +2516,22 @@ PrefabInstance:
     - target: {fileID: 391773514072331038, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 3124878029446266823}
+      objectReference: {fileID: 1555353094215050581}
     - target: {fileID: 391773514072331038, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 391773514072331038, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToLobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 391773514072331038, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WinPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 391773514072331038, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5697326629841469079, guid: 38e3760ee128f9944b3dd8d74de2becb, type: 3}
       propertyPath: m_Name
