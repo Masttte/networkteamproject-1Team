@@ -83,19 +83,29 @@ public class SettingMenu : MonoBehaviour
 
     private void OnMasterChanged(float value)
     {
-        // TODO: AudioManager 연결 필요 AudioManager.Instance.SetMasterVolume(value);
+        // TODO: AudioManager 연결 필요
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetMasterVolume(value);
+        }
         PlayerPrefs.SetFloat(KEY_MASTER, value);
     }
     
     private void OnBgmChanged(float value)
     {
-        // TODO: AudioManager.Instance.SetBGMVolume(value);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetMusicVolume(value);
+        }
         PlayerPrefs.SetFloat(KEY_BGM, value);
     }
 
     private void OnSfxChanged(float value)
     {
-        // TODO: AudioManager.Instance.SetSFXVolume(value);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetSFXVolume(value);
+        }
         PlayerPrefs.SetFloat(KEY_SFX, value);
     }
 
@@ -127,7 +137,14 @@ public class SettingMenu : MonoBehaviour
         masterSlider?.SetValueWithoutNotify(master);
         bgmSlider?.SetValueWithoutNotify(bgm);
         sfxSlider?.SetValueWithoutNotify(sfx);
-        
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetMasterVolume(master);
+            AudioManager.Instance.SetMusicVolume(bgm);
+            AudioManager.Instance.SetSFXVolume(sfx);
+        }
+
         // Sensitivity
         float sensitivity = PlayerPrefs.GetFloat(KEY_SENS, DEFAULT_SENSITIVITY);
         
