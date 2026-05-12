@@ -425,6 +425,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 508569757338675149}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToLobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WinPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948851599198611566, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2163261087989505419, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -509,6 +537,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8053635966415536588, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 508569757338675149}
+    - target: {fileID: 8053635966415536588, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToLobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 8053635966415536588, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WinPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8053635966415536588, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -534,6 +578,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc3e3f33de5c1c14e856bde52cd242e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinPanel
+  citizenWinPanel: {fileID: 508569757338675151}
+  mafiaWinPanel: {fileID: 508569757338675150}
+  fadeDuration: 2
+--- !u!225 &508569757338675150 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 3410727009297367223, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+  m_PrefabInstance: {fileID: 508569757338675147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &508569757338675151 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 2207028874589733963, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+  m_PrefabInstance: {fileID: 508569757338675147}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
