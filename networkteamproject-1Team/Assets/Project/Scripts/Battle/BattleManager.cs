@@ -22,20 +22,19 @@ namespace Battle
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init() => Instance = null;
 
+        [HideInInspector] public TeamManager tm;
+        private void Awake()
+        {
+            Instance = this;
+            tm = GetComponent<TeamManager>();
+        }
+
         [Header("스폰 시스템 연결")]
         [SerializeField] private RandomSpawnObject randomSpawnObject;
         [SerializeField] private int spawnCount; // 스폰할 발전기 개수
         
         [Header("목표 발전기 수")] 
         public int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
-        public override void OnNetworkSpawn()
-        {
-            Instance = this;
-        }
-        
-        
-        [HideInInspector] public TeamManager tm;
-        private void Awake() => tm = GetComponent<TeamManager>();
 
         public event Action OnGameStart;
         public event Action<TeamType> OnGameEnd;

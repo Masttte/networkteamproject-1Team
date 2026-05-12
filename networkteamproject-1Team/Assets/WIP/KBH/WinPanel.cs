@@ -10,7 +10,7 @@ public class WinPanel : MonoBehaviour
     public CanvasGroup mafiaWinPanel;       // 마피아 승리 패널
     public float fadeDuration = 2.0f;       // 페이드인 되는시간
 
-    private void OnEnable()
+    private void Start()
     {
         if (BattleManager.Instance != null)
         {
@@ -40,6 +40,7 @@ public class WinPanel : MonoBehaviour
 
     private IEnumerator FadeInRoutine(CanvasGroup target)
     {
+        Debug.Log(" 떳어 ");
         float timer = 0f;
         while (timer < fadeDuration)
         {

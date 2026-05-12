@@ -32,26 +32,10 @@ public class TutorialKeyGuide : MonoBehaviour
         {
             closeButton.onClick.AddListener(CloseGuide);
         }
-        
-        GameManager.Instance.OnGameStarted += OnGameStarted;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStarted -= OnGameStarted;
-        }
-    }
-
-    private void OnGameStarted()
-    {
     }
 
     private void Update()
     {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-
         if (Keyboard.current.f1Key.wasPressedThisFrame)
         {
             ToggleGuide();
@@ -86,7 +70,7 @@ public class TutorialKeyGuide : MonoBehaviour
         isOpen = true;
     }
 
-    private void CloseGuide()
+    public void CloseGuide()
     {
         citizenGuide.SetActive(false);
         mafiaGuide.SetActive(false);
