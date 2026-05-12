@@ -4,18 +4,17 @@ using Monster;
 using Unity.Netcode;
 using UnityEngine;
 
-public class MonsterPresenter : NetworkBehaviour
+public class MonsterPresenter : MonoBehaviour
 {
     private Prison _prison;
     [SerializeField] private MonsterView _view;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        Debug.Log("1");
         Prison.OnPrisonSpawned += HandlePrisonSpawned;
     }
     
-    public override void OnNetworkDespawn()
+    private void OnDestroy()
     {
         Prison.OnPrisonSpawned -= HandlePrisonSpawned;
 
@@ -27,15 +26,13 @@ public class MonsterPresenter : NetworkBehaviour
 
     private void HandlePrisonSpawned(Prison prisonSpawned)
     {
+        Debug.Log(prisonSpawned.isUnlocked.Value);
         _prison = prisonSpawned;
         _prison.isUnlocked.OnValueChanged += OnMonsterUnlocked;
     }
 
     private void OnMonsterUnlocked(bool previousValue, bool newValue)
     {
-        if (previousValue == false && newValue == true)
-        {
-            _view.NotifyMonster(newValue);
-        }
+        _view.NotifyMonster(newValue);
     }
 }
