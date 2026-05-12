@@ -87,6 +87,11 @@ public class AudioManager : MonoBehaviour
         // 오디오 믹서의 값은 -80 ~ 0까지이기 때문에 0.0001 ~ 1의 Log10 * 20을 한다.
         audioMixer.SetFloat(audioMixerType.ToString(), Mathf.Log10(volume) * 20);
     }
+
+    public void SetMasterVolume(float value) => SetAudioVolume(AudioMixerType.Master, Mathf.Max(value, 0.0001f));
+    public void SetMusicVolume(float value)  => SetAudioVolume(AudioMixerType.Music, Mathf.Max(value, 0.0001f));
+    public void SetSFXVolume(float value)    => SetAudioVolume(AudioMixerType.SFX, Mathf.Max(value, 0.0001f));
+    
     void SetAudioMute(AudioMixerType audioMixerType)
     {
         int type = (int)audioMixerType;
