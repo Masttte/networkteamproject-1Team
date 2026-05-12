@@ -5848,21 +5848,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Phone 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4132648201669917903, guid: cd36c94939c864643a31e604dfb60558, type: 3}
-      propertyPath: _ringIntervalMax
-      value: 160
-      objectReference: {fileID: 0}
-    - target: {fileID: 4132648201669917903, guid: cd36c94939c864643a31e604dfb60558, type: 3}
-      propertyPath: _ringIntervalMin
-      value: 115
-      objectReference: {fileID: 0}
     - target: {fileID: 4156433758025281949, guid: cd36c94939c864643a31e604dfb60558, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1931227600
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156433758025281949, guid: cd36c94939c864643a31e604dfb60558, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 2337312411
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14761,6 +14749,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9968660939932280, guid: 74ff38d5d2f28f34eb4a3bbda24164e1, type: 3}
+      propertyPath: _intensityDuration1
+      value: 4.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9968660939932280, guid: 74ff38d5d2f28f34eb4a3bbda24164e1, type: 3}
+      propertyPath: _intensityDuration2
+      value: 0.11
+      objectReference: {fileID: 0}
     - target: {fileID: 7403029755986293710, guid: 74ff38d5d2f28f34eb4a3bbda24164e1, type: 3}
       propertyPath: m_Name
       value: VFXManager
