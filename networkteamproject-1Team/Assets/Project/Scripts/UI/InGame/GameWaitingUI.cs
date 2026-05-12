@@ -13,7 +13,6 @@ public class GameWaitingUI : NetworkBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Init() => Instance = null;
 
-    [SerializeField] GameObject _panel;
     [SerializeField] TMP_Text _statusText;
 
     private void Awake()
@@ -45,8 +44,8 @@ public class GameWaitingUI : NetworkBehaviour
 
     public async UniTaskVoid HideWaitingPanel()
     {
-        _statusText.text = "<color=green>F1</color>키를 눌러 세력을 확인하세요";
+        _statusText.text = "<color=green>TAB</color>키를 눌러 세력을 확인하세요\n 곧 게임을 시작합니다...";
         await UniTask.Delay(3000);
-        _panel.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

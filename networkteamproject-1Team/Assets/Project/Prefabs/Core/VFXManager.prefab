@@ -108,8 +108,8 @@ MonoBehaviour:
   _alertPulseInterval: 0.13
   _alertRiseEase: 22
   _alertFallEase: 26
-  _intensityDuration1: 3
-  _intensityDuration2: 0.2
+  _intensityDuration1: 4.8
+  _intensityDuration2: 0.11
   _intensityDuration3: 6
   _intensityEase1: 5
   _intensityEase2: 8

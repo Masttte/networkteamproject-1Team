@@ -8,6 +8,7 @@ namespace Battle
     public class PlayerEntity : EntityBase
     {
         PlayerCombat _combat;
+        PlayerInputHandler _inputHandler;
 
         [SerializeField] AudioResource _deathSound;
 
@@ -26,6 +27,10 @@ namespace Battle
 
             if (IsOwner)
             {
+                _inputHandler = GetComponent<PlayerInputHandler>();
+                PauseMenu.Instance.Inject(_inputHandler); // 두근두근 의존성 주입
+                WinPanel.Instance.Inject(_inputHandler); // 두근두근 의존성 주입
+
                 if (VFXManager.Instance != null)
                     CurHp.OnValueChanged += HandleHpChanged;
             }

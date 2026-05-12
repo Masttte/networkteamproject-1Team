@@ -126,7 +126,7 @@ public class TeamManager : NetworkBehaviour
     void HideWaitingUIClientRpc()
     {
         if (GameWaitingUI.Instance != null)
-            GameWaitingUI.Instance.HideWaitingPanel();
+            GameWaitingUI.Instance.HideWaitingPanel().Forget();
     }
 
     void Shuffle(List<ulong> list)
