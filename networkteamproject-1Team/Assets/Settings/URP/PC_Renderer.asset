@@ -164,7 +164,7 @@ MonoBehaviour:
     _camDistance: 100
   _passes:
     m_List:
-    - {fileID: -1070726118261910496}
+    - {fileID: 0}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &7833122117494664109
 MonoBehaviour:

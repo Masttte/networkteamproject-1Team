@@ -22,7 +22,7 @@ namespace Monster
         public void Update()
         {
             if (_monsterController.Prison == null) return;
-            if (!_monsterController.Prison.Unlocked) return;
+            if (!_monsterController.Prison.isUnlock.Value) return;
             
             _timer += Time.deltaTime;
         

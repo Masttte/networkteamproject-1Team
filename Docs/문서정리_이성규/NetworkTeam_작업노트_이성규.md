@@ -796,6 +796,277 @@ PlayerCamera는 본인이 B팀일 때 SwitchToB로 ViewPoint 동적 변경 (`_vi
 - 라이팅 설정
 - APV Bake Probe Volumes 실행
 
+## Day 11 — 2026-05-08
+
+### QA 작업 진행
+
+### QA 작업 진행
+팀원 전원이서 QA 작업 진행 및 새로운 병합 작업 진행.
+
+이에따라 게임씬 룩뎁 폴리싱이 대기로 QA 작업 집중
+
+### 폴리싱 리스트 정리
+
+- 메인 씬 룩뎁 (라이팅 + APV + PPS)
+- 상호작용 UI 피드백 (시야에 IInteractable 들어올 때 표시)
+- 시야 회전에 따른 캐릭터 IK 피드백 (Spine/Neck IK)
+- 앉기 기능 추가 고려
+
+## Day 12 — 2026-05-11
+
+### 게임 씬 라이트 조정 작업
+
+병합된 게임 씬이 생겨서 하루 시간 할당하여 조명 환경 + 비주얼 조정 진행.
+
+#### 작업 환경 준비
+맵 프리팹 Alphanumeric Sorting 활성화로 라이팅 그룹화 + 정렬. 다수 라이트 관리 편의성 확보.
+
+#### 라이트 영역별 셋업
+
+| 영역 | 종류 | 온도 (K) | 색상 |
+|---|---|---|---|
+| 벽면 라이팅 | Point | 4711 | White (#FFFFFF) |
+| 천장 라이팅 | Area Light | 5800 | White (#FFFFFF) |
+| 대형 룸 샹들리에 | Point | 5203 | White (#FFFFFF) |
+| 소/중형 천장 전구 | Point | 6200 | Warm White (#F7F7EA) |
+
+#### 폴리싱 — 베이킹 + 세부 조정
+
+베이킹 후 맵 밝기 + 그림자 톤 검토하면서 위치별 세부 강도 / 온도 조정. 다회차 베이킹 + 검토 반복.
+
+#### 시행착오 — Area Light 베이킹 부담
+
+천장에 Area Light 다수 적용 후 베이킹 시간 + 성능 부담 급증. 
+
+**해결**: 테스트 단계에선 Lightmap 샘플 수 감소 후 빠른 베이킹으로 반복 검토. 최종 베이킹 시점에만 샘플 수 정상값으로 복원.
+
+> Area Light는 면 광원 자연스러움 대비 베이킹 비용이 큼. 다수 사용 시 테스트/최종 베이킹 분리 전략 필수.
+
+#### 추가 셋업
+
+- **조명 오브젝트 Cast Shadow off**: 자기 자신이 그림자 만들 필요 없음. 베이킹 시간 절감 + 시각적 부자연스러움 방지.
+- **사물 디테일 확인 가능한 밝기 수준 유지**: 너무 어두우면 호러 분위기 OK지만 게임플레이 방해. 균형점 찾기.
+- **방 간 톤 통일**: 위치별 라이팅은 다르지만 전체 톤은 일관. 플레이어 이동 시 시각적 충격 없게.
+
+#### 팀원 피드백 반영
+
+팀원에게 작업 결과 공유 후 받은 피드백 반영:
+- 메인 홀과 지하실의 **밝기 대비 강화** 필요
+- 메인 홀 → 밝게
+- 지하실 → 더 어둡게
+
+위치별 라이트 강도 / 색온도 미세 조정 진행.
+
+#### 최종 베이킹
+
+빌드 퀄리티 셋업으로 최종 베이킹:
+- 라이트맵 해상도 ↑
+- Lightmap 샘플링 ↑
+- APV 동작 확인
+
+테스트 단계에선 샘플 수 줄여 빠른 반복, 최종 베이킹만 정상 셋업 적용한 전략 마무리.
+
+> 룩뎁은 본인 시각 + 팀원 피드백을 같이 고려해야 좋은 결과. 한 명의 눈만으로는 익숙해져서 못 보는 부분 존재.
+
+#### 룩뎁 라이팅 비교
+
+이전 버전 라이팅 비주얼
+![alt text](Resources/Before_Lighting_Visual.png)
+
+최신 버전 라이팅 비주얼
+![alt text](Resources/After_Lighting_Visual.png)
+
+색온도 영역별 차별화 + Area Light + 메인 홀/지하실 대비 강화로 호러 톤 + 공간 위계 확보.
+
+### 오클루전 베이킹 조정
+
+기존 Smallest Occluder = 1 베이킹 시 플레이어 시선에서 오브젝트가 부자연스럽게 가려져 꺼지는 현상 확인.
+
+**조정**: Smallest Occluder = 5로 변경 후 재베이킹.
+
+기본값 5 정도로 크게 잡아도 성능상 큰 이슈 없음. 작은 값일수록 정밀 컬링이지만 시각 부자연스러움 증가 트레이드오프.
+
+### PP 보강 — Film Grain
+
+팀원과 합의하에 기본 시야에 Film Grain 효과 추가:
+- Type: Medium 6
+- 강도: 1
+
+![alt text](Resources/Film_Grain.jpg)
+
+호러 톤 + 필름 질감으로 분위기 보강. 게임 디자인상 시야 왜곡과는 별개로 전체 톤 통일 효과.
+
+### 성능 프로파일링 — 룩뎁 적용 후
+
+#### 렌더 프로파일링
+![alt text](Resources/Profiling_Render_Stats.png)
+
+| 항목 | 수치 |
+|---|---|
+| SetPass Calls | 86 |
+| Draw Calls | 792 |
+| Batches | 790 |
+| Triangles | 528.1k |
+| Vertices | 585.0k |
+| Render Textures | **199 / 1.85 GB** |
+| Used Textures | 421 / 475.2 MB |
+| Shadow Casters | 0 |
+
+#### 메모리 프로파일링
+![alt text](Resources/Profiling_Memory_Breakdown.png)
+
+| 항목 | 메모리 |
+|---|---|
+| Total Committed | 5.86 GB |
+| Graphics & Driver | 3.01 GB |
+| Textures (2354개) | 3.11 GB |
+| Managed Heap | 0.77 GB |
+
+#### 분석
+
+**런타임 성능 확보의 대가**
+
+라이팅을 전부 Baked로 처리하고 APV / Reflection Probe / Shadow Map 캐시 등으로 런타임 라이팅 계산을 메모리에 미리 저장하는 트레이드오프. Render Textures 1.85GB가 그 결과.
+
+| 항목 | 트레이드오프 |
+|---|---|
+| Realtime Light 사용 시 | CPU/GPU 부담 ↑ / 메모리 ↓ |
+| Baked Light + Probe 사용 시 | 런타임 부담 ↓ / 메모리 ↑ |
+
+개발 게임은 호러 분위기 + PC 빌드 환경이라 **메모리 비용을 감수하고 런타임 성능 확보** 결정 합리적. Shadow Casters 0이 베이크 적용 효과 그대로 드러남.
+
+#### 짚을 점
+
+- PC 빌드 기준 5.86GB Total Committed는 허용 범위
+- 모바일/콘솔 빌드 시엔 Render Textures 1.85GB 축소 필요 (해상도 조정, Probe 수 감소)
+- Textures 2354개 / 3.11GB는 Day 2에 -66% 감소 작업한 결과 위에 추가 텍스처 누적된 상태
+
+> 룩뎁 작업의 메모리 비용은 본질적 트레이드오프. 회피보다는 인지 후 플랫폼별 전략 결정이 답.
+
+### 프로젝트 세팅 최적화
+
+Project Auditor에서 발견한 추가 최적화 항목들 적용.
+
+#### Texture Streaming Mipmap 활성화
+
+밉맵 텍스처가 다수 사용되는 환경이라 Texture Streaming 기능 활성화.
+
+> 카메라 거리에 따라 mipmap 동적 로드 → 멀리 있는 오브젝트는 낮은 해상도 사용 → 메모리 ↓.
+> 디스크 I/O 약간 ↑ 트레이드오프 있지만, 해당 게임처럼 넓은 맵 + 다수 텍스처 환경에 적합.
+
+#### Prebake Collision Meshes 활성화
+
+물리 사용하는 프로젝트에서 콜리전 메시를 미리 베이킹.
+
+| 항목 | 트레이드오프 |
+|---|---|
+| 빌드 시간 | ↑ |
+| 빌드 사이즈 | ↑ |
+| 런타임 로딩/초기화 | ↓ |
+
+런타임 시점에 베이킹하는 비용을 빌드 단계로 이동. 릴리즈 빌드 + 프로파일링 빌드에 권장.
+
+#### Splash Screen 비활성화
+
+UI 에셋에서 자체 Splash Screen 구현되어 있어 Unity 기본 Splash Screen 중복 비활성화.
+
+> Player Settings의 Show Splash Screen 활성 시 첫 씬 로딩 시간 증가. 자체 구현 있으면 중복 제거가 답.
+
+#### Async Upload 버퍼 설정
+
+GPU로 텍스처/메시 데이터 업로드 속도 향상을 위한 비동기 업로드 설정 조정.
+
+| 항목 | 기본값 | 변경값 |
+|---|---|---|
+| Buffer Size | 16 MB | **32 MB** |
+| Time Slice | 2 ms | **4 ms** |
+
+대용량 텍스처 로딩 시 GPU 업로드 속도 향상. 해당 프로젝트처럼 텍스처 다수 + 넓은 맵 환경에 효과 큼.
+
+> Buffer Size는 메가바이트 단위라 메모리 여유 있는 PC 빌드 환경에서만 안전하게 증가 가능. 모바일 빌드 시 기본값 유지 권장.
+
+## Day 13 — 2026-05-12
+
+### PlayerInteractorUI 개발
+
+상호작용 UI 피드백 (시야에 IInteractable 들어올 때 화면 안내 표시).
+
+#### 시야 판별 방식
+
+옵션 검토:
+- **Raycast 기반** (ViewPoint에서 직선) ← 채택
+- OverlapSphere 기반 (근접 자동 인식)
+- FPS 조준선 + Raycast
+
+PlayerInteractor의 DetectTarget이 이미 ViewPoint 기반 Raycast로 동작 중. 구현 난이도 + 기존 코드 활용성 + 호러 게임의 정확한 조작감 측면에서 Raycast 채택.
+
+#### UI 라이프사이클 — 씬 배치 + 캐싱
+
+옵션 검토:
+- **씬 하이어라키 배치 + Owner 초기화로 캐싱** ← 채택
+- 프리팹 스폰 (플레이어 라이프사이클과 동기화)
+
+본인 PlayerCamera가 이미 씬에 시네머신 배치 + Target 갈아끼우는 패턴이라 일관성 측면에서 씬 배치 채택. 룩뎁 작업 시 인스펙터 조정 효율도 챙김.
+
+NetworkObject 불필요 (로컬 플레이어만 보는 화면) → MonoBehaviour로 충분.
+
+#### 구현 흐름
+
+**1. PlayerInteractor 측 — 이벤트 추가**
+
+DetectTarget에서 _currentTarget 변경 시점에만 OnTargetChanged 이벤트 발행:
+- 임시 변수에 새 타겟 담기
+- 이전 값과 비교
+- 변경 시에만 이벤트 호출
+
+> 매 프레임 갱신 대신 변경 시점 이벤트 → 폴링 부담 ↓ + 의도 명확.
+
+**2. PlayerInteractorUI 측 — 컴포넌트**
+
+- 활성화할 Panel 오브젝트
+- 가이드 텍스트
+- PlayerInteractor 참조 캐싱
+- OnTargetChanged 구독 → 라벨 표시 / Panel 활성화
+
+**3. PlayerController 측 — 초기화**
+
+OnNetworkSpawn (Owner 한정) 시점:
+- 씬에서 FindAnyObjectByType<PlayerInteractorUI> 검색
+- 캐싱 + Init(_interactor) 호출
+
+> 다른 컴포넌트는 GetComponent로 캐싱하지만 PlayerInteractorUI는 씬 오브젝트라 FindAnyObjectByType 사용. PlayerCamera의 시네머신 검색과 동일 패턴.
+
+#### 임시 처리 — 라벨
+
+IInteractable.InteractionLabel 인터페이스 확장은 팀원 합의 필요 사항. 합의 전엔 PlayerInteractorUI 측에서 타입 분기로 임시 처리:
+
+```csharp
+return target switch
+{
+    Generator => "발전기 수리",
+    Prison => "감옥 열기",
+    Phone => "전화 받기",
+    _ => "상호작용"
+};
+```
+
+> 안티패턴이지만 통합 단계 임시 처리. 팀원 합의 후 IInteractable 인터페이스 확장으로 전환 예정. using도 함께 제거.
+
+#### 보류 항목
+
+상호작용 완료 시 안내 UI를 다시 표시 안 하는 로직 → 팀원 IInteractable 측 협업 필요. PressAction 게이지 완료 이벤트 같은 거 구독해야 함. 후순위로 미룸.
+
+#### 작업 결과
+
+- PlayerInteractor.cs: OnTargetChanged 이벤트 + DetectTarget 변경 감지 패턴
+- PlayerInteractorUI.cs: 신규 작성
+- PlayerController.cs: FindAnyObjectByType 캐싱 + Init 호출
+- 씬: UI Canvas + Panel + Text 배치
+
+
+
+
+
 ---
 ## 작업 일지 양식
 
