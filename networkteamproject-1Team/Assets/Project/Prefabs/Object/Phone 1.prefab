@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3071352527939995220}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70066595, z: -0, w: 0.71348953}
+  m_LocalRotation: {x: 0, y: 0.7006665, z: 0, w: 0.71348894}
   m_LocalPosition: {x: 20.469, y: 5.3591185, z: -1.205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2735605775
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 1931227600
+  InScenePlacedSourceGlobalObjectIdHash: 2337312411
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -198,7 +198,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.99642944
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -254,5 +254,5 @@ MonoBehaviour:
   _ringingClip: {fileID: 8300000, guid: ff6eb03ff4a788c4ea8452c1a3a1c234, type: 3}
   _teamAAnswerClip: {fileID: 8300000, guid: c8ee71b2375c5314ab743e845626b34e, type: 3}
   _teamBAnswerClip: {fileID: 8300000, guid: 983872bc8a9f35e4891cfa00853cbbfe, type: 3}
-  _ringIntervalMin: 10
-  _ringIntervalMax: 20
+  _ringIntervalMin: 115
+  _ringIntervalMax: 160
