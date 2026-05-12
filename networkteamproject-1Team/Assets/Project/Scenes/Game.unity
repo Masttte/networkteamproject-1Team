@@ -447,7 +447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: spawnCount
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: randomSpawnObject
@@ -455,7 +455,7 @@ PrefabInstance:
       objectReference: {fileID: 1931299521}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: generatorRequiredCount
-      value: 3
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1811204544574743715, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4447,7 +4447,7 @@ PrefabInstance:
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: generatorPrefab
       value: 
-      objectReference: {fileID: 3813983170230886178, guid: 0d85739f181f5dd43a9f98f43c33ef7c, type: 3}
+      objectReference: {fileID: 4175558774571293146, guid: 2bfc4cc31a7185243ade8e43a1f1fe21, type: 3}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: spawnPoints.Array.size
       value: 22

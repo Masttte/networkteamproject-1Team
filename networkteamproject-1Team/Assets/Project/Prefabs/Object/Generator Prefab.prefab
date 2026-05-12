@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: -1105817839616648037}
   - component: {fileID: -1676103092743397653}
   - component: {fileID: -7458427099017832091}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: generator_01_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &-1105817839616648037
 Transform:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 598364959947962184}
   - component: {fileID: 1657113264488769742}
   - component: {fileID: 2041807949985777206}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,8 +176,8 @@ GameObject:
   - component: {fileID: 2870213731018993655}
   - component: {fileID: 1836669697721629554}
   - component: {fileID: 7624646864842772343}
-  m_Layer: 0
-  m_Name: Sphere
+  m_Layer: 12
+  m_Name: bulb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,7 +231,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c97db159f46cfed439e3d7075b617f25, type: 2}
+  - {fileID: 2100000, guid: 1cd0c219ebe22684db97ad8d09a1313c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 2861975872525627528}
   - component: {fileID: -2908946097283667761}
   - component: {fileID: -3790362307729332283}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: generator_01_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 2331651035277550117}
   - component: {fileID: 8632734415380167293}
   - component: {fileID: 4944558187357771089}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Generator Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -474,6 +474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Generator
   ShowTopMostFoldoutHeaderGroup: 1
+  changer: {fileID: 3055722419650248019}
 --- !u!114 &2331651035277550117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,13 +544,13 @@ GameObject:
   - component: {fileID: -487013993301149076}
   - component: {fileID: -130407187780882064}
   - component: {fileID: 5958131388474628816}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: generator_01_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &-487013993301149076
 Transform:
   m_ObjectHideFlags: 0
@@ -633,8 +634,8 @@ GameObject:
   - component: {fileID: 988022080184293998}
   - component: {fileID: 4874803051461534728}
   - component: {fileID: 1447618329022722613}
-  m_Layer: 0
-  m_Name: Cylinder
+  m_Layer: 12
+  m_Name: pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -688,7 +689,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19bd022df8055b5429eae11b8e06dbfa, type: 2}
+  - {fileID: 2100000, guid: 1cd0c219ebe22684db97ad8d09a1313c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -724,7 +725,7 @@ GameObject:
   - component: {fileID: 2050925305621308033}
   - component: {fileID: 9091129826934249229}
   - component: {fileID: 849669452992427215}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -823,7 +824,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2785221923357717017}
-  m_Layer: 0
+  - component: {fileID: 3055722419650248019}
+  m_Layer: 12
   m_Name: GeneratorLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -847,3 +849,18 @@ Transform:
   - {fileID: 988022080184293998}
   m_Father: {fileID: 3636531275414537068}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3055722419650248019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767441979473302822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586943e980a537946932ec4cf09baacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialChanger
+  bulbRenderer: {fileID: 7624646864842772343}
+  pillarRenderer: {fileID: 1447618329022722613}
+  completedMaterials: {fileID: 2100000, guid: 19bd022df8055b5429eae11b8e06dbfa, type: 2}

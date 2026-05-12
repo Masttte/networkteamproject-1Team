@@ -2,12 +2,13 @@
 using Unity.Netcode;
 using UnityEngine;
 using Battle;
+using UnityEditor.Rendering;
 
 public class Generator : NetworkBehaviour, IInteractable
 {
     private PressAction _pressAction;
-    // private MeshRenderer _renderer;
-    // public Material completedMaterials;
+
+    public MaterialChanger changer;
 
     private NetworkVariable<bool> _isRepaired = new NetworkVariable<bool>(
         false,
@@ -16,7 +17,6 @@ public class Generator : NetworkBehaviour, IInteractable
     
     public override void OnNetworkSpawn()
     {
-        // _renderer = GetComponent<MeshRenderer>();
         _pressAction = GetComponent<PressAction>();
 
         _isRepaired.OnValueChanged += OnRepairedStateChange;
@@ -68,14 +68,6 @@ public class Generator : NetworkBehaviour, IInteractable
 
     private void ApplyCompletedVisual()
     {
-        /*
-        if (_renderer != null && completedMaterials != null)
-        {
-            _renderer.material = completedMaterials;
-        }
-        */
-        
-
         if (_pressAction != null)
         {
             if (_pressAction.image != null && _pressAction.image.canvas != null)
@@ -84,6 +76,11 @@ public class Generator : NetworkBehaviour, IInteractable
             }
 
             _pressAction.enabled = false;
+        }
+        
+        if (changer != null)
+        {
+            changer.ChangeMaterial();
         }
     }
 
