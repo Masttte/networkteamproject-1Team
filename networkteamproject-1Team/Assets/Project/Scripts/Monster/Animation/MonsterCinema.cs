@@ -17,9 +17,11 @@ namespace Monster
         Animator _rootAnimator;
 
         [Header("Audio")]
+        [SerializeField] bool _isHelpLoop = true; // locked 대사 루프 여부
         [SerializeField] AudioResource _locked;
         [SerializeField] AudioResource _talk;
         [SerializeField] AudioResource _threat;
+        [SerializeField] int _threatAudioMs = 23000; // 위협 대사 주기
         AudioSource _source;
 
         [Header("Audio Timing")]
@@ -30,6 +32,7 @@ namespace Monster
 
         NetworkVariable<bool> _isTalked = new NetworkVariable<bool>(false);
         MonsterController _monsterController;
+
 
         bool _wasBInRange;
         bool _wasAInRange;
@@ -73,16 +76,15 @@ namespace Monster
         {
             if (IsServer)
             {
-                LockedLoopAsync().Forget();
+                if (_isHelpLoop) LockedLoopAsync().Forget();
             }
         }
-
         async UniTaskVoid LockedLoopAsync()
         {
             while (true)
             {
                 float delay = UnityEngine.Random.Range(_lockedIntervalMin, _lockedIntervalMax);
-                await UniTask.Delay((int)(delay * 1000));
+                await UniTask.Delay((int)(delay * 1000), cancellationToken: destroyCancellationToken);
 
                 if (_isTalked.Value || _monsterController.Prison.isUnlock.Value) break;
 
@@ -142,7 +144,7 @@ namespace Monster
         // 단순 기다리기
         async UniTaskVoid WaitAndPlayLockedAsync()
         {
-            await UniTask.Delay(23000); // 하드코딩 하면 그만이야~
+            await UniTask.Delay(_threatAudioMs, cancellationToken: destroyCancellationToken);
             _wasAInRange = false;
         }
         #endregion

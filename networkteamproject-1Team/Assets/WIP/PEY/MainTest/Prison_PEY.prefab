@@ -107,8 +107,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster.Prison
   ShowTopMostFoldoutHeaderGroup: 1
-  _monsterPrefab: {fileID: 7715287895704808701, guid: 3577d388bde22634980ff8059a9e4394, type: 3}
+  _monsterPrefab: {fileID: 7715287895704808701, guid: b47f011d6842de3498e6ade369776025, type: 3}
   _monsterSpawnPoint: {fileID: 4146070315991043871}
+  isUnlock:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &4748053811678077192
 MonoBehaviour:
   m_ObjectHideFlags: 0
