@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
+    
+    [SerializeField] private GameObject settingsPanel;
     
     private PlayerInputHandler _playerInputHandler;
     private const InputCategory PauseBlock = InputCategory.All;
@@ -65,8 +68,15 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void Resume()
+    private void Resume()
     {
+        if (settingsPanel != null && settingsPanel.activeSelf)
+        {
+            settingsPanel.SetActive(false);
+            pauseMenu.SetActive(true);
+            return;
+        }
+
         if (_playerInputHandler != null)
         {
             _playerInputHandler.EnableInput(PauseBlock);
@@ -82,8 +92,20 @@ public class PauseMenu : MonoBehaviour
 
     private void OnSettingsClicked()
     {
-        // TODO: 설정 패널 완성되면 여기에 연결
-        Debug.Log("[설정 버튼] - 추후 연결 예정");
+        pauseMenu.SetActive(false);
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+    }
+
+    public void OpenPausePanel()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+        pauseMenu.SetActive(true);
     }
 
     private void OnQuitClicked()
@@ -102,7 +124,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
 
         // yes 눌렀을때 메인 화면(씬)으로 바꿔주기
-        // SceneLoader.Instance.LoadMainMenu();
+        LobbyManager.Instance.LeaveSessionAsync().Forget();
+        SceneLoader.LoadLocal(0);
     }
 
     private void OnConfirmNo()
