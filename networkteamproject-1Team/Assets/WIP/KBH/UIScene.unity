@@ -512,8 +512,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3124878029446266823, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 508569757338675149}
   m_SourcePrefab: {fileID: 100100000, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+--- !u!1 &508569757338675148 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3124878029446266823, guid: e4d946aa78525564a8e04eac1d542cce, type: 3}
+  m_PrefabInstance: {fileID: 508569757338675147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &508569757338675149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508569757338675148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3e3f33de5c1c14e856bde52cd242e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinPanel
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
