@@ -25,8 +25,8 @@ namespace Monster
         [Header("Audio Timing")]
         [SerializeField] float _lockedIntervalMin = 7f;
         [SerializeField] float _lockedIntervalMax = 14f;
-        [SerializeField] float _talkRange = 3f;
         [SerializeField] float _threatRange = 5f;
+        float _talkRange = 2.93f;
 
         NetworkVariable<bool> _isTalked = new NetworkVariable<bool>(false);
         MonsterController _monsterController;

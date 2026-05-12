@@ -36,7 +36,7 @@ public class TutorialKeyGuide : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.f1Key.wasPressedThisFrame)
+        if (Keyboard.current.tabKey.wasPressedThisFrame)
         {
             ToggleGuide();
         }

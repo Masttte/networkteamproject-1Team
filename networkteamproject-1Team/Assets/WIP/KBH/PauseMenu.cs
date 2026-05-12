@@ -1,15 +1,26 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
+    #region 두근두근 의존성 주입하려고 만든 Instance...
+    public static PauseMenu Instance;
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void Init() => Instance = null;
+    private void Awake() => Instance = this;
+    private void OnDestroy() => Instance = null;
+
+    // 두근두근 의존성 주입 추가
+    public void Inject(PlayerInputHandler inputHandler)
+    {
+        _playerInputHandler = inputHandler;
+    }
+    #endregion
     [SerializeField] private GameObject pauseMenu;
-    
+
     [Header("메뉴버튼")]
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button settingsButton;
@@ -19,14 +30,15 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
-    
+
     [SerializeField] private GameObject settingsPanel;
-    
+
     private PlayerInputHandler _playerInputHandler;
     private const InputCategory PauseBlock = InputCategory.All;
     private bool isPaused = false;
 
     TutorialKeyGuide _TKG; //추가
+
 
     private void Start()
     {
@@ -35,7 +47,7 @@ public class PauseMenu : MonoBehaviour
         quitButton.onClick.AddListener(OnQuitClicked);
         yesButton.onClick.AddListener(OnConfirmYes);
         noButton.onClick.AddListener(OnConfirmNo);
-        
+
         pauseMenu.SetActive(false);
         confirmPanel.SetActive(false);
 
@@ -87,7 +99,7 @@ public class PauseMenu : MonoBehaviour
         {
             _playerInputHandler.EnableInput(PauseBlock);
         }
-        
+
         pauseMenu.SetActive(false);
         confirmPanel.SetActive(false);
         isPaused = false;
@@ -125,7 +137,7 @@ public class PauseMenu : MonoBehaviour
         {
             _playerInputHandler.EnableInput(PauseBlock);
         }
-        
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
