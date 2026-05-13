@@ -1063,9 +1063,147 @@ return target switch
 - PlayerController.cs: FindAnyObjectByType 캐싱 + Init 호출
 - 씬: UI Canvas + Panel + Text 배치
 
+### 팀원 신규 사용 에셋 최적화
 
+저번과 동일하게 XnConverter를 사용한 4k 이상의 텍스쳐 2048로 최적화 및 패키지 공유
 
+## Day 14 — 2026-05-13
 
+### 관전자 카메라 개발
+
+팀원 요청에 따라 관전자 모드 추가.
+
+#### 기존 PlayerCamera 재사용 불가 진단
+
+기존 PlayerCamera 스크립트는 플레이어 오브젝트에 강하게 종속:
+- 헤드 본 추적 / ViewPoint A·B 의존 / IsOwner 가드
+- 사망 시 플레이어 NetworkObject Despawn = PlayerCamera 함께 소멸
+
+→ 관전자 시점은 사망 후에도 동작해야 하므로 별도 스크립트 필요.
+
+#### 책임 분리 설계
+
+| 컴포넌트 | 책임 |
+|---|---|
+| PlayerCamera (기존) | 자기 시점 1인칭, 플레이어 라이프사이클 |
+| SpectatorCamera (신규) | 사망 후 관전, 씬 독립 라이프사이클 |
+
+NetworkObject 불필요 — 로컬 클라만 보는 시야 → MonoBehaviour 충분.
+씬 배치 → 플레이어 Despawn에 영향 X.
+
+#### 라이프사이클 흐름 설계
+
+```
+T=0: 사망 (PlayerCombatState.Dead)
+  ↓ PlayerCamera 헤드본 추적 (SetFollowBoneRotation)
+  ↓ PlayerController가 SpectatorCamera.TriggerAfterVFX 호출
+
+T=11.26초: VFXManager.OnDeathVFXCompleted 발행
+  ↓ SpectatorCamera.Activate (자기 이벤트 구독)
+  ↓ FindAlivePlayers + FocusTarget(0)
+  ↓ 시네머신 Priority 변경으로 Brain 자동 블렌딩
+```
+
+**짚을 점**: PlayerController는 사망 후 Despawn 라이프사이클. PlayerController가 OnDeathVFXCompleted 직접 구독 시 destroyed 컴포넌트 호출 위험. SpectatorCamera(씬 컴포넌트) 자기가 이벤트 구독 + 자기 활성 책임 → 라이프사이클 안전.
+
+#### ViewPoint Owner 권한 이슈 발견
+
+**현상**: SpectatorCamera에서 살아있는 다른 PlayerCamera 가져왔지만 ViewPoint == null
+
+**원인**:
+PlayerCamera._activeViewPoint는 SetupOwnerView()에서만 설정. SetupOwnerView는 OnNetworkSpawn에서 Owner만 호출 → Non-Owner의 PlayerCamera는 ViewPoint null.
+
+디버그 로그로 확인:  
+`NullCheck_CamAndView: False, False`
+→ playerCam은 존재하지만 ViewPoint는 null
+
+#### 해결 — SpectatorRoot 별도 노출
+
+**1차 시도**: 헤드 본 직접 추적
+- 헤드 본은 NetworkAnimator로 모든 클라 동기화 ✅
+- 다만 사망/공격 애니메이션 따라 흔들림 → 관전 화면 어지러움 ⚠️
+
+**최종 결정**: 애니메이션 영향 안 받는 SpectatorRoot Transform 별도 생성
+- PlayerCamera에 `[SerializeField] Transform _spectatorRoot` 추가
+- `public Transform SpectatorRoot => _spectatorRoot` 노출
+- 캐릭터 머리 높이의 빈 GameObject 자식으로 추가 후 할당
+
+> 1차 시도 → 한계 발견 → 더 적합한 방식 도출. 통합 테스트가 시각적 문제 발견에 가치.
+
+#### 시네머신 카메라 셋업 (3인칭 관전 뷰)
+
+씬에 별도 시네머신 카메라 추가 + SpectatorCamera 컴포넌트 부착 후 프리팹화.
+
+**구성 컴포넌트**:
+- **Cinemachine Orbital Follow**: 3인칭 궤도 추적 (Three Ring)
+- **Cinemachine Rotation Composer**: 회전 합성
+- **Cinemachine Deoccluder**: 벽 회피
+- **Cinemachine Input Axis Controller**: 마우스 입력 → 카메라 회전
+
+![Orbital Follow 셋업](Resources/Orbital_Follow.png)
+![Rotation Composer 셋업](Resources/Rotation_Composer.png)
+![Deoccluder 셋업](Resources/Cine_Deoccluder.png)
+
+#### Deoccluder 셋업 핵심
+- Collide Against: 벽 / 바닥 / Default 레이어
+- Camera Radius: 0.4 (벽 근접 시 최소 거리)
+- Strategy: Pull Camera Forward (자연스러운 카메라 당기기)
+- Smoothing Time: 0.3 (벽 회피 시 점프 방지)
+
+> 호러 게임 관전은 천천히 움직이는 분위기라 Smoothing + Damping으로 부드러움 우선.
+
+#### 시네머신 카메라 검색 방식 변경
+
+```
+기존: FindAnyObjectByType<CinemachineCamera>
+  ↓ 카메라 2개 (PlayerCamera용 + SpectatorCamera용) 되면 어느 것을 반환할지 보장 X
+변경: 태그 기반 검색
+```
+
+| 카메라 | 검색 방식 | 이유 |
+|---|---|---|
+| PlayerCamera 시네머신 | FindGameObjectWithTag("GameController") | 플레이어 프리팹 ≠ 시네머신 GameObject |
+| SpectatorCamera 시네머신 | GetComponent<CinemachineCamera> | 자기 GameObject에 시네머신 부착 |
+
+> 단일 패턴 강요보다 셋업 컨텍스트별 적합성 우선. 각 컴포넌트의 시네머신 위치 관계가 다르므로 검색 방식도 다름.
+
+#### 시네머신 Priority 전환
+
+```
+씬에 여러 CinemachineCamera 존재
+  ↓
+CinemachineBrain (메인 카메라에 부착)
+  ↓
+가장 높은 Priority의 활성 카메라 추적
+  ↓
+Priority 변경 시 Default Blend 따라 자동 블렌딩
+```
+
+SpectatorCamera는 GameObject.SetActive가 아닌 **Priority 변경**으로 활성/비활성 처리:
+- Active Priority: 100
+- Inactive Priority: -1
+- Brain의 Default Blend로 부드러운 전환
+
+> SetActive는 즉시 점프, Priority 변경은 블렌딩 활용. 시각 효과 자연스러움.
+
+#### 변경 코드
+
+**PlayerCamera.cs**
+- `[SerializeField] Transform _spectatorRoot` + public SpectatorRoot 프로퍼티
+- AssignToVirtualCamera: FindAnyObjectByType → FindGameObjectWithTag("GameController")
+
+**PlayerController.cs**
+- HandleCombatStateChanged Dead 분기에 TriggerSpectatorMode() 추가
+- 신규 메서드: FindAnyObjectByType<SpectatorCamera> + TriggerAfterVFX 호출
+
+**SpectatorCamera.cs (신규)**
+- TriggerAfterVFX → OnDeathVFXCompleted 구독 → Activate
+- FindAlivePlayers + FocusTarget(SpectatorRoot 추적)
+- NextTarget (인덱스 순환, 매번 살아있는 플레이어 재검색)
+- Priority 기반 활성/비활성 (Brain 블렌딩 활용)
+
+#### 협업 영역
+VFXManager.OnDeathVFXCompleted (팀원이 열어준 이벤트 활용).
 
 ---
 ## 작업 일지 양식

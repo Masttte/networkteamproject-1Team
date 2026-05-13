@@ -12,6 +12,9 @@ namespace Player
         [Header("Head Bones (각 모델별)")]
         [SerializeField] private Transform _headBoneA;
         [SerializeField] private Transform _headBoneB;
+
+        [Header("관전 타겟 루트")]
+        [SerializeField] private Transform _spectatorRoot;
         
         // 헤드 본 기준 로컬 좌표계의 오프셋
         private Vector3 _viewPointLocalOffset;
@@ -36,6 +39,10 @@ namespace Player
         
         public float YawAngle => _yaw;
         public Transform ViewPoint => _activeViewPoint;
+        public Transform SpectatorRoot => _spectatorRoot;
+        
+        private const string GAME_CAMERA_TAG = "GameController";
+
         public void SetFollowBoneRotation(bool follow) => _followBoneRotation = follow;
         
         public void SetupOwnerView()
@@ -72,11 +79,15 @@ namespace Player
         {
             // 씬에서 시네머신 카메라 찾아서 Target만 갈아끼우기
             if (_virtualCamera == null)
-                _virtualCamera = FindAnyObjectByType<CinemachineCamera>();
-        
+            {
+                var camObj = GameObject.FindGameObjectWithTag(GAME_CAMERA_TAG);
+                if (camObj != null)
+                    _virtualCamera = camObj.GetComponent<CinemachineCamera>();
+            }
+            
             if (_virtualCamera == null)
             {
-                Debug.LogError("[PlayerCamera] CinemachineCamera not found in scene.");
+                Debug.LogError($"[PlayerCamera] '{GAME_CAMERA_TAG}' 태그의 CinemachineCamera를 씬에서 찾을 수 없습니다.");
                 return;
             }
         
