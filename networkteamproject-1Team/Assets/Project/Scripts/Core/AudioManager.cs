@@ -23,6 +23,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource[] wetSfxSources = new AudioSource[16]; int sfxIndex; // 배열 갯수만큼 소리 제한
     public AudioSource drySfxSource; // 리버브 없는 효과음 (예: UI 사운드)
 
+    [Header("특수 클립")]
+    [SerializeField] AudioClip _laugh;
+
 #if UNITY_EDITOR
     private void Reset()
     {
@@ -80,7 +83,10 @@ public class AudioManager : MonoBehaviour
         drySfxSource.resource = clip;
         drySfxSource.Play();
     }
-
+    public void PlayLaugh()
+    {
+        drySfxSource.PlayOneShot(_laugh);
+    }
 
     void SetAudioVolume(AudioMixerType audioMixerType, float volume)
     {
