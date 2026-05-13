@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2929833961
+  GlobalObjectIdHash: 1457734055
   InScenePlacedSourceGlobalObjectIdHash: 1628084957
   DeferredDespawnTick: 0
   Ownership: 1
@@ -314,9 +314,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cdd53c9d96b5941bbe455602d9c819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster.MonsterAnimationEvents
-  _attackA: {fileID: 6418180475301049370, guid: bb4db7d999bf41b4aa2254b22e583e28, type: 2}
-  _attackB: {fileID: 6418180475301049370, guid: 46db49c5f82b1544ab1e594ad3b7dc2b, type: 2}
-  _footStep: {fileID: 6418180475301049370, guid: 1e29126c6d907ee4591fa0cc6e0c7635, type: 2}
+  _attackA: {fileID: 6418180475301049370, guid: a5416ad2544e8b843a65d18a2ea9346d, type: 2}
+  _attackB: {fileID: 6418180475301049370, guid: a5416ad2544e8b843a65d18a2ea9346d, type: 2}
+  _footStep: {fileID: 6418180475301049370, guid: 92420c4cf6e37d94fa28efe829ae6c40, type: 2}
 --- !u!114 &1680963083851607323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,8 +337,8 @@ MonoBehaviour:
   _isHelpLoop: 0
   _locked: {fileID: 8300000, guid: 2647b169f72da724bad3c85d595ab312, type: 3}
   _talk: {fileID: 8300000, guid: dfcf7d31b40702c4e8a7a6c1f7f7309f, type: 3}
-  _threat: {fileID: 8300000, guid: c3bd559fe6c068b479f5a5084bc64dd1, type: 3}
-  _threatAudioMs: 23000
+  _threat: {fileID: 8300000, guid: c98a80bd9312aff45baab22dfe93bdc3, type: 3}
+  _threatAudioMs: 14000
   _lockedIntervalMin: 7
   _lockedIntervalMax: 14
   _threatRange: 5
