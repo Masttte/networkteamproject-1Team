@@ -12,6 +12,11 @@ namespace Monster
         private PressAction _pressAction;
         private MeshRenderer _monsterRenderer;
 
+        private int _cnt;
+        private float _timer;
+        [SerializeField] private float _unlockTime;
+        public bool IsSecondMonster { get; set; }
+
         public static event Action<Prison> OnPrisonSpawned;
 
         public NetworkVariable<bool> isUnlock = new NetworkVariable<bool>(
@@ -24,6 +29,8 @@ namespace Monster
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
             _monsterRenderer = GetComponentInChildren<MeshRenderer>();
+            IsSecondMonster = false;
+            _cnt = 0;
 
             if (!IsServer) return;
             isUnlock.Value = false;
@@ -33,6 +40,19 @@ namespace Monster
 
             _pressAction.IsPressAction += UnlockPrison;
 
+        }
+
+        private void Update()
+        {
+            if (!IsSecondMonster || _cnt == 1) return;
+            
+            _timer += Time.deltaTime;
+
+            if (_timer >= _unlockTime)
+            {
+                UnlockPrison();
+                _cnt++;
+            }
         }
 
         public override void OnNetworkDespawn()
