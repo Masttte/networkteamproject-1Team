@@ -47,6 +47,7 @@ public class Generator : NetworkBehaviour, IInteractable
         if (_isRepaired.Value) return;
 
         _isRepaired.Value = true;
+        gameObject.layer = 2; // Ignore Raycast
 
         if (BattleManager.Instance != null)
         {
@@ -59,8 +60,6 @@ public class Generator : NetworkBehaviour, IInteractable
         if (newValue == true)
         {
             ApplyCompletedVisual();
-            
-            // TODO: 전구의 머티리얼 변경
         }
     }
 
