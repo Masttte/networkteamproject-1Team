@@ -81,7 +81,7 @@ public class LobbyManager : MonoBehaviour
     private void Awake()
     {
         SetSingleton();
-        InitWhenSceneLoad();
+        //InitWhenSceneLoad();
         SceneManager.sceneLoaded += OnSceneLoaded;
         Application.wantsToQuit += OnWantsToQuit;
     }
@@ -95,8 +95,18 @@ public class LobbyManager : MonoBehaviour
     void InitWhenSceneLoad()
     {
         //  LobbyManager는 싱글톤이므로, 씬 로드 시점에 참조를 찾아와야 함
-        GameObject go = GameObject.FindWithTag("GameController");
-        _playerNameInput = go.GetComponent<TMP_InputField>();
+        var go = GameObject.FindWithTag("GameController");
+        darkUIPanelMain = go.GetComponent<MainPanelManager>();
+
+        var inputs = FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var input in inputs)
+        {
+            if (input.CompareTag("GameController"))
+            {
+                _playerNameInput = input;
+                break;
+            }
+        }
     }
 
     private void OnDestroy()

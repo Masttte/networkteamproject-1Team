@@ -18,13 +18,6 @@ public enum SceneId
 /// </summary>
 public static class SceneLoader
 {
-    // 로컬 씬 로드 (SceneId / int). NGO 미실행 상태에서 사용
-    public static void LoadLocal(SceneId id) => LoadLocal((int)id);
-    public static void LoadLocal(int sceneIndex)
-    {
-        SceneManager.LoadScene(sceneIndex, LoadSceneMode.Single);
-    }
-
     /// <summary>
     /// NGO 동기화 씬 로드 (SceneId 권장). 호스트에서만 호출하면 모든 멤버에게 자동 전파됨
     /// </summary>

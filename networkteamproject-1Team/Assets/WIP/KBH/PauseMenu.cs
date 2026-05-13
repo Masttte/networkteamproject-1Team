@@ -1,8 +1,10 @@
 using Cysharp.Threading.Tasks;
 using Player;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -143,7 +145,8 @@ public class PauseMenu : MonoBehaviour
 
         // yes 눌렀을때 메인 화면(씬)으로 바꿔주기
         LobbyManager.Instance.LeaveSessionAsync().Forget();
-        SceneLoader.LoadLocal(0);
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene(0);
     }
 
     private void OnConfirmNo()

@@ -44,6 +44,7 @@ public partial class LocalManager : MonoBehaviour
             Debug.Log("[LocalManager] 서버와의 연결이 끊겼습니다."); // 자신 또는 서버 연결 해제 시
             if (LobbyManager.Instance.darkUIPanelMain != null) LobbyManager.Instance.CloseDarkUI();
             LobbyManager.Instance.LeaveSessionAsync().Forget();
+            NetworkManager.Singleton.Shutdown();
             SceneManager.LoadScene(0);
         }
     }
