@@ -28,7 +28,6 @@ public class LobbyManager : MonoBehaviour
     ISession _session;
     ISession _exitSession; // 나갈떄 참조용
     string _playerName = "Player";
-    bool _isStartingGame;
     float _lastGameEndRealtime = float.NegativeInfinity;
 
     /// <summary>
@@ -63,7 +62,7 @@ public class LobbyManager : MonoBehaviour
     {
         get
         {
-            if (!IsHost || _session == null || _isStartingGame) return false;
+            if (!IsHost || _session == null) return false;
             if (Time.realtimeSinceStartup - _lastGameEndRealtime < _settings.GameRestartCooldownSec) return false;
             if (_session.PlayerCount < _settings.MinPlayersToStart) return false;
             return AreNonHostPlayersReady();
@@ -354,11 +353,10 @@ public class LobbyManager : MonoBehaviour
     /// <returns>실제 시작에 성공했으면 true</returns>
     public async UniTask<bool> TryStartGameAsHostAsync()
     {
-        if (!IsHost || _session == null || _isStartingGame) return false;
+        if (!IsHost || _session == null) return false;
         if (Time.realtimeSinceStartup - _lastGameEndRealtime < _settings.GameRestartCooldownSec) return false;
         if (_session.PlayerCount < _settings.MinPlayersToStart || !AreNonHostPlayersReady()) return false;
 
-        _isStartingGame = true;
         ExpectedPlayerCount = _session.PlayerCount;
 
         try
@@ -370,7 +368,6 @@ public class LobbyManager : MonoBehaviour
 
             if (!SceneLoader.LoadNetworked(SceneId.Map1))
             {
-                _isStartingGame = false;
                 return false;
             }
             return true;
@@ -378,7 +375,6 @@ public class LobbyManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogWarning($"LobbyManager: 호스트 게임 시작 실패: {e.Message}");
-            _isStartingGame = false;
             return false;
         }
     }
