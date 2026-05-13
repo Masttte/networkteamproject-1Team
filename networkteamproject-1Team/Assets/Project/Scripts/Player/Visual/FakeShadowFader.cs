@@ -14,7 +14,7 @@ namespace Player
         private void Awake()
         {
             if (_decal == null)
-                _decal = GetComponentInChildren<DecalProjector>();
+                _decal = GetComponent<DecalProjector>();
         }
         
         // 바닥과 거리에 따라 데칼을 페이드해서 자연스러운 Fake Shadow 연출
