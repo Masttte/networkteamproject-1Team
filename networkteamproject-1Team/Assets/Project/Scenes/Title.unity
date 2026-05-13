@@ -391,7 +391,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166449153}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2177,7 +2177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u200B"
+  m_text: "<u>\u3139</u>\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eabe3cc54185168458d0f7c6c0301990, type: 2}
   m_sharedMaterial: {fileID: -6049935134085417370, guid: eabe3cc54185168458d0f7c6c0301990, type: 2}
@@ -4268,7 +4268,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1720587090}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -4736,7 +4736,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u200B"
+  m_text: "<u>\u3139</u>\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eabe3cc54185168458d0f7c6c0301990, type: 2}
   m_sharedMaterial: {fileID: -6049935134085417370, guid: eabe3cc54185168458d0f7c6c0301990, type: 2}
