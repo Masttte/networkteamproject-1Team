@@ -65,6 +65,7 @@ public class TeamManager : NetworkBehaviour
         {
             ShowTimeoutClientRpc(clientsTimedOut.Count);
             LobbyManager.Instance.LeaveSessionAsync().Forget();
+            NetworkManager.Singleton.Shutdown();
             SceneManager.LoadScene(0);
             return;
         }

@@ -2,7 +2,9 @@ using Battle;
 using Cysharp.Threading.Tasks;
 using Player;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WinPanel : MonoBehaviour
 {
@@ -76,7 +78,8 @@ public class WinPanel : MonoBehaviour
     public void GoToLobby()
     {
         LobbyManager.Instance.LeaveSessionAsync().Forget();
-        SceneLoader.LoadLocal(0);
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene(0);
     }
 
 }
