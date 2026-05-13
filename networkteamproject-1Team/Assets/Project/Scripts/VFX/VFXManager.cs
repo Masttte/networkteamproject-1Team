@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using LitMotion;
 using UnityEngine;
@@ -59,6 +60,8 @@ public class VFXManager : MonoBehaviour
     MotionHandle _alertDistortionHandle;
 
     MotionHandle _deathSequenceHandle;
+
+    public event Action OnDeathVFXCompleted;
 
     private void Awake()
     {
@@ -130,6 +133,11 @@ public class VFXManager : MonoBehaviour
 
     public void PlayDeathVFX()
     {
+        PlayDeathVFXAsync().Forget();
+    }
+
+    async UniTaskVoid PlayDeathVFXAsync()
+    {
         var builder = LSequence.Create();
 
         builder.Append(LMotion.Create(0f, 0f, 0.35f).Bind(_ => { })); // 잠시 멈춤
@@ -155,6 +163,9 @@ public class VFXManager : MonoBehaviour
             .Bind(x => _screenVFX._glitchTint.value = x));
 
         _deathSequenceHandle = builder.Run();
+
+        await _deathSequenceHandle.ToUniTask(cancellationToken: destroyCancellationToken);
+        OnDeathVFXCompleted?.Invoke();
     }
 
     private void OnDisable()
