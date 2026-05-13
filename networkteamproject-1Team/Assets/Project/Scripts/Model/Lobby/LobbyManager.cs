@@ -6,6 +6,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 세션(Lobby + Relay + NGO 통합) 진입/퇴장과 게임 시작을 총괄하는 싱글톤 매니저.
@@ -17,7 +18,8 @@ public class LobbyManager : MonoBehaviour
 
     public MainPanelManager darkUIPanelMain; // dark UI
     [SerializeField] LobbySettings _settings;
-    [SerializeField] TMP_InputField _playerNameInput;
+    [SerializeField] string _titleSceneName = "Title"; // 타이틀 씬 이름
+    TMP_InputField _playerNameInput;
 
     // SDK 내부 transient 실패(첫 번째 NetworkManager 시작 task canceled 등) 자동 재시도용
     const int JOIN_MAX_RETRY = 1;
@@ -79,11 +81,27 @@ public class LobbyManager : MonoBehaviour
     private void Awake()
     {
         SetSingleton();
+        InitWhenSceneLoad();
+        SceneManager.sceneLoaded += OnSceneLoaded;
         Application.wantsToQuit += OnWantsToQuit;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == _titleSceneName)
+            InitWhenSceneLoad();
+    }
+
+    void InitWhenSceneLoad()
+    {
+        //  LobbyManager는 싱글톤이므로, 씬 로드 시점에 참조를 찾아와야 함
+        GameObject go = GameObject.FindWithTag("GameController");
+        _playerNameInput = go.GetComponent<TMP_InputField>();
     }
 
     private void OnDestroy()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         Application.wantsToQuit -= OnWantsToQuit;
     }
 
@@ -95,7 +113,8 @@ public class LobbyManager : MonoBehaviour
     }
 
     private async UniTaskVoid LeaveAndQuitAsync()
-    {;
+    {
+        ;
         if (_exitSession != null)
         {
             await _exitSession.LeaveAsync();

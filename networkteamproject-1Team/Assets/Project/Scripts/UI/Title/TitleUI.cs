@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
@@ -28,5 +27,11 @@ public class TitleUI : MonoBehaviour
     private void SetStatus(string message)
     {
         _statusText.text = message;
+    }
+
+    // 게임 종료 호출
+    public void OnClickExit()
+    {
+        Application.Quit();
     }
 }

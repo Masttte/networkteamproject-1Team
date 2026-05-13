@@ -18,14 +18,18 @@ namespace VFX
         [Range(0.03f, 2f)]
         [SerializeField] float _animationSpeed = 0.11f;
 
-        private void Awake()
-        {
-            Instance = this;
-        }
+        [SerializeField] AudioSource _audioSource;
+        [SerializeField] AudioClip _loadingclip;
+
+        private void Awake() => Instance = this;
 
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+        }
+        public void PlaySound()
+        {
+            _audioSource.PlayOneShot(_loadingclip);
         }
 
         /// <summary>

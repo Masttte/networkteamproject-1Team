@@ -233,6 +233,7 @@ public class RoomUI : NetworkBehaviour
         _panelToHideAtGame.SetActive(false);
         _darkUIPanelMulti.OpenPanel("LOADING");
         TransitionControl.Instance.PlayIn();
+        TransitionControl.Instance.PlaySound();
     }
 
 
