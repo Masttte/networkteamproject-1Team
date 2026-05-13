@@ -94,7 +94,19 @@ namespace Player
                 // 상호작용 중이었다면 강제 취소 (게이지 멈춤)
                 if (_interactor.IsInteracting)
                     _interactor.OnInteractCancel();
+                
+                // 관전 카메라 트리거 (SpectatorCamera가 VFX 완료 후 자기 활성)
+                TriggerSpectatorMode();
             }
+        }
+
+        private void TriggerSpectatorMode()
+        {
+            var spectator = FindAnyObjectByType<SpectatorCamera>();
+            if (spectator != null)
+                spectator.TriggerAfterVFX();
+            else
+                Debug.LogWarning("[PlayerController] SpectatorCamera를 찾을 수 없습니다.");
         }
     }
 }
