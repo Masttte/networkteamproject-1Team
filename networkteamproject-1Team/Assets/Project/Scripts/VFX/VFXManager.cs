@@ -9,6 +9,7 @@ public class VFXManager : MonoBehaviour
     public static VFXManager Instance;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Init() => Instance = null;
+    private void OnDestroy() => Instance = null;
 
     Volume _volume;
     CustomScreenVol _screenVFX;
@@ -74,7 +75,7 @@ public class VFXManager : MonoBehaviour
     async UniTaskVoid PlayHitVFXAsync()
     {
 
-        await UniTask.Delay(235);
+        await UniTask.Delay(235, cancellationToken: destroyCancellationToken);
 
         float halfDuration = _vfxDuration * 0.5f;
         _intensityHandle = LSequence.Create()
@@ -112,7 +113,7 @@ public class VFXManager : MonoBehaviour
                 .WithEase(_alertRiseEase)
                 .Bind(x => _screenVFX._distortionScale.value = x);
 
-            await UniTask.Delay((int)(_alertPulseDuration * 1000));
+            await UniTask.Delay((int)(_alertPulseDuration * 1000), cancellationToken: destroyCancellationToken);
 
             // 원래대로 — 내려가기
             _alertIntensityHandle = LMotion.Create(_screenVFX._intensity.value, 0, _alertPulseDuration)
@@ -123,7 +124,7 @@ public class VFXManager : MonoBehaviour
                 .WithEase(_alertRiseEase)
                 .Bind(x => _screenVFX._distortionScale.value = x);
 
-            await UniTask.Delay((int)((_alertPulseInterval) * 1000));
+            await UniTask.Delay((int)((_alertPulseInterval) * 1000), cancellationToken: destroyCancellationToken);
         }
     }
 
@@ -156,14 +157,21 @@ public class VFXManager : MonoBehaviour
         _deathSequenceHandle = builder.Run();
     }
 
-    //private void OnDisable()
-    //{
-    //    _colorHandel.Cancel();
-    //    _intensityHandle.Cancel();
-    //    _distortionHandle.Cancel();
-    //    _glitchHandle.Cancel();
-    //    _alertIntensityHandle.Cancel();
-    //    _alertDistortionHandle.Cancel();
-    //    _deathSequenceHandle.Cancel();
-    //}
+    private void OnDisable()
+    {
+        if (_colorHandel.IsActive())
+            _colorHandel.Cancel();
+        if (_intensityHandle.IsActive())
+            _intensityHandle.Cancel();
+        if (_distortionHandle.IsActive())
+            _distortionHandle.Cancel();
+        if (_glitchHandle.IsActive())
+            _glitchHandle.Cancel();
+        if (_alertIntensityHandle.IsActive())
+            _alertIntensityHandle.Cancel();
+        if (_alertDistortionHandle.IsActive())
+            _alertDistortionHandle.Cancel();
+        if (_deathSequenceHandle.IsActive())
+            _deathSequenceHandle.Cancel();
+    }
 }

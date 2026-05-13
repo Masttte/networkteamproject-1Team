@@ -21,6 +21,11 @@ namespace Battle
         public static BattleManager Instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init() => Instance = null;
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            Instance = null;
+        }
 
         [HideInInspector] public TeamManager tm;
         private void Awake()
@@ -132,7 +137,6 @@ namespace Battle
             string msg = winner == TeamType.None ? "무승부?!" : $"{winner}팀 승리!";
             Debug.Log($"<color=green>[BattleManager] 게임 종료: {msg}</color>");
             OnGameEnd?.Invoke(winner);
-            // TODO: [BattleManager] 게임 종료 UI 표시등 추가 작업
         }
 
     }

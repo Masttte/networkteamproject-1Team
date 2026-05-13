@@ -8,7 +8,7 @@ namespace Monster
     {
         [SerializeField] private GameObject _monsterPrefab;
         [SerializeField] private Transform _monsterSpawnPoint;
-        
+
         private PressAction _pressAction;
         private MeshRenderer _monsterRenderer;
 
@@ -24,15 +24,15 @@ namespace Monster
             OnPrisonSpawned?.Invoke(this); // 추가
             _pressAction = GetComponent<PressAction>();
             _monsterRenderer = GetComponentInChildren<MeshRenderer>();
-            
+
             if (!IsServer) return;
             isUnlock.Value = false;
-            
+
             if (_monsterPrefab == null || _monsterSpawnPoint == null) return;
             MonsterSpawn();
-            
+
             _pressAction.IsPressAction += UnlockPrison;
-            
+
         }
 
         public override void OnNetworkDespawn()
@@ -42,7 +42,7 @@ namespace Monster
                 _pressAction.IsPressAction -= UnlockPrison;
             }
         }
-        
+
         private void UnlockPrison()
         {
             if (isUnlock.Value)
@@ -54,6 +54,7 @@ namespace Monster
             if (IsServer)
             {
                 SyncUnlock();
+                isUnlock.Value = true;
             }
             else
             {
@@ -69,7 +70,6 @@ namespace Monster
 
         private void SyncUnlock()
         {
-            isUnlock.Value = true;
             Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
             _monsterRenderer.enabled = false;
         }
