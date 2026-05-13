@@ -32,6 +32,7 @@ namespace Interactable
         {
             _ringSource = GetComponent<AudioSource>();
             _isAnswered.OnValueChanged += OnAnsweredChanged;
+            gameObject.layer = 2; // Interactable 비활성화 (벨소리 울리기 전까지 안전장치)
 
             if (IsServer)
             {
@@ -62,6 +63,7 @@ namespace Interactable
         [Rpc(SendTo.Everyone)]
         private void PlayRingRpc()
         {
+            gameObject.layer = 12; // Interactable 레이어 활성화
             _ringSource.resource = _ringingClip;
             _ringSource.Play();
         }
@@ -70,6 +72,7 @@ namespace Interactable
         {
             //if (_isAnswered.Value) return;
             AnswerPhoneRpc(LocalManager.Instance.IamB); // 클라이언트가 자신의 팀 정보를 직접 넘겨줌
+            gameObject.layer = 2; // Phone 상호작용은 한 번만 가능
         }
         public void InteractStop()
         {

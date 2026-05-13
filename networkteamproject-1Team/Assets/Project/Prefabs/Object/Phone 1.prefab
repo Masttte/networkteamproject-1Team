@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4156433758025281949}
   - component: {fileID: 8364432998830048704}
   - component: {fileID: 4132648201669917903}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Phone 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,5 +254,5 @@ MonoBehaviour:
   _ringingClip: {fileID: 8300000, guid: ff6eb03ff4a788c4ea8452c1a3a1c234, type: 3}
   _teamAAnswerClip: {fileID: 8300000, guid: c8ee71b2375c5314ab743e845626b34e, type: 3}
   _teamBAnswerClip: {fileID: 8300000, guid: 983872bc8a9f35e4891cfa00853cbbfe, type: 3}
-  _ringIntervalMin: 115
-  _ringIntervalMax: 160
+  _ringIntervalMin: 65
+  _ringIntervalMax: 132
