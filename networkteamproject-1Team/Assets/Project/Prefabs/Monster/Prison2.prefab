@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1936073875
+  GlobalObjectIdHash: 1651038611
   InScenePlacedSourceGlobalObjectIdHash: 2678651658
   DeferredDespawnTick: 0
   Ownership: 1
@@ -109,7 +109,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _monsterPrefab: {fileID: 9211612362082635193, guid: aa55be691a696564abf09a18d938060c, type: 3}
   _monsterSpawnPoint: {fileID: 4146070315991043871}
-  _unlockTime: 10
+  _unlockTime: 120
   isUnlock:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressAction
   ShowTopMostFoldoutHeaderGroup: 1
   image: {fileID: 2802766458685972286}
-  _holdTime: 8
+  _holdTime: 25
 --- !u!65 &-5860407533462193135
 BoxCollider:
   m_ObjectHideFlags: 0

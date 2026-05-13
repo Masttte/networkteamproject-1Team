@@ -24,7 +24,7 @@ public class PressAction : NetworkBehaviour
         NetworkVariableWritePermission.Server
         );
 
-   [Range(1, 10)] [SerializeField] 
+   [Range(1, 60)] [SerializeField] 
     private float _holdTime = 10f;
     
     public override void OnNetworkSpawn()

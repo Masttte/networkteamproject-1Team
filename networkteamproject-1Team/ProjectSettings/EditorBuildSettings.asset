@@ -20,13 +20,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/WIP/KYB/Scenes/Show.unity
     guid: aae472d23aef9d44a9abc3e9136cef36
-  - enabled: 1
+  - enabled: 0
     path: Assets/WIP/PEY/MainTest/GamePEY.unity
-    guid: 4c213a6e0041fb04e86ff2b6795f6dad
-  - enabled: 1
+    guid: fb046d953bedb8949b6a3af3240fe5f8
+  - enabled: 0
     path: Assets/WIP/KYB/Scenes/Game_UITestScene.unity
     guid: 812cb7205da6b0b4aa5e28e0dbe4034d
-  - enabled: 1
+  - enabled: 0
     path: Assets/WIP/KYB/Scenes/Game_2_UITest.unity
     guid: 60ac917500a795446972c9a3f27b75ae
   m_configObjects:
