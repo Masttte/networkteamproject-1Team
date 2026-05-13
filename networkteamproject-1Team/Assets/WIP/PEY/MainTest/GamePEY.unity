@@ -192,6 +192,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1990787930564274836, guid: 3c1040361d177c346b87595dbc8ac49a, type: 3}
+      propertyPath: _laugh
+      value: 
+      objectReference: {fileID: 8300000, guid: 9ab3d6ba944c4ea42ad148221ac23a94, type: 3}
     - target: {fileID: 2659310205283848809, guid: 3c1040361d177c346b87595dbc8ac49a, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -5195,7 +5199,7 @@ PrefabInstance:
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: prisonPrefab
       value: 
-      objectReference: {fileID: 4592518776790323498, guid: 0a0c1a7fe1461be44b21030efd2fea01, type: 3}
+      objectReference: {fileID: 4592518776790323498, guid: ca6bf5f6fb846a14d9d8863e51d45920, type: 3}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: generatorPrefab
       value: 

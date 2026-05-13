@@ -17,6 +17,8 @@ public class MonsterView : MonoBehaviour
             notifyMonster.color = Color.red;
 
             StartCoroutine(VanishEffect());
+
+            AudioManager.Instance.PlayLaugh();// 오디오 추가
         }
         
         //TODO : 1~3초동안 보여주고 서서히 사라지는것을 구현
