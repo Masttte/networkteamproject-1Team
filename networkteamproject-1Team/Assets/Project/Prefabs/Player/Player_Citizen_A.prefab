@@ -3250,6 +3250,37 @@ Transform:
   - {fileID: 3683924220127096300}
   m_Father: {fileID: 3759158212346295128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5742760955816778797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1627045138392999627}
+  m_Layer: 10
+  m_Name: PlayerCameraRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1627045138392999627
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5742760955816778797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1075321386617030663}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5763182407572253890
 GameObject:
   m_ObjectHideFlags: 0
@@ -3889,6 +3920,7 @@ MonoBehaviour:
   _viewPointB: {fileID: 6857552248808694056}
   _headBoneA: {fileID: 6458442984911526445}
   _headBoneB: {fileID: 3363356698200135763}
+  _spectatorRoot: {fileID: 1627045138392999627}
   _upClamp: -80
   _downClamp: 80
   _mouseSensitivity: 0.3
@@ -4185,6 +4217,7 @@ Transform:
   - {fileID: 8587730820733359085}
   - {fileID: 7382947306124319823}
   - {fileID: 3762790518048291774}
+  - {fileID: 1627045138392999627}
   m_Father: {fileID: 4849735774016670813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6825757993042848894
