@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Monster;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,6 +12,9 @@ namespace WIP.KYB.Scripts
         [Header("소환할 프리팹")]
         public GameObject generatorPrefab;
         public GameObject prisonPrefab;
+
+        [SerializeField] private GameObject _secondPrisonPrefab;
+        [SerializeField] private Transform _secondMonsterSpawnPoint;
 
         // public Transform basementFixedPoint; // 영안실 고정 스폰 포인트 (강한 몬스터 스폰) 
         public Transform[] spawnPoints; // 나머지 스폰포인트 (랜덤으로 돌릴 포인트)
@@ -60,6 +64,13 @@ namespace WIP.KYB.Scripts
                 
                 insPoint.RemoveAt(randomIndex);
             }
+
+            if (_secondPrisonPrefab == null || _secondMonsterSpawnPoint == null) return;
+            
+            GameObject monster = Instantiate(_secondPrisonPrefab, _secondMonsterSpawnPoint.position, Quaternion.identity);
+            monster.gameObject.GetComponent<NetworkObject>().Spawn();
+            Prison prison = monster.GetComponent<Prison>();
+            prison.IsSecondMonster = true;
         }
 
         private void SpawnNetworkObject(GameObject prefab, Transform spawnTransform)

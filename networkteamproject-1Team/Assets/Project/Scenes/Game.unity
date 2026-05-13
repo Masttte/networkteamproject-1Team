@@ -5173,8 +5173,12 @@ PrefabInstance:
       objectReference: {fileID: 4175558774571293146, guid: 2bfc4cc31a7185243ade8e43a1f1fe21, type: 3}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
+      propertyPath: _secondMonsterSpawnPoint
+      value: 
+      objectReference: {fileID: 171490526}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[0]'
       value: 
@@ -5206,59 +5210,59 @@ PrefabInstance:
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[7]'
       value: 
-      objectReference: {fileID: 171490526}
+      objectReference: {fileID: 171490525}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[8]'
       value: 
-      objectReference: {fileID: 171490525}
+      objectReference: {fileID: 171490524}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[9]'
       value: 
-      objectReference: {fileID: 171490524}
+      objectReference: {fileID: 171490523}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[10]'
       value: 
-      objectReference: {fileID: 171490523}
+      objectReference: {fileID: 171490522}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[11]'
       value: 
-      objectReference: {fileID: 171490522}
+      objectReference: {fileID: 171490521}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[12]'
       value: 
-      objectReference: {fileID: 171490521}
+      objectReference: {fileID: 171490520}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[13]'
       value: 
-      objectReference: {fileID: 171490520}
+      objectReference: {fileID: 171490519}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[14]'
       value: 
-      objectReference: {fileID: 171490519}
+      objectReference: {fileID: 171490518}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[15]'
       value: 
-      objectReference: {fileID: 171490518}
+      objectReference: {fileID: 171490517}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[16]'
       value: 
-      objectReference: {fileID: 171490517}
+      objectReference: {fileID: 171490516}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[17]'
       value: 
-      objectReference: {fileID: 171490516}
+      objectReference: {fileID: 171490515}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[18]'
       value: 
-      objectReference: {fileID: 171490515}
+      objectReference: {fileID: 171490514}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[19]'
       value: 
-      objectReference: {fileID: 171490514}
+      objectReference: {fileID: 171490513}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[20]'
       value: 
-      objectReference: {fileID: 171490513}
+      objectReference: {fileID: 171490512}
     - target: {fileID: 7247801313497044711, guid: 117fd2e61e262a246a3f8cd0c19b14f7, type: 3}
       propertyPath: 'spawnPoints.Array.data[21]'
       value: 
