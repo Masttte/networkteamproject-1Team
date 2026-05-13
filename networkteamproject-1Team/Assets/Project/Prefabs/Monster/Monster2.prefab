@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cdd53c9d96b5941bbe455602d9c819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster.MonsterAnimationEvents
-  _attackA: {fileID: 8300000, guid: 78bc272b0c2748f4183b822311a16a02, type: 3}
-  _attackB: {fileID: 8300000, guid: 78bc272b0c2748f4183b822311a16a02, type: 3}
+  _attackA: {fileID: 6418180475301049370, guid: 3a4b7dfa19f897940a8d1e8227884021, type: 2}
+  _attackB: {fileID: 6418180475301049370, guid: 3a4b7dfa19f897940a8d1e8227884021, type: 2}
   _footStep: {fileID: 6418180475301049370, guid: d810765087173e64ea680682110a9586, type: 2}
 --- !u!114 &6723587459399186650
 MonoBehaviour:
@@ -280,7 +280,7 @@ MonoBehaviour:
     offset: {x: 0, y: 1, z: 0}
     idleTime: 3
     chaseRange: 100
-    attackRange: 3.61
+    attackRange: 3.71
     attackDamage: 50
     attackCooldown: 0.66
     isAttacking: 0
@@ -336,7 +336,7 @@ MonoBehaviour:
   _monsterAvatar: {fileID: 9000000, guid: 930d3f7f8ec96db42afe5c193a99d837, type: 3}
   _isHelpLoop: 0
   _locked: {fileID: 8300000, guid: 2647b169f72da724bad3c85d595ab312, type: 3}
-  _talk: {fileID: 8300000, guid: dfcf7d31b40702c4e8a7a6c1f7f7309f, type: 3}
+  _talk: {fileID: 8300000, guid: 30bfd495621211d48aab588b096c5208, type: 3}
   _threat: {fileID: 8300000, guid: c98a80bd9312aff45baab22dfe93bdc3, type: 3}
   _threatAudioMs: 14000
   _lockedIntervalMin: 7

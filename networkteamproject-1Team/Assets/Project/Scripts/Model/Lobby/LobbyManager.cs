@@ -118,7 +118,7 @@ public class LobbyManager : MonoBehaviour
     private bool OnWantsToQuit()
     {
         LeaveAndQuitAsync().Forget();
-        return false;
+        return false; // 종료 보류
     }
 
     private async UniTaskVoid LeaveAndQuitAsync()
@@ -127,6 +127,8 @@ public class LobbyManager : MonoBehaviour
         {
             await _exitSession.LeaveAsync();
         }
+        // 구독 해제 후 재호출
+        Application.wantsToQuit -= OnWantsToQuit; // 없으면 무한루프
         Application.Quit();
     }
 
