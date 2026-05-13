@@ -72,8 +72,15 @@ namespace Interactable
         {
             //if (_isAnswered.Value) return;
             AnswerPhoneRpc(LocalManager.Instance.IamB); // 클라이언트가 자신의 팀 정보를 직접 넘겨줌
-            gameObject.layer = 2; // Phone 상호작용은 한 번만 가능
+            DisablePhoneRpc();
         }
+        [Rpc(SendTo.Everyone)]
+        void DisablePhoneRpc()
+        {
+            gameObject.layer = 2; // 상호작용 레이어 비활성화
+        }
+
+
         public void InteractStop()
         {
             // 단순 클릭 상호작용이라 홀드 종료 처리 없음

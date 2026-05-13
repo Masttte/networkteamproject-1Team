@@ -123,7 +123,6 @@ public class LobbyManager : MonoBehaviour
 
     private async UniTaskVoid LeaveAndQuitAsync()
     {
-        ;
         if (_exitSession != null)
         {
             await _exitSession.LeaveAsync();
