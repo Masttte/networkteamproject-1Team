@@ -30,6 +30,7 @@ namespace Monster
             writePerm: NetworkVariableWritePermission.Server);
 
         public Prison Prison { get; private set; }
+        public event Action<Prison> OnPrisonSet;
         public MonsterAI MonsterAI { get; private set; }
         public MonsterAttack MonsterAttack { get; private set; }
 
@@ -90,6 +91,7 @@ namespace Monster
         public void PrisonSet(Prison prison)
         {
             Prison = prison;
+            OnPrisonSet?.Invoke(prison);
         }
 
         public Transform DetectPlayer()
