@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace Player
 {
@@ -30,6 +31,9 @@ namespace Player
         private PlayerCombat _combat;
         private TeamA _teamA;  // 시민 프리팹 캐싱 (없으면 null)
         
+        private RigBuilder _rigBuilderNormal;
+        private RigBuilder _rigBuilderMonster;
+        
         public PlayerCombat Combat => _combat;
 
         private void Awake()
@@ -42,24 +46,17 @@ namespace Player
         public override void OnNetworkSpawn()
         {
             CacheAllAnimators();
-            RefreshAnimator();
-            
-            // 시민(TeamA) 프리팹: 모델 전환 시 Animator 재캐싱
-            // 마피아(TeamB) 프리팹: _teamA가 null이라 구독 X (단일 모델, 갱신 불필요)
-            if (_teamA != null)
-                _teamA.OnModelSwitched += RefreshAnimator;
+            ApplyCullingMode();
         }
-        
         public override void OnNetworkDespawn()
         {
-            if (_teamA != null)
-                _teamA.OnModelSwitched -= RefreshAnimator;
+            // 향후 이벤트 구독 추가 시 해제 위치
         }
 
         void Update()
         {
             if (!IsOwner) return;
-            if (_movement == null || _animator == null) return;
+            if (_movement == null) return;
             
             SetMovementParams(_animatorNormal);
             SetMovementParams(_animatorMonster);
@@ -86,7 +83,10 @@ namespace Player
                     break;
                 case PlayerCombatState.Dead:
                     SetTriggerOnBoth(AnimDeath);
+                    SetIKEnabled(false);
+#if UNITY_EDITOR
                     Debug.Log("Dead");
+#endif
                     break;
             }
         }
@@ -108,35 +108,24 @@ namespace Player
                 // 시민 프리팹: 두 모델 각각의 Animator
                 _animatorNormal = _teamA.NormalModel.GetComponent<Animator>();
                 _animatorMonster = _teamA.MonsterModel.GetComponent<Animator>();
+                _rigBuilderNormal = _teamA.NormalModel.GetComponent<RigBuilder>();
+                _rigBuilderMonster = _teamA.MonsterModel.GetComponent<RigBuilder>();
             }
             else
             {
                 // 마피아 프리팹: 단일 Animator
                 _animatorNormal = GetComponentInChildren<Animator>();
                 _animatorMonster = null;
+                _rigBuilderNormal = GetComponentInChildren<RigBuilder>();
+                _rigBuilderMonster = null;
             }
         }
         
-        // <summary>
-        /// 활성 모델의 Animator를 캐싱 (Trigger / culling 적용용).
-        /// 시민(TeamA) 프리팹은 OnModelSwitched 이벤트로 모델 전환 시 재호출.
-        /// 마피아(TeamB) 프리팹은 OnNetworkSpawn 시 1회만 호출.
-        /// </summary>
-        private void RefreshAnimator()
+        // IK 헤드 트래킹 사용 설정
+        public void SetIKEnabled(bool enabled)
         {
-            // GetComponentInChildren: 활성 GameObject의 컴포넌트만 검색
-            // - TeamA 시민 모델 활성 시: A 자식의 Animator 발견
-            // - TeamA 괴물 모델 활성 시: B 자식의 Animator 발견
-            // - TeamB: A 자식의 Animator 발견 (단일 모델)
-            _animator = GetComponentInChildren<Animator>();
-    
-            if (_animator == null)
-            {
-                Debug.LogError("[PlayerAnimation] Animator를 찾을 수 없습니다.");
-                return;
-            }
-            
-            ApplyCullingMode();
+            if (_rigBuilderNormal != null) _rigBuilderNormal.enabled = enabled;
+            if (_rigBuilderMonster != null) _rigBuilderMonster.enabled = enabled;
         }
         
         private void SetMovementParams(Animator anim)

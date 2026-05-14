@@ -38,8 +38,6 @@ namespace Player
                 _camera.enabled = false;
                 return;
             }
-            // 스폰 직후: 카메라 회전만 활성 (둘러보기 OK), 나머지 입력 비활성
-            _input.EnableInput(InputCategory.Camera);
             // 나머지는 기본값 None이라 따로 비활성화 호출 불필요
             
             // 게임 라이프사이클 이벤트 구독
@@ -57,7 +55,10 @@ namespace Player
             else
                 Debug.LogWarning("[PlayerController] PlayerInteractorUI를 씬에서 찾을 수 없습니다.");
             // Owner만 모듈 간 의존성 주입 허용
-            _input.Initialize(_movement, _camera, _combat, _interactor);
+            _input.Initialize(_movement, _camera, _animation, _combat, _interactor);
+            
+            // 스폰 직후: 카메라 회전과 그에 따른 헤드 트래킹만 활성 (둘러보기 OK), 나머지 입력 비활성
+            _input.EnableInput(InputCategory.Camera | InputCategory.HeadTracking);
 
             _combat.OnStateChanged += HandleCombatStateChanged;
         }
