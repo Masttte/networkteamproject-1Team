@@ -40,6 +40,7 @@ public class PauseMenu : MonoBehaviour
     private bool isPaused = false;
 
     TutorialKeyGuide _TKG; //추가
+    private SpectatorCamera _spectator; // 관전 카메리 입력 토글을 위해 캐싱
 
 
     private void Start()
@@ -54,6 +55,7 @@ public class PauseMenu : MonoBehaviour
         confirmPanel.SetActive(false);
 
         _TKG = GetComponent<TutorialKeyGuide>(); //추가
+        _spectator = FindAnyObjectByType<SpectatorCamera>();
     }
 
     private void Update()
@@ -80,6 +82,9 @@ public class PauseMenu : MonoBehaviour
             _playerInputHandler.DisableInput(PauseBlock);
         }
 
+        // 관전 카메라 입력 차단
+        _spectator?.SetInputEnabled(false);
+        
         pauseMenu.SetActive(true);
         confirmPanel.SetActive(false);
         isPaused = true;
@@ -101,6 +106,9 @@ public class PauseMenu : MonoBehaviour
         {
             _playerInputHandler.EnableInput(PauseBlock);
         }
+        
+        // 관전 카메라 입력 복원
+        _spectator?.SetInputEnabled(true);
 
         pauseMenu.SetActive(false);
         confirmPanel.SetActive(false);
@@ -139,6 +147,8 @@ public class PauseMenu : MonoBehaviour
         {
             _playerInputHandler.EnableInput(PauseBlock);
         }
+        
+        _spectator?.SetInputEnabled(true);  // 씬 전환 전 관전 카메라 입력 복원
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
