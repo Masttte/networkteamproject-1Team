@@ -1226,7 +1226,148 @@ DecalProjector Depth가 점프 대응으로 길게 설정되어 다층 구조에
 
 > 인스펙터 셋업만으론 한계. 동적 컴포넌트로 다층 구조 + 점프 동시 대응.
 
+## Day 15 — 2026-05-14
 
+### 관전 대상 변경 개발 (NextTarget 입력)
+
+#### 입력 시스템 결정
+
+옵션 검토:
+- **BattleInputReader 확장** ← 채택
+- SpectatorCamera 자체 InputActionReference
+- 별도 Spectator Action Map
+
+게임의 모든 입력이 BattleInputReader 통과하는 일관 시스템.
+
+#### 키 선택 — Q
+
+- 게임플레이 다른 키와 충돌 X
+- 호러 게임에서 흔히 안 쓰임
+- 관전 기능에 적합
+
+#### 입력 라이프사이클
+
+사망 → TriggerAfterVFX → 입력 구독 X (활성 전)
+VFX 완료 → Activate → 입력 구독 (Q 키 활성)
+Deactivate → 구독 해제
+OnDestroy → 안전망 해제
+
+3단계 입력 정리로 안전성 확보. 살아있는 플레이어 0명이면 입력 구독 X.
+
+#### 변경 코드
+
+**Input Action Asset**
+- NextTarget 액션 추가 + Q 키 바인딩
+
+**BattleInputReader.cs (팀원 합의 후 본인 수정)**
+- onNextTarget 이벤트 추가
+- OnNextTarget 콜백 메서드
+
+**SpectatorCamera.cs**
+- BattleInputReader 인스펙터 노출
+- Activate 시 onNextTarget 구독 (살아있는 플레이어 있을 때만)
+- Deactivate / OnDestroy 시 구독 해제
+
+> 별도 InputActionReference 분리 대신 기존 입력 시스템 일관성 우선. Day 9 onLook 추가 협업 패턴과 동일.
+
+---
+
+### 시네머신 Binding Mode 변경 — World Space → Lazy Follow
+
+#### 발견된 문제
+Q 키로 관전 대상 전환 시 한쪽 방향은 부드럽게 보간되는데 반대 방향은 즉시 점프하는 비대칭 동작 발생.
+
+#### 원인
+Orbital Follow의 Binding Mode가 World Space로 설정 → 카메라 회전이 월드 기준 고정. Target 변경 시 위치는 보간되지만 각도는 그대로 유지되어 방향에 따라 보간 결과 다르게 보임.
+
+#### 시네머신 Binding Mode 비교
+
+| Binding Mode | 동작 |
+|---|---|
+| World Space (기존) | 위치만 보간, 각도 World 고정 |
+| Lock To Target On Assign | 할당 시점만 정렬, 이후 World 동작 |
+| Lock To Target With World Up | Yaw 따라감, Pitch 고정 |
+| Lock To Target No Roll | Yaw + Pitch 따라감 |
+| Lock To Target | 완전 따라감 (Roll 포함) |
+| **Lazy Follow (채택)** | **Target 회전 부드럽게 보간** |
+
+#### 결정 — Lazy Follow
+
+- Target 변경 시 부드러운 회전 보간
+- 양방향 동일 동작 확보
+- 관전 모드 자연스러운 전환에 적합
+
+### 마우스 민감도 설정 연결
+
+#### 협업 영역
+팀원이 SettingMenu에 Slider + PlayerPrefs 저장 시스템 이미 구현. 본인은 카메라 측 연결 담당.
+
+UI 범위: 100 ~ 1500 (기본 600).
+
+#### 옵션 검토
+
+| 옵션 | 평가 |
+|---|---|
+| 슬라이더 직접 구독 (UI 컴포넌트 인스펙터 할당) | ❌ |
+| 슬라이더 런타임 검색 후 할당 | ❌ |
+| **이벤트 액션 기반 구독** | ✅ 채택 |
+
+- PlayerCamera는 플레이어 프리팹 컴포넌트 = 런타임 스폰
+- 인스펙터로 씬의 슬라이더 직접 할당 불가
+- 런타임 검색은 비효율적
+- → **정적 이벤트 기반 구독**이 가장 적합
+
+#### 결정 — SettingMenu 정적 이벤트 발행
+팀원 합의 후 본인이 SettingMenu에 OnMouseSensitivityChanged 정적 이벤트 추가. PlayerCamera / SpectatorCamera가 각자 구독.
+
+#### 카메라별 스케일링 — 두 입력 처리 방식 분리
+
+| 카메라 | 처리 방식 | 스케일 |
+|---|---|---|
+| PlayerCamera (1인칭) | 본인 _mouseSensitivity 값을 마우스 델타에 직접 곱 | 1 / 2000 |
+| SpectatorCamera (3인칭) | 시네머신 Input Axis Controller의 Gain 조정 | 0.001 |
+
+##### PlayerCamera 스케일 — 1 / 2000
+- UI 기본 600 → 본인 코드 0.3 (현재 _mouseSensitivity 기본값 매칭)
+- 본인 게임 톤 유지
+
+##### SpectatorCamera 스케일 — 0.001
+- 시네머신 현재 Gain: **X=1, Y=-1, Z=-1**
+- 민감도 1000 기준 → Gain 절대값 1.0 매칭
+- Y 반전 등 부호 보존: Awake에서 기본 Gain 부호 저장 후 민감도 적용 시 절대값만 변경
+
+> 카메라마다 입력 처리 메커니즘 다름. 단일 스케일 강요 X. 각자 적정 비율 + 부호 보존.
+
+---
+
+### UI 오픈 시 관전 카메라 입력 차단
+
+#### 진단
+입력 시스템 두 경로 분리:
+- 게임플레이 입력: PlayerInputHandler의 InputCategory 비트 플래그
+- 관전 카메라 입력: Cinemachine Input Axis Controller (시네머신 자체 처리)
+
+PauseMenu의 PlayerInputHandler.DisableInput으로는 시네머신 입력 차단 X. Q 키(NextTarget) 입력도 마찬가지로 별도 처리 필요.
+
+#### 해결 — SpectatorCamera.SetInputEnabled(bool) API
+
+두 가지 함께 토글:
+
+| 항목 | 처리 |
+|---|---|
+| Cinemachine Input Axis Controller | enabled 토글 |
+| NextTarget 입력 (Q 키) | SubscribeInput / UnsubscribeInput |
+
+#### PauseMenu 통합 (팀원 합의 후 본인 수정)
+- Start에서 FindAnyObjectByType으로 SpectatorCamera 캐싱
+- Pause 시점에 SetInputEnabled(false)
+- Resume 시점에 SetInputEnabled(true)
+- OnConfirmYes 시점에도 복원 (씬 전환 안전망)
+
+#### 비트 플래그 시스템 통합 안 한 이유
+InputCategory.SpectatorCamera 추가하면 PlayerInputHandler가 SpectatorCamera 직접 의존 → 책임 결합. PlayerInputHandler는 게임플레이 입력 전용 유지.
+
+> 두 입력 시스템(비트 플래그 / 시네머신)이 본질적으로 다른 메커니즘. UI 측(PauseMenu)에서 둘 다 명시적으로 토글. 입력 시스템 간 결합 X, 외부 컨텍스트가 책임.
 
 
 ---

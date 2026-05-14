@@ -16,6 +16,7 @@ public class BattleInputReader : ScriptableObject, IBattleActions
     public event Action onStartInteract; public event Action onPerformedInteract; public event Action onCanceledInteract;
     public event Action onJump;
     public event Action<Vector2> onLook;
+    public event Action onNextTarget;
 
     public event Action on1; public event Action on2; public event Action on3;
 
@@ -68,6 +69,11 @@ public class BattleInputReader : ScriptableObject, IBattleActions
     public void OnLook(InputAction.CallbackContext context)
     {
         onLook?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnNextTarget(InputAction.CallbackContext context)
+    {
+        if (context.performed) onNextTarget?.Invoke();
     }
 
     public void On_1(InputAction.CallbackContext context)

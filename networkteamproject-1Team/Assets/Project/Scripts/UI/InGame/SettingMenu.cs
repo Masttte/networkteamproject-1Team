@@ -33,6 +33,8 @@ public class SettingMenu : MonoBehaviour
     private const string KEY_SFX = "vol_sfx";
     private const string KEY_SENS = "sensitivity";
     
+    public static event Action<float> OnMouseSensitivityChanged;
+    
     private void OnEnable()
     {
         LoadSettings();
@@ -119,6 +121,7 @@ public class SettingMenu : MonoBehaviour
         
         // TODO: 카메라 연결
         PlayerPrefs.SetFloat(KEY_SENS, value);
+        OnMouseSensitivityChanged?.Invoke(value);
     }
 
     private void LoadSettings()
