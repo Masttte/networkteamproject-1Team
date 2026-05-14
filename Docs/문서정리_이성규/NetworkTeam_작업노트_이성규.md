@@ -1226,8 +1226,76 @@ DecalProjector Depth가 점프 대응으로 길게 설정되어 다층 구조에
 
 > 인스펙터 셋업만으론 한계. 동적 컴포넌트로 다층 구조 + 점프 동시 대응.
 
+## Day 15 — 2026-05-14
 
+### 관전 대상 변경 개발 (NextTarget 입력)
 
+#### 입력 시스템 결정
+
+옵션 검토:
+- **BattleInputReader 확장** ← 채택
+- SpectatorCamera 자체 InputActionReference
+- 별도 Spectator Action Map
+
+게임의 모든 입력이 BattleInputReader 통과하는 일관 시스템.
+
+#### 키 선택 — Q
+
+- 게임플레이 다른 키와 충돌 X
+- 호러 게임에서 흔히 안 쓰임
+- 관전 기능에 적합
+
+#### 입력 라이프사이클
+
+사망 → TriggerAfterVFX → 입력 구독 X (활성 전)
+VFX 완료 → Activate → 입력 구독 (Q 키 활성)
+Deactivate → 구독 해제
+OnDestroy → 안전망 해제
+
+3단계 입력 정리로 안전성 확보. 살아있는 플레이어 0명이면 입력 구독 X.
+
+#### 변경 코드
+
+**Input Action Asset**
+- NextTarget 액션 추가 + Q 키 바인딩
+
+**BattleInputReader.cs (팀원 합의 후 본인 수정)**
+- onNextTarget 이벤트 추가
+- OnNextTarget 콜백 메서드
+
+**SpectatorCamera.cs**
+- BattleInputReader 인스펙터 노출
+- Activate 시 onNextTarget 구독 (살아있는 플레이어 있을 때만)
+- Deactivate / OnDestroy 시 구독 해제
+
+> 별도 InputActionReference 분리 대신 기존 입력 시스템 일관성 우선. Day 9 onLook 추가 협업 패턴과 동일.
+
+---
+
+### 시네머신 Binding Mode 변경 — World Space → Lazy Follow
+
+#### 발견된 문제
+Q 키로 관전 대상 전환 시 한쪽 방향은 부드럽게 보간되는데 반대 방향은 즉시 점프하는 비대칭 동작 발생.
+
+#### 원인
+Orbital Follow의 Binding Mode가 World Space로 설정 → 카메라 회전이 월드 기준 고정. Target 변경 시 위치는 보간되지만 각도는 그대로 유지되어 방향에 따라 보간 결과 다르게 보임.
+
+#### 시네머신 Binding Mode 비교
+
+| Binding Mode | 동작 |
+|---|---|
+| World Space (기존) | 위치만 보간, 각도 World 고정 |
+| Lock To Target On Assign | 할당 시점만 정렬, 이후 World 동작 |
+| Lock To Target With World Up | Yaw 따라감, Pitch 고정 |
+| Lock To Target No Roll | Yaw + Pitch 따라감 |
+| Lock To Target | 완전 따라감 (Roll 포함) |
+| **Lazy Follow (채택)** | **Target 회전 부드럽게 보간** |
+
+#### 결정 — Lazy Follow
+
+- Target 변경 시 부드러운 회전 보간
+- 양방향 동일 동작 확보
+- 관전 모드 자연스러운 전환에 적합
 
 ---
 ## 작업 일지 양식

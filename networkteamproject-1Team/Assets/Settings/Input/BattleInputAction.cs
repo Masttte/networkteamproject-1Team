@@ -172,6 +172,15 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""NextTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""892c8a24-12cd-4acb-9985-1a1f76badc7e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -350,6 +359,17 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d385685c-6015-4758-a4a2-8076da375c34"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyBoard, Mouse"",
+                    ""action"": ""NextTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -384,6 +404,7 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
         m_Battle__2 = m_Battle.FindAction("2", throwIfNotFound: true);
         m_Battle__3 = m_Battle.FindAction("3", throwIfNotFound: true);
         m_Battle_Look = m_Battle.FindAction("Look", throwIfNotFound: true);
+        m_Battle_NextTarget = m_Battle.FindAction("NextTarget", throwIfNotFound: true);
     }
 
     ~@BattleInputAction()
@@ -473,6 +494,7 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Battle__2;
     private readonly InputAction m_Battle__3;
     private readonly InputAction m_Battle_Look;
+    private readonly InputAction m_Battle_NextTarget;
     /// <summary>
     /// Provides access to input actions defined in input action map "Battle".
     /// </summary>
@@ -520,6 +542,10 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Battle/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_Battle_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "Battle/NextTarget".
+        /// </summary>
+        public InputAction @NextTarget => m_Wrapper.m_Battle_NextTarget;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -573,6 +599,9 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @NextTarget.started += instance.OnNextTarget;
+            @NextTarget.performed += instance.OnNextTarget;
+            @NextTarget.canceled += instance.OnNextTarget;
         }
 
         /// <summary>
@@ -611,6 +640,9 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @NextTarget.started -= instance.OnNextTarget;
+            @NextTarget.performed -= instance.OnNextTarget;
+            @NextTarget.canceled -= instance.OnNextTarget;
         }
 
         /// <summary>
@@ -727,5 +759,12 @@ public partial class @BattleInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NextTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNextTarget(InputAction.CallbackContext context);
     }
 }

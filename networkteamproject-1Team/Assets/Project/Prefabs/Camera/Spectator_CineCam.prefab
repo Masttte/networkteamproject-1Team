@@ -94,7 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineOrbitalFollow
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
-    BindingMode: 4
+    BindingMode: 5
     PositionDamping: {x: 1, y: 1, z: 1}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
@@ -278,3 +278,4 @@ MonoBehaviour:
   _camera: {fileID: 1351164808019023419}
   _activePriority: 100
   _inactivePriority: -1
+  _input: {fileID: 11400000, guid: f3dea7d9139022049872a40ab03fa674, type: 2}
