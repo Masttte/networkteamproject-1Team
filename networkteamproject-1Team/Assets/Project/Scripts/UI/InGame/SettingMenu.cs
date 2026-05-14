@@ -8,7 +8,6 @@ using TMPro;
 
 public class SettingMenu : MonoBehaviour
 {
-
     [Header("사운드 설정")] 
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider bgmSlider;
@@ -24,7 +23,6 @@ public class SettingMenu : MonoBehaviour
     [SerializeField] private PauseMenu pauseMenu;
     [SerializeField] private GameObject settings;
     
-    private const string KEY_DISPLAY = "display";
     private const string KEY_MASTER = "vol_master";
     private const string KEY_BGM = "vol_bgm";
     private const string KEY_SFX = "vol_sfx";
