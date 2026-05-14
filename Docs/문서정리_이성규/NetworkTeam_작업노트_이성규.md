@@ -1369,6 +1369,273 @@ InputCategory.SpectatorCamera 추가하면 PlayerInputHandler가 SpectatorCamera
 
 > 두 입력 시스템(비트 플래그 / 시네머신)이 본질적으로 다른 메커니즘. UI 측(PauseMenu)에서 둘 다 명시적으로 토글. 입력 시스템 간 결합 X, 외부 컨텍스트가 책임.
 
+### 플레이어 IK 기능 개발
+
+AnimationRigging 패키지의 Multi-Aim Constraint 활용.
+
+---
+
+### Animator 위치 이동
+
+#### 발견된 문제
+Play 모드 진입 시 TransformStreamHandle 해석 실패 에러 + Avatar 경로 워닝:
+
+```
+Could not resolve 'CharacterArmature/Root/Hips/...'
+because it is not a child Transform in the Animator hierarchy.
+```
+#### 원인
+Animator의 Avatar가 기억하는 본 경로(CharacterArmature/...)와 GameObject 구조(Player_Mafia_B/A/CharacterArmature/...) 불일치. A GameObject가 중간에 끼어있어 Avatar 경로 검증 실패.
+
+#### 해결
+Animator + NetworkAnimator + Rig Builder를 A GameObject로 이동. A의 자식이 CharacterArmature이므로 Avatar 경로 일치.
+
+#### 두 프리팹 차이
+
+| 프리팹 | 모델 구조 | Animator 위치 |
+|---|---|---|
+| Player_Citizen_A | A (Normal) + B (Monster) | A/B 각각 보유 |
+| Player_Mafia_B | A (Normal)만 | A 자식 |
+
+시민 프리팹은 시야 분리 메커닉상 두 모델 보유, 마피아는 단일.
+
+#### 변경 코드
+
+**PlayerController.cs**
+- `[RequireComponent(typeof(Animator))]` 제거 (Animator가 자식 GameObject로 이동)
+
+**PlayerAnimation.cs**
+- Animator 참조 방식 변경
+- 처음엔 `[SerializeField] private Animator _animator` 인스펙터 할당 검토했으나 두 모델(A/B) 동시 캐싱 필요로 코드 캐싱 방식 채택
+
+> Avatar는 본 경로를 강하게 검증. 모델 import 후 Hierarchy 재구성 시 Avatar 경로 일치 필수.
+
+---
+
+### Animation Event 분리 — PlayerAnimationEvent
+
+#### 결정
+Animator가 A GameObject로 이동하면서 Animation Event 수신 위치도 A. 기존 PlayerAnimation이 Animation Event 콜백 직접 받던 패턴을 별도 컴포넌트로 분리.
+
+#### 책임 분리
+
+| 컴포넌트 | 위치 | 책임 |
+|---|---|---|
+| PlayerAnimation | 루트 | Animator 파라미터 설정 + Trigger |
+| PlayerAnimationEvent | A 자식 (Animator와 같이) | Animation Event 콜백 → PlayerCombat 호출 |
+
+> Animation Event 수신은 Animator와 같은 GameObject 필수. 책임 분리하면서 Unity 제약 해결.
+
+---
+
+### Multi-Aim Constraint 세팅
+
+#### Constraint 구성
+
+Rig 자식으로 3개 GameObject 생성, Multi-Aim Constraint 부착:
+
+| Constraint | Constrained Object | Weight | Min/Max Limit |
+|---|---|---|---|
+| HeadAimConstraint | Head | 0.8 | ±80 |
+| NeckAimConstraint | Neck | 0.5 | ±45 |
+| ChestAimConstraint | Chest | 0.2 | ±30 |
+
+위로 갈수록 강하게 추적 + 큰 가동 범위. 자연스러운 회전 곡선.
+
+#### 공통 셋업
+
+| 항목 | 값 |
+|---|---|
+| Aim Axis | Z (본의 정면) |
+| Up Axis | Y (본의 위) |
+| World Up Type | Scene Up |
+| Source | AimTarget |
+| Constrained Axes | X ✅ / Y ✅ / Z ❌ (Roll 방지) |
+| Maintain Offset | ❌ |
+
+#### Aim Axis 본 좌표계 검증
+
+처음 Aim Axis Y / Up Axis Z로 셋업 → 위/아래 비대칭 동작 발생.  
+Scene 뷰에서 Head 본 Local 좌표계 직접 확인 → 정면 Z / 위 Y   
+Aim/Up Axis 교체 후 양방향 대칭 확보.
+
+> 본 좌표계와 Aim Axis 매칭이 결정적. Scene 뷰 Gizmo 검증.
+
+---
+
+### AimTarget 별도 세팅
+
+#### 발견된 문제 — ViewPoint = 시점 중앙
+ViewPoint가 머리 본 근처(시점 중앙)라 Constraint가 거의 자기 자신을 조준 → 추적 효과 미미.
+
+#### 해결 — ViewPoint 자식 AimTarget
+ViewPoint_A의 자식으로 빈 GameObject AimTarget 추가, Local Position (0, 0, 10).
+
+### 결과
+
+- ✅ 호스트/클라이언트 양쪽 모두 Locomotion 정상 동기화
+- ✅ 공격/피격/사망 양쪽 Animator 동기화
+- ✅ Multi-Aim Constraint IK 정상 동기화
+- ✅ 마피아 시점 위장(괴물 모델 + 괴물 그림자) 정상
+- ⚠️ Humanoid + Animation Rigging Generic 충돌 워닝 (시각 결과 정상이라 무시)
+
+---
+
+### 동작 흐름 정리
+
+#### 스폰 → 시점 결정 흐름
+
+```
+1. 호스트가 SpawnAsPlayerObject 호출
+2. 모든 클라이언트에서 Player_Citizen_A(Clone) 생성
+   ↓ 프리팹의 A/B 두 GameObject 활성 상태로 생성
+   
+3. TeamA.Awake
+   ↓ _normalModel.SetActive(true), _monsterModel.SetActive(true)
+   ↓ ModelVisual 캐싱
+   
+4. PlayerAnimation.Awake
+   ↓ _movement, _combat, _teamA 캐싱
+   
+5. NGO가 NetworkBehaviour 등록
+   ↓ 두 모델 활성 → 두 NetworkAnimator 정상 등록 ✅
+   ↓ ViewPoint_A의 NetworkTransform 등록 (Owner Authority)
+   
+6. TeamA.OnNetworkSpawn → SwitchToNormalModel
+   ↓ Normal 시각 ON, Monster 시각 OFF
+   ↓ OnModelSwitched 이벤트 발행
+   
+7. PlayerAnimation.OnNetworkSpawn
+   ↓ CacheAllAnimators (두 모델 Animator 캐싱)
+   ↓ ApplyCullingMode (두 Animator 모두 culling 설정)
+   
+8. Team.Value 동기화 완료 → TeamA.OnTeamSetup
+   ↓ 본인 마피아면 SwitchToMonsterModel
+   ↓ 본인 시민이면 OnIamBSet 이벤트 구독 (나중 마피아 결정 대비)
+```
+
+---
+
+#### 시점별 시각 결과
+
+| 시점 | 본인 캐릭터 | 다른 시민 | 다른 마피아 |
+|---|---|---|---|
+| 본인 시민 | Normal 모델 | Normal 모델 | Normal 모델 |
+| 본인 마피아 | Normal 모델 | **Monster 모델** | Normal 모델 |
+
+본인이 마피아면 SwitchToMonsterModel 호출되어 시민들의 Monster 모델만 보임.
+Renderer 토글이라 GameObject + Animator는 항상 동작.
+
+---
+
+#### Locomotion 동기화 흐름 (매 프레임)
+
+```
+Owner(시민 본인) 측:
+  PlayerAnimation.Update (IsOwner 가드)
+    ↓ SetMovementParams(_animatorNormal) → Normal Animator 파라미터 set
+    ↓ SetMovementParams(_animatorMonster) → Monster Animator 파라미터 set
+    
+  두 Animator 항상 활성이라 update 사이클 동작
+    ↓ Normal NetworkAnimator → dirty 감지 → 모든 클라 동기화
+    ↓ Monster NetworkAnimator → dirty 감지 → 모든 클라 동기화
+
+Non-Owner 측:
+  Update IsOwner 가드 통과 X (return)
+  NetworkAnimator가 수신 데이터로 자기 Animator 파라미터 적용
+    ↓ Normal Animator: Speed/Grounded/Jump 등 동기화 ✅
+    ↓ Monster Animator: Speed/Grounded/Jump 등 동기화 ✅
+    
+시각:
+  본인 시민 시점 → Normal 시각 ON → Normal 애니메이션 보임
+  본인 마피아 시점 → Monster 시각 ON → Monster 애니메이션 보임
+```
+
+---
+
+#### 공격/피격/사망 트리거 흐름
+
+```
+Owner 측 PlayerCombat 상태 변경
+  ↓ NetworkVariable 동기화 → 모든 클라이언트 PlayerAnimation.PlayStateAnimation 호출
+  
+PlayStateAnimation:
+  ↓ SetTriggerOnBoth(AnimAttack)
+  ↓ _animatorNormal.SetTrigger(Attack)
+  ↓ _animatorMonster.SetTrigger(Attack)
+
+각 NetworkAnimator:
+  ↓ Trigger는 RPC 기반 → 즉시 모든 클라 송신
+  
+시각:
+  본인 시민 시점 → Normal의 공격 모션 보임
+  본인 마피아 시점 → Monster의 공격 모션 보임
+```
+
+Trigger는 dirty 체크가 아닌 RPC라 양쪽 NetworkAnimator 모두 즉시 송신.
+
+---
+
+#### IK 동작 흐름 (카메라 회전 시)
+
+```
+Owner 카메라 회전 (PlayerCamera)
+  ↓ ViewPoint_A의 Local Rotation 변경 (Pitch/Yaw)
+  ↓ 자식 AimTarget의 월드 위치 변경
+  
+ViewPoint_A의 NetworkTransform (Owner Authority)
+  ↓ 모든 클라이언트에 위치/회전 동기화
+  ↓ 다른 클라이언트의 AimTarget도 같은 월드 위치 ✅
+
+각 클라이언트:
+  Rig Builder가 매 프레임 IK 평가
+    ↓ Head/Neck/Chest Multi-Aim Constraint가 AimTarget 방향 회전
+    ↓ Weight 0.8 / 0.5 / 0.2 분배로 자연스러운 곡선
+    
+  본 회전은 Renderer 무관 → 시각 ON 모델만 결과 보임
+```
+
+NetworkTransform Owner Authority 변경이 핵심. Server Authority 기본값에선 클라이언트의 회전 송신 불가.
+
+---
+
+#### 모델 전환 흐름 (본인이 마피아로 결정 시)
+
+```
+1. 본인 마피아 결정 (LocalManager.IamB = true)
+   ↓ OnIamBSet 이벤트 발행
+
+2. 모든 시민 인스턴스의 TeamA.OnTeamSetup이 OnIamBSet 구독 중
+   ↓ SwitchToMonsterModel 호출
+
+3. 각 시민의 TeamA.SwitchToMonsterModel
+   ↓ _normalVisual.SetVisible(false) → Normal Renderer + Decal OFF
+   ↓ _monsterVisual.SetVisible(true) → Monster Renderer + Decal ON
+   ↓ OnModelSwitched 이벤트 발행 (구독자 없음, 향후 확장용)
+   
+시각 결과:
+  본인 마피아 측에선 모든 시민이 Monster 모델 + 괴물 그림자로 보임 ✅
+  
+다른 클라(시민 본인) 측에선 변화 없음:
+  시민 본인은 IamB = false → SwitchToMonsterModel 호출 X
+  자기 자신과 다른 시민들 모두 Normal 모델로 유지 ✅
+```
+
+각 클라이언트의 LocalManager.IamB 상태에 따라 독립적으로 시각 결정. NGO 동기화와 별개.
+
+---
+
+#### 핵심 분리 원칙
+
+| 메커니즘 | 책임 |
+|---|---|
+| GameObject 활성 | NGO 등록 + Animator update 사이클 |
+| Renderer enabled | 시각 표현 |
+| NetworkAnimator | Animator 파라미터/Trigger 동기화 |
+| NetworkTransform | Transform 위치/회전 동기화 |
+| LocalManager.IamB | 로컬 시점 결정 (네트워크 무관) |
+
+다섯 메커니즘이 독립적으로 동작 + 각자 책임 명확. 통합 디버깅 과정에서 본질적으로 다른 메커니즘을 같은 코드로 다루던 부분을 분리한 결과.
 
 ---
 ## 작업 일지 양식
