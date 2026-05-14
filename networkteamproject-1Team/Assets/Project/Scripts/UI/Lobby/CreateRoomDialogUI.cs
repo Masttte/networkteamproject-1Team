@@ -11,10 +11,12 @@ public class CreateRoomDialogUI : MonoBehaviour
     [SerializeField] TMP_InputField _roomNameInput;
     [SerializeField] TMP_Text _warningText;
     [SerializeField] Button _confirmButton;
+    public bool isPrivate { get; set; }
 
     private void OnEnable()
     {
         BindButtonEvents();
+        isPrivate = false;
     }
 
     private void OnDisable()
@@ -44,7 +46,7 @@ public class CreateRoomDialogUI : MonoBehaviour
         }
 
         SetWarning("방 생성 중...");
-        bool success = await LobbyManager.Instance.CreateSessionAsync(roomName);
+        bool success = await LobbyManager.Instance.CreateSessionAsync(roomName, isPrivate);
 
         if (!success)
         {

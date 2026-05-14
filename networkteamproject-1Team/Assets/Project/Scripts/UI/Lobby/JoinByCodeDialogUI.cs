@@ -17,12 +17,19 @@ public class JoinByCodeDialogUI : MonoBehaviour
 
     private void OnEnable()
     {
-        BindButtonEvents();
+        if (_confirmButton != null)
+        {
+            BindButtonEvents();
+            ResetFields();
+        }
     }
 
     private void OnDisable()
     {
-        UnbindButtonEvents();
+        if (_confirmButton != null)
+        {
+            UnbindButtonEvents();
+        }
     }
 
     /// <summary>
@@ -31,7 +38,6 @@ public class JoinByCodeDialogUI : MonoBehaviour
     public void Open()
     {
         _panel.SetActive(true);
-        ResetFields();
     }
 
     /// <summary>
