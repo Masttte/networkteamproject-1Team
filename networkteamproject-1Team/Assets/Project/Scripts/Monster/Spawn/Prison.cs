@@ -15,7 +15,7 @@ namespace Monster
         private int _cnt;
         private float _timer;
         public float unlockTime;
-        public bool IsSecondMonster { get; set; }
+        public bool IsSecondMonster;
 
         public static event Action<Prison> OnPrisonSpawned;
 
