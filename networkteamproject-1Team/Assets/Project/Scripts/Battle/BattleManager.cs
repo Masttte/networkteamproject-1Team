@@ -67,6 +67,7 @@ namespace Battle
         // 모든 클라이언트에서 실행
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
+            await UniTask.Delay(noStartDelay ? 100 : 9000);
             AudioManager.Instance.PlaySfxDry(countSound);
 
             // ----- 발전기 배치 -----
@@ -75,7 +76,7 @@ namespace Battle
             // 발전기 스폰 (서버에서 실행)
             randomSpawnObject.SpawnObjects(spawnCount); 
 
-            await UniTask.Delay(noStartDelay ? 0 : 3000); // 시작 딜레이 (임시로 짧게)
+            await UniTask.Delay(noStartDelay ? 100 : 3000); // 오디오 싱크 시작 딜레이 
             OnGameStart?.Invoke();
             Debug.Log("게임을 시작하지");
         }
@@ -106,7 +107,7 @@ namespace Battle
             else if (aliveB == 0)
             {
                 // B팀 전멸: A팀 승리 (B 팀이 전멸해도 게임끝나지 않는 게임디자인 고려중)
-                DeclareResultRpc(TeamType.A);
+                //DeclareResultRpc(TeamType.A);
             }
             else if (aliveA == 0 && aliveB == 0)
             {

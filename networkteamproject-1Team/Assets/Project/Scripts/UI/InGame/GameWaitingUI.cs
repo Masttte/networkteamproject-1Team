@@ -45,7 +45,7 @@ public class GameWaitingUI : NetworkBehaviour
     public async UniTaskVoid HideWaitingPanel()
     {
         _statusText.text = "<color=green>TAB</color>키를 눌러 역할을 확인하세요\n 곧 게임을 시작합니다...";
-        await UniTask.Delay(3000);
+        await UniTask.Delay(9000);
         gameObject.SetActive(false);
     }
 }
