@@ -46,7 +46,9 @@ namespace Monster
             _rootAnimator = GetComponent<Animator>();
             _source = GetComponent<AudioSource>();
             _monsterController = GetComponent<MonsterController>();
+            _monsterController.OnPrisonSet += OnPrisonSet;
         }
+
         #region 아바타 설정
 
         protected override void OnNetworkPostSpawn()
@@ -57,6 +59,8 @@ namespace Monster
         public override void OnNetworkDespawn()
         {
             BattleManager.Instance.OnGameStart -= OnGameSetup;
+            _monsterController.OnPrisonSet -= OnPrisonSet;
+            _monsterController.Prison.isUnlock.OnValueChanged -= OnPrisonUnlocked;
         }
 
         private void OnGameSetup()
@@ -89,6 +93,17 @@ namespace Monster
             {
                 if (_isHelpLoop) LockedLoopAsync().Forget();
             }
+        }
+
+        void OnPrisonSet(Prison prison)
+        {
+            prison.isUnlock.OnValueChanged += OnPrisonUnlocked;
+        }
+
+        void OnPrisonUnlocked(bool prev, bool next)
+        {
+            // 해제되는 순간 _wasBInRange를 막아 재진입 방지
+            if (next) _wasBInRange = true;
         }
         async UniTaskVoid LockedLoopAsync()
         {

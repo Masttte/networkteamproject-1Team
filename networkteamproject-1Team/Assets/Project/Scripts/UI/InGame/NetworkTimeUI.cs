@@ -1,37 +1,35 @@
 using Battle;
 using Monster;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 
-// Prison의 UnlockServerTime을 NetworkTime 기준으로 카운트다운하여 표시
-public class NetworkTimeUI : NetworkBehaviour, INetworkUpdateSystem
+// Prison의 unlockTime을 기준으로 카운트다운하여 표시
+public class NetworkTimeUI : MonoBehaviour
 {
     [SerializeField] TMP_Text _timerText;
 
     Prison _prison;
     float _remaining;
+    public bool running;
 
     private void Awake()
     {
         Prison.OnPrisonSpawned += OnPrisonSpawned;
     }
 
-    public override void OnNetworkSpawn()
+    private void OnEnable()
     {
         BattleManager.Instance.OnGameStart += OnGameStart;
     }
-
-    public override void OnNetworkDespawn()
+    private void OnDisable()
     {
-        BattleManager.Instance.OnGameStart -= OnGameStart;
-        this.UnregisterNetworkUpdate(NetworkUpdateStage.Update);
+        if (BattleManager.Instance != null)
+            BattleManager.Instance.OnGameStart -= OnGameStart;
     }
 
-    public override void OnDestroy()
+    public void OnDestroy()
     {
         Prison.OnPrisonSpawned -= OnPrisonSpawned;
-        base.OnDestroy();
     }
 
     private void OnPrisonSpawned(Prison prison)
@@ -45,23 +43,19 @@ public class NetworkTimeUI : NetworkBehaviour, INetworkUpdateSystem
 
     void OnGameStart()
     {
-        this.RegisterNetworkUpdate(NetworkUpdateStage.Update);
+        running = true;
     }
 
-    public void NetworkUpdate(NetworkUpdateStage updateStage)
-    {
-        if (updateStage != NetworkUpdateStage.Update) return;
 
-        if (_prison.isUnlock.Value)
-        {
-            _timerText.text = string.Empty;
-            return;
-        }
+    private void Update()
+    {
+        if (!running) return;
 
         _remaining -= Time.deltaTime;
-        if (_remaining <= 0)
+        if (_remaining <= 0 || _prison.isUnlock.Value)
         {
-            _timerText.text = "00:00";
+            _timerText.text = string.Empty;
+            running = false;
             return;
         }
 
