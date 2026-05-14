@@ -180,8 +180,9 @@ public class LobbyManager : MonoBehaviour
     /// 세션 생성 후 자동 진입. Relay + NGO Host가 함께 시작됨
     /// </summary>
     /// <param name="sessionName">방 이름</param>
+    /// <param name="isPrivate">true이면 목록에 표시되지 않고 코드로만 참여 가능</param>
     /// <returns>성공 여부</returns>
-    public async UniTask<bool> CreateSessionAsync(string sessionName)
+    public async UniTask<bool> CreateSessionAsync(string sessionName, bool isPrivate = false)
     {
         for (int attempt = 0; attempt <= JOIN_MAX_RETRY; attempt++)
         {
@@ -193,7 +194,7 @@ public class LobbyManager : MonoBehaviour
                 {
                     Name = sessionName,
                     MaxPlayers = _settings.MaxPlayers,
-                    IsPrivate = false,
+                    IsPrivate = isPrivate,
                     PlayerProperties = BuildLocalPlayerProperties()
                 }.WithRelayNetwork(region);
                 _session = await MultiplayerService.Instance.CreateSessionAsync(options);
