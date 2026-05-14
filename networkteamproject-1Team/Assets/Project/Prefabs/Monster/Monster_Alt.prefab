@@ -157,7 +157,7 @@ MonoBehaviour:
     offset: {x: 0, y: 1, z: 0}
     idleTime: 3.5
     chaseRange: 100
-    attackRange: 3.64
+    attackRange: 3.84
     attackDamage: 40
     attackCooldown: 1.5
     isAttacking: 0
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cdd53c9d96b5941bbe455602d9c819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster.MonsterAnimationEvents
-  _attackA: {fileID: 6418180475301049370, guid: a5416ad2544e8b843a65d18a2ea9346d, type: 2}
+  _attackA: {fileID: 6418180475301049370, guid: c5095401c9ac8fc4b92583938a99c938, type: 2}
   _attackB: {fileID: 6418180475301049370, guid: a5416ad2544e8b843a65d18a2ea9346d, type: 2}
   _footStep: {fileID: 6418180475301049370, guid: 92420c4cf6e37d94fa28efe829ae6c40, type: 2}
 --- !u!114 &1680963083851607323
@@ -337,8 +337,8 @@ MonoBehaviour:
   _isHelpLoop: 0
   _locked: {fileID: 8300000, guid: 2647b169f72da724bad3c85d595ab312, type: 3}
   _talk: {fileID: 8300000, guid: dfcf7d31b40702c4e8a7a6c1f7f7309f, type: 3}
-  _threat: {fileID: 8300000, guid: c98a80bd9312aff45baab22dfe93bdc3, type: 3}
-  _threatAudioMs: 14000
+  _threat: {fileID: 8300000, guid: 12e62b8b02d0e10488bd9eb20c313fb7, type: 3}
+  _threatAudioMs: 10000
   _lockedIntervalMin: 7
   _lockedIntervalMax: 14
   _threatRange: 5

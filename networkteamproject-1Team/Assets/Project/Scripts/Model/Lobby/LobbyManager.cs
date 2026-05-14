@@ -118,17 +118,25 @@ public class LobbyManager : MonoBehaviour
     private bool OnWantsToQuit()
     {
         LeaveAndQuitAsync().Forget();
-        return false;
+        return false; // 종료 보류
     }
 
     private async UniTaskVoid LeaveAndQuitAsync()
     {
-        ;
-        if (_exitSession != null)
+        try
         {
-            await _exitSession.LeaveAsync();
+            if (_exitSession != null)
+                await _exitSession.LeaveAsync();
         }
-        Application.Quit();
+        catch (Exception e)
+        {
+            Debug.LogWarning($"{e.Message}");
+        }
+        finally
+        {
+            Application.wantsToQuit -= OnWantsToQuit;
+            Application.Quit();
+        }
     }
 
     /// <summary>
