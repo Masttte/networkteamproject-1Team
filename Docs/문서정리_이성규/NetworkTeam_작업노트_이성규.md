@@ -1637,6 +1637,75 @@ NetworkTransform Owner Authority 변경이 핵심. Server Authority 기본값에
 
 다섯 메커니즘이 독립적으로 동작 + 각자 책임 명확. 통합 디버깅 과정에서 본질적으로 다른 메커니즘을 같은 코드로 다루던 부분을 분리한 결과.
 
+### IK 입력 시스템 통합 (사망 시 자동 비활성 + 입력 카테고리 일관)
+
+#### 의도
+사망 시 머리 IK가 AimTarget 계속 추적하면 Death 애니메이션 어색  
+PlayerInputHandler의 InputCategory 비트 플래그 시스템에 HeadTracking을
+추가해서 UI/사망 시 입력과 함께 IK도 일괄 처리되도록 통합.
+
+#### 설계
+
+InputCategory에 HeadTracking 비트 추가:
+- `1 << 6` 비트 할당
+- `All`에 포함 → DisableInput(All) 한 줄로 IK까지 비활성
+
+PlayerInputHandler.ApplyState에서 HeadTracking 변경 시에만 IK 토글:
+```csharp
+private void ApplyState(InputCategory changed)
+{
+    if ((changed & InputCategory.HeadTracking) != 0 && _animation != null)
+        _animation.SetIKEnabled(IsEnabled(InputCategory.HeadTracking));
+}
+```
+
+변경된 카테고리만 처리. 다른 카테고리 변경 시 IK 재적용 X.
+
+#### Owner / Non-Owner 책임 분리
+
+| 경로 | 영향 범위 | 트리거 |
+|---|---|---|
+| PlayerInputHandler.ApplyState | Owner만 | UI 오픈 / 사망 (입력 시스템) |
+| PlayerAnimation.PlayStateAnimation | 모든 클라 | NetworkVariable 동기화 |
+
+Non-Owner는 PlayerInputHandler.enabled = false → ApplyState 호출 X.
+PlayStateAnimation은 모든 클라에서 호출되므로 사망 시 SetIKEnabled(false)
+호출 보장.
+
+#### IK 라이프사이클
+
+```
+스폰 직후:
+  PlayerAnimation.OnNetworkSpawn → CacheAllAnimators + ApplyCullingMode
+  PlayerController.OnNetworkSpawn → _input.EnableInput(Camera | HeadTracking)
+    ↓ 둘러보기 가능 + 머리 추적 활성
+
+게임 시작:
+  HandleGameStart → _input.EnableInput(All)
+    ↓ 모든 입력 + IK 활성 유지
+
+사망:
+  PlayStateAnimation(Dead) → SetIKEnabled(false) [모든 클라]
+  HandleCombatStateChanged → _input.DisableInput(All) → SetIKEnabled(false) [Owner 재호출]
+    ↓ Death 애니메이션 자연스러운 출력
+```
+
+#### 변경 코드
+
+**PlayerInputHandler.cs**
+- InputCategory.HeadTracking 비트 추가
+- ApplyState(changed) 메서드 신규 (변경된 카테고리만 처리)
+- Initialize 시그니처에 PlayerAnimation 매개변수 추가
+
+**PlayerAnimation.cs**
+- _rigBuilderNormal / _rigBuilderMonster 캐싱
+- SetIKEnabled(bool) public API
+- PlayStateAnimation Dead 케이스에 SetIKEnabled(false) 추가
+
+**PlayerController.cs**
+- Initialize 호출에 _animation 전달
+- 스폰 직후 EnableInput(Camera | HeadTracking)으로 IK 함께 활성
+
 ---
 ## 작업 일지 양식
 
