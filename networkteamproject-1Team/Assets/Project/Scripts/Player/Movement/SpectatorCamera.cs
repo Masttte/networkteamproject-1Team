@@ -6,23 +6,33 @@ using UnityEngine;
 
 namespace Player
 {
+    /// <summary>
+    /// 사망 후 관전 카메라. VFX 완료 후 자기 활성, 살아있는 플레이어의 SpectatorRoot 추적.
+    /// Q 키로 다음 관전 대상 순환.
+    /// 씬 배치 + Priority 변경으로 Brain 블렌딩 활용.
+    /// </summary>
     public class SpectatorCamera : MonoBehaviour
     {
+        [Header("Cinemachine")]
         [SerializeField] private CinemachineCamera _camera;
         
+        [Header("Priority")]
         [SerializeField] private int _activePriority = 100;
         [SerializeField] private int _inactivePriority = -1;
+        
+        [Header("Input")]
+        [SerializeField] private BattleInputReader _input;
     
         private List<PlayerCamera> _alivePlayers;
         private int _currentIndex;
-        
-        private const string SPECTATOR_CAMERA_TAG = "Spectator";
 
         private void Awake()
         {
             if(_camera == null) _camera = GetComponent<CinemachineCamera>();
         }
 
+        // ===== 활성 / 비활성 =====
+        
         public void TriggerAfterVFX()
         {
             if (VFXManager.Instance != null)
@@ -42,8 +52,7 @@ namespace Player
             if (_alivePlayers.Count == 0)
             {
                 Debug.LogWarning("[SpectatorCamera] 살아있는 플레이어 0명. 모든 플레이어 사망");
-                // 게임 종료 처리 또는 빈 화면 처리
-                return;
+                return; // 살아있는 플레이어 없으면 입력 구독 X
             }
             
             _currentIndex = 0;
@@ -51,16 +60,25 @@ namespace Player
             
             // Priority 변경으로 Brain 블렌딩 활용
             _camera.Priority = _activePriority;
+            
+            // 입력 구독 (살아있는 플레이어 있을 때만)
+            SubscribeInput();
+            
             Debug.Log($"[SpectatorCamera] 활성. Priority={_activePriority}");
         }
 
         public void Deactivate()
         {
             _camera.Priority = _inactivePriority;
+            UnsubscribeInput();
         }
         
-        // 게임 진행 중 다른 플레이어도 죽을 수 있음.
-        // NextTarget 호출 시 죽은 플레이어 자동 제거 또는 재검색
+        // ===== 타겟 전환 =====
+        
+        /// <summary>
+        /// 게임 진행 중 다른 플레이어도 죽을 수 있음.
+        /// NextTarget 호출 시 죽은 플레이어 자동 제거 또는 재검색
+        /// </summary>
         public void NextTarget()
         {
             if (_alivePlayers == null || _alivePlayers.Count == 0) return;
@@ -117,6 +135,31 @@ namespace Player
             // 3인칭용 카메라 루트 추적 (애니메이션 영향 없는 안정적 Transform)
             _camera.Target.TrackingTarget = playerCam.SpectatorRoot;
             Debug.Log($"[SpectatorCamera] 추적 시작: {playerCam.name}");
+        }
+        
+        // ===== 입력 =====
+
+        private void SubscribeInput()
+        {
+            if (_input == null)
+            {
+                Debug.LogWarning("[SpectatorCamera] BattleInputReader가 인스펙터에 할당되지 않았습니다.");
+                return;
+            }
+
+            _input.onNextTarget += NextTarget;
+        }
+
+        private void UnsubscribeInput()
+        {
+            if (_input == null) return;
+            
+            _input.onNextTarget -= NextTarget;
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribeInput();
         }
     }
 }

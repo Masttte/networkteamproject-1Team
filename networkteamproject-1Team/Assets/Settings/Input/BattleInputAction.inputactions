@@ -86,6 +86,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "NextTarget",
+                    "type": "Button",
+                    "id": "892c8a24-12cd-4acb-9985-1a1f76badc7e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -262,6 +271,17 @@
                     "processors": "",
                     "groups": ";KeyBoard, Mouse",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d385685c-6015-4758-a4a2-8076da375c34",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyBoard, Mouse",
+                    "action": "NextTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
