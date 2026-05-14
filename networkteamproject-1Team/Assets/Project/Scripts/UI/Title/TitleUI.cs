@@ -9,7 +9,7 @@ public class TitleUI : MonoBehaviour
 {
     [SerializeField] TMP_Text _statusText;
 
-    private async void OnEnable()
+    private async void Start()
     {
         SetStatus("로그인 중...");
         try

@@ -123,13 +123,20 @@ public class LobbyManager : MonoBehaviour
 
     private async UniTaskVoid LeaveAndQuitAsync()
     {
-        if (_exitSession != null)
+        try
         {
-            await _exitSession.LeaveAsync();
+            if (_exitSession != null)
+                await _exitSession.LeaveAsync();
         }
-        // 구독 해제 후 재호출
-        Application.wantsToQuit -= OnWantsToQuit; // 없으면 무한루프
-        Application.Quit();
+        catch (Exception e)
+        {
+            Debug.LogWarning($"{e.Message}");
+        }
+        finally
+        {
+            Application.wantsToQuit -= OnWantsToQuit;
+            Application.Quit();
+        }
     }
 
     /// <summary>

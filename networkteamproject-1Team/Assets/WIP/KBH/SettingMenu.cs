@@ -76,6 +76,7 @@ public class SettingMenu : MonoBehaviour
     private void OnDisplayChanged(int index)
     {
         bool ifFullscreen = (index == 1);
+        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
         Screen.fullScreen = ifFullscreen;
         PlayerPrefs.SetInt(KEY_DISPLAY, index);
         PlayerPrefs.Save();
