@@ -1,3 +1,4 @@
+using Battle;
 using System;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Monster
         private PressAction _pressAction;
         private MeshRenderer _monsterRenderer;
 
-        private int _cnt;
+        public int cnt = 0;
         private float _timer;
         public float unlockTime;
         public bool IsSecondMonster;
@@ -30,7 +31,6 @@ namespace Monster
             _pressAction = GetComponent<PressAction>();
             _monsterRenderer = GetComponentInChildren<MeshRenderer>();
             IsSecondMonster = false;
-            _cnt = 0;
 
             if (!IsServer) return;
             isUnlock.Value = false;
@@ -42,16 +42,29 @@ namespace Monster
 
         }
 
+        private void OnEnable()
+        {
+            BattleManager.Instance.OnGameStart += OnGameStart;
+        }
+        private void OnDisable()
+        {
+            BattleManager.Instance.OnGameStart -= OnGameStart;
+        }
+
+        void OnGameStart()
+        {
+            cnt = 1; // 시작 시점에 설정
+        }
         private void Update()
         {
-            if (!IsSecondMonster || _cnt == 1) return;
-            
+            if (!IsSecondMonster || cnt != 1) return;
+
             _timer += Time.deltaTime;
 
             if (_timer >= unlockTime)
             {
                 UnlockPrison();
-                _cnt++;
+                cnt++;
             }
         }
 
@@ -71,20 +84,13 @@ namespace Monster
                 return;
             }
 
-            if (IsServer)
-            {
-                SyncUnlock();
-                isUnlock.Value = true;
-            }
-            else
-            {
-                UnlockServerRpc();
-            }
+            UnlockRpc();
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void UnlockServerRpc()
+        [Rpc(SendTo.Everyone)]
+        private void UnlockRpc()
         {
+            if (IsServer) isUnlock.Value = true;
             SyncUnlock();
         }
 
