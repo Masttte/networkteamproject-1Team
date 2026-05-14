@@ -6,7 +6,6 @@ namespace Player
 {
     // 캐싱 및 플레이어 모듈 간 의존성 주입을 담당하는 최상단 에이전트
     [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(Animator))]
     public class PlayerController : NetworkBehaviour
     {
         // 컴포넌트 선언
