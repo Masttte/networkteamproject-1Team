@@ -1,5 +1,6 @@
 using Battle;
 using System;
+using Player;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -111,11 +112,21 @@ namespace Monster
         public void InteractStart()
         {
             _pressAction.StartInteraction();
+            
+            var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var input = playerObj.GetComponent<PlayerInputHandler>();
+
+            input.DisableInput(InputCategory.Movement); // 발전기 상호작용 중에는 움직이지 못하게
         }
 
         public void InteractStop()
         {
             _pressAction.StopInteraction();
+            
+            var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var input = playerObj.GetComponent<PlayerInputHandler>();
+        
+            input.EnableInput(InputCategory.Movement); // 이동 복구
         }
     }
 }

@@ -1,61 +1,63 @@
+using System;
+using Player;
 using UnityEngine;
 
 // PlayerA 프리팹에 부착
 // 프리팹 구조:
 //   PlayerA  (Layer: Player)
-//   ├─ A     (Layer: Average)    A 시점: 보통 모델
-//   ├─ B     (Layer: Beautiful)  B 시점: 괴물 모델
+//   ├─ A     (Layer: Average)    A 시점: 보통 모델 (Animator + NetworkAnimator 보유)
+//   ├─ B     (Layer: Beautiful)  B 시점: 괴물 모델 (Animator + NetworkAnimator 보유)
 //   └─ ...
 public class TeamA : TeamBase
 {
     [SerializeField] GameObject _normalModel;
     [SerializeField] GameObject _monsterModel;
+
+    public GameObject NormalModel => _normalModel;
+    public GameObject MonsterModel => _monsterModel;
     
-    [Header("Avatars")]
-    [SerializeField] Avatar _normalAvatar;
-    [SerializeField] Avatar _monsterAvatar;
+    /// <summary>
+    /// 모델 전환(SetActive 변경) 직후 발행.
+    /// PlayerAnimation 등 활성 모델의 Animator를 참조하는 컴포넌트가 재캐싱용으로 구독.
+    /// </summary>
+    public event Action OnModelSwitched;
     
-    Animator _rootAnimator;
+    // 두 모델의 Renderer 캐싱 (SkinnedMeshRenderer 포함)
+    private ModelVisual _normalVisual;
+    private ModelVisual _monsterVisual;
 
     private void Awake()
     {
-        _rootAnimator = GetComponent<Animator>();
+        // 시작 시 두 모델 모두 활성 (NGO가 NetworkBehaviour 등록 가능하도록)
+        _normalModel.SetActive(true);
+        _monsterModel.SetActive(true);
         
-        // 시작 시점에 normal avatar 명시적 설정 및 꺼져있을지 모를 모델 활성화 (안전장치)
-        ApplyNormalAvatar(); 
+        // 비주얼 요소 캐싱 (자식 포함, 비활성 포함 X — 항상 활성이므로 불필요)
+        _normalVisual  = _normalModel.GetComponent<ModelVisual>();
+        _monsterVisual = _monsterModel.GetComponent<ModelVisual>();
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+        // NGO 등록 완료 후 적합한 모델만 활성
+        SwitchToNormalModel();
     }
 
     protected override void OnTeamSetup() // 팀 배정 시 모든 클라이언트에서 호출됨
     {
-        // B팀 클라이언트에서 PlayerA를 괴물로 보이게 처리
-        // 앞 순서로 생성된 PlayerA 프리팹은 델리게이트로 처리 (플레이어 B 설정이 늦었을때 적용)
+        // 본인이 마피아면 시민들을 괴물로 보이게 전환
+        // 본인 시점 결정이 늦으면 이벤트로 대응
         if (LocalManager.Instance.IamB)
-            ApplyMonsterAvatar();
+            SwitchToMonsterModel();
         else
-            LocalManager.Instance.OnIamBSet += ApplyMonsterAvatar;
+            LocalManager.Instance.OnIamBSet += SwitchToMonsterModel;
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        LocalManager.Instance.OnIamBSet -= ApplyMonsterAvatar;
-    }
-
-    // 노말 아바타로 Reset/되돌리기
-    void ApplyNormalAvatar()
-    {
-        _normalModel.SetActive(true);
-        _monsterModel.SetActive(false);
-        _rootAnimator.avatar = _normalAvatar;
-    }
-    
-    // 루트 Animator의 Avatar를 괴물 Avatar 자산으로 교체
-    void ApplyMonsterAvatar()
-    {
-        _normalModel.gameObject.SetActive(false);
-        _monsterModel.gameObject.SetActive(true);
-
-        _rootAnimator.avatar = _monsterAvatar;
+        LocalManager.Instance.OnIamBSet -= SwitchToMonsterModel;
     }
 
     protected override void UpdateNameText(string newName)
@@ -71,5 +73,19 @@ public class TeamA : TeamBase
         {
             nameText.color = Color.white;
         }
+    }
+    
+    void SwitchToNormalModel()
+    {
+        _normalVisual.SetVisible(true);
+        _monsterVisual.SetVisible(false);
+        OnModelSwitched?.Invoke();
+    }
+    
+    void SwitchToMonsterModel()
+    {
+        _normalVisual.SetVisible(false);
+        _monsterVisual.SetVisible(true);
+        OnModelSwitched?.Invoke();
     }
 }
