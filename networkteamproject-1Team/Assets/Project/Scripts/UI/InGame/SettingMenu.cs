@@ -9,9 +9,6 @@ using TMPro;
 public class SettingMenu : MonoBehaviour
 {
 
-    [Header("UI")]
-    [SerializeField] private TMP_Dropdown displayDropdown;
-
     [Header("사운드 설정")] 
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider bgmSlider;
@@ -66,22 +63,12 @@ public class SettingMenu : MonoBehaviour
             sensitivitySlider.maxValue = MAX_SENSITIVITY;
         }
         
-        displayDropdown?.onValueChanged.AddListener(OnDisplayChanged);
         masterSlider?.onValueChanged.AddListener(OnMasterChanged);
         bgmSlider?.onValueChanged.AddListener(OnBgmChanged);
         sfxSlider?.onValueChanged.AddListener(OnSfxChanged);
         sensitivitySlider?.onValueChanged.AddListener(OnSensitivityChanged);
         
         LoadSettings();
-    }
-
-    private void OnDisplayChanged(int index)
-    {
-        bool ifFullscreen = (index == 1);
-        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
-        Screen.fullScreen = ifFullscreen;
-        PlayerPrefs.SetInt(KEY_DISPLAY, index);
-        PlayerPrefs.Save();
     }
 
     private void OnMasterChanged(float value)
@@ -126,14 +113,6 @@ public class SettingMenu : MonoBehaviour
 
     private void LoadSettings()
     {
-        // UI
-        int displayIndex = PlayerPrefs.GetInt(KEY_DISPLAY, 0);
-        if (displayDropdown != null)
-        {
-            displayDropdown.SetValueWithoutNotify(displayIndex);
-            Screen.fullScreen = (displayIndex == 1);
-        }
-        
         // Sound
         float master = PlayerPrefs.GetFloat(KEY_MASTER, 1f);
         float bgm = PlayerPrefs.GetFloat(KEY_BGM, 1f);
