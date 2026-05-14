@@ -447,7 +447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: spawnCount
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: randomSpawnObject
@@ -455,7 +455,7 @@ PrefabInstance:
       objectReference: {fileID: 1931299521}
     - target: {fileID: 1658008972141709227, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: generatorRequiredCount
-      value: 15
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1811204544574743715, guid: e06407df0a470054eaeb599475a054c9, type: 3}
       propertyPath: m_LocalPosition.y
