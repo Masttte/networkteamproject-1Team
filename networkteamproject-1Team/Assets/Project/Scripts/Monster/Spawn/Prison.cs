@@ -14,7 +14,7 @@ namespace Monster
 
         private int _cnt;
         private float _timer;
-        [SerializeField] private float _unlockTime;
+        public float unlockTime;
         public bool IsSecondMonster { get; set; }
 
         public static event Action<Prison> OnPrisonSpawned;
@@ -48,7 +48,7 @@ namespace Monster
             
             _timer += Time.deltaTime;
 
-            if (_timer >= _unlockTime)
+            if (_timer >= unlockTime)
             {
                 UnlockPrison();
                 _cnt++;
