@@ -29,7 +29,7 @@ namespace Monster
         [SerializeField] float _lockedIntervalMin = 7f;
         [SerializeField] float _lockedIntervalMax = 14f;
         [SerializeField] float _threatRange = 5f;
-        float _talkRange = 2.99f;
+        public float talkRange = 2.49f;
 
         NetworkVariable<bool> _isTalked = new NetworkVariable<bool>(false);
         MonsterController _monsterController;
@@ -125,7 +125,7 @@ namespace Monster
             // locked 상태일 때만 B팀 근접 대사 체크
             if (!_monsterController.Prison.isUnlock.Value)
             {
-                bool isBInRange = Physics.CheckSphere(transform.position, _talkRange, BLayer);
+                bool isBInRange = Physics.CheckSphere(transform.position, talkRange, BLayer);
                 if (isBInRange && !_wasBInRange)
                 {
                     PlayTalkRpc();
