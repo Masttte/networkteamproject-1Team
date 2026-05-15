@@ -68,9 +68,12 @@ namespace Battle
         // 모든 클라이언트에서 실행
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
-            await UniTask.Delay(300);
+            // 인원 수에 따라 목표 발전기 수 설정
+            generatorRequiredCount = players.Count <= 4 ? 16 : 19;
+
+            await UniTask.Delay(2300);
             OnNameSetup?.Invoke();
-            await UniTask.Delay(noStartDelay ? 0 : 7700);
+            await UniTask.Delay(noStartDelay ? 0 : 5700);
             AudioManager.Instance.PlaySfxDry(countSound);
             // ----- 발전기 배치 -----
             // 필요한 발전기 개수 초기화

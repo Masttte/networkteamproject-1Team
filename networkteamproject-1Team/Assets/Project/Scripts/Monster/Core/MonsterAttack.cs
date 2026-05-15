@@ -7,7 +7,6 @@ namespace Monster
     public class MonsterAttack : NetworkBehaviour
     {
         private MonsterController _monsterController;
-        private float _timer;
         private Ray _ray;
 
         public override void OnNetworkSpawn()
@@ -21,13 +20,15 @@ namespace Monster
             // 테스트를 위해 임시로 Player
         }
     
+        const int WallIgnoreMask = ~(1 << 13); // Wall 레이어 제외
+
         public void Attack()
         {
             if (!IsServer) return;
-        
+
             _ray = new Ray(transform.position + _monsterController.MonsterData.offset, transform.forward);
-        
-            if (Physics.SphereCast(_ray, 1.2f, out RaycastHit hit, _monsterController.MonsterData.attackRange))
+
+            if (Physics.SphereCast(_ray, 1.2f, out RaycastHit hit, _monsterController.MonsterData.attackRange, WallIgnoreMask))
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {

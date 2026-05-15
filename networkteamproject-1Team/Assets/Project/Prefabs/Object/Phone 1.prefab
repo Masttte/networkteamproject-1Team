@@ -255,4 +255,4 @@ MonoBehaviour:
   _teamAAnswerClip: {fileID: 8300000, guid: c8ee71b2375c5314ab743e845626b34e, type: 3}
   _teamBAnswerClip: {fileID: 8300000, guid: 983872bc8a9f35e4891cfa00853cbbfe, type: 3}
   _ringIntervalMin: 65
-  _ringIntervalMax: 132
+  _ringIntervalMax: 200
