@@ -1938,9 +1938,39 @@ if (PlayerPrefs.HasKey(PREF_W) && PlayerPrefs.HasKey(PREF_H))
 각 메서드가 PlayerPrefs 직접 읽기 → 호출자는 흐름만 명확.매개변수 전달  
 중복 제거.  
 
+markdown## Day 18 — 2026-05-17
 
+### 최종 병합 + itch.io 출시
 
-### 최종 병합 및 itch.io 출시
+#### 팀원 작업 병합
+모든 팀원의 PR 머지 + 충돌 해결 + 통합 테스트.
+
+#### 최종 라이트 베이킹
+
+이전 작업에서 이미 셋업 완료한 라이팅 설정 활용 → 버튼 한 번으로 베이킹 완료.
+
+##### 셋업 완료 항목 (이전 작업)
+- APV (Adaptive Probe Volume) 배치 + 셀 크기
+- Lightmap 해상도 / Indirect Resolution
+- Light 모드 (Mixed / Baked)
+- Lightmap Static 플래그
+
+##### 베이킹 검증
+Window → Rendering → Lighting → Debug Settings → **Lighting Data Asset** 확인.
+Scene 뷰의 **Debug Draw Mode**로 베이킹 결과 시각 확인:
+- Baked Lightmap: 베이크된 GI 확인
+- Indirect: 간접광 분포 확인
+- Probes: APV 데이터 확인
+
+#### 최종 빌드
+- 빌드 셋팅 확인: Scene 순서 + Player Settings (해상도 / Allow Fullscreen Switch 등)
+- Development Build 해제
+- 빌드 대상: Windows x64
+
+#### itch.io 출시
+- 빌드 파일 압축 + 업로드
+- 게임 페이지 정보 입력 (스크린샷 / 설명 / 태그)
+- 공개 발행
 
 ---
 ## 작업 일지 양식
