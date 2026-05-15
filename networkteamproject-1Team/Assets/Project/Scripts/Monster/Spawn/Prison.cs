@@ -117,6 +117,7 @@ namespace Monster
             var input = playerObj.GetComponent<PlayerInputHandler>();
 
             input.DisableInput(InputCategory.Movement); // 발전기 상호작용 중에는 움직이지 못하게
+            AudioManager.Instance.PlayUnlockLoop().Forget();
         }
 
         public void InteractStop()
@@ -127,6 +128,7 @@ namespace Monster
             var input = playerObj.GetComponent<PlayerInputHandler>();
         
             input.EnableInput(InputCategory.Movement); // 이동 복구
+            AudioManager.Instance.StopUnlockLoop();
         }
     }
 }

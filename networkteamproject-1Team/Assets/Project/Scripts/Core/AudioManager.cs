@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public enum AudioMixerType { Master, Music, SFX }
 
@@ -26,7 +28,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("감옥 클립")]
     [SerializeField] AudioClip _laugh;
-    [SerializeField] AudioClip _unlockLoop;
+    [SerializeField] AudioClip _unlockLoop; public bool isUnlocking; int _unlockLoopMs;
     [SerializeField] AudioClip _openCage;
 
 #if UNITY_EDITOR
@@ -45,6 +47,7 @@ public class AudioManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this; DontDestroyOnLoad(gameObject); //싱글톤
 
+
         // wetSfxSources: 각 AudioSource를 독립 자식 GameObject에 붙여서 위치를 개별 제어 가능하게 함
         // 오브젝트 풀링 안의 스피커를 hitPoint로 순간이동시켜 재사용
         var sfxMixerGroup = audioMixer.FindMatchingGroups("SFX Reverb")[0];
@@ -61,6 +64,23 @@ public class AudioManager : MonoBehaviour
 
             wetSfxSources[i] = source;
         }
+
+        // 오디오 길이 저장 (루프 재생 주기 계산용)
+        _unlockLoopMs = (int)(_unlockLoop.length * 1000);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // 싱글톤 초기화
+    {
+        if (isUnlocking)
+        {
+            StopUnlockLoop();
+        }
     }
 
     public void PlayBGM(AudioResource bgmClip)
@@ -71,7 +91,6 @@ public class AudioManager : MonoBehaviour
     // 3D 공간음 재생 — 스피커를 position으로 이동 후 재생
     public void PlaySfxWet(AudioResource clip, Vector3 position)
     {
-        if (clip == null) return;
         AudioSource speaker = wetSfxSources[sfxIndex];
 
         // 스피커를 타격 위치로 순간이동 → AudioListener(카메라)와의 거리가 실제 거리가 됨
@@ -91,20 +110,27 @@ public class AudioManager : MonoBehaviour
     {
         drySfxSource.PlayOneShot(_laugh);
     }
-    public void PlayUnlockLoop()
+    public async UniTaskVoid PlayUnlockLoop()
     {
+        isUnlocking = true;
         dryLoopSource.clip = _unlockLoop;
-        dryLoopSource.Play();
+
+        while (isUnlocking)
+        {
+            dryLoopSource.Play();
+            await UniTask.Delay(_unlockLoopMs);
+        }
     }
     public void StopUnlockLoop()
     {
+        isUnlocking = false;
         dryLoopSource.Stop();
+        dryLoopSource.clip = null;
     }
     public void PlayOpenCage()
     {
         drySfxSource.PlayOneShot(_openCage);
     }
-
 
 
     void SetAudioVolume(AudioMixerType audioMixerType, float volume)
@@ -114,9 +140,9 @@ public class AudioManager : MonoBehaviour
     }
 
     public void SetMasterVolume(float value) => SetAudioVolume(AudioMixerType.Master, Mathf.Max(value, 0.0001f));
-    public void SetMusicVolume(float value)  => SetAudioVolume(AudioMixerType.Music, Mathf.Max(value, 0.0001f));
-    public void SetSFXVolume(float value)    => SetAudioVolume(AudioMixerType.SFX, Mathf.Max(value, 0.0001f));
-    
+    public void SetMusicVolume(float value) => SetAudioVolume(AudioMixerType.Music, Mathf.Max(value, 0.0001f));
+    public void SetSFXVolume(float value) => SetAudioVolume(AudioMixerType.SFX, Mathf.Max(value, 0.0001f));
+
     void SetAudioMute(AudioMixerType audioMixerType)
     {
         int type = (int)audioMixerType;
