@@ -1785,11 +1785,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2003056221899642706, guid: 7b00d96bc6ddcf549b587de86f4b1802, type: 3}
       propertyPath: m_text
-      value: "\uC0AC\uB78C\uB4E4\uC744 \uAC00\uB46C\uB193\uACE0 <color=yellow>\uBC1C\uC804\uAE30</color>\uB97C
-        \uB3CC\uB824 \uC0DD\uCCB4 \uC2E4\uD5D8\uC744 \uD558\uB824\uB294 <color=red>\uAD34\uBB3C</color>\uB4E4\uC744
-        <color=red>\uBC29\uD574\uD558\uAC70\uB098 \uD53C\uD558\uBA74\uC11C</color><color=green>
-        \uAC07\uD600\uC788\uB294 \uC0DD\uC874\uC790</color>\uB4E4\uC744 <color=yellow>\uAD6C\uCD9C</color>
-        \uD558\uC2ED\uC2DC\uC624"
+      value: "<color=green>\uAC07\uD600\uC788\uB294 \uC0DD\uC874\uC790</color>\uB4E4\uC744
+        <color=yellow>\uAD6C\uCD9C</color> \uD558\uACE0 \uC0DD\uCCB4 \uC2E4\uD5D8\uC744
+        \uD558\uB824\uACE0 <color=yellow>\uBC1C\uC804\uAE30</color>\uB97C \uB3CC\uB9AC\uB294
+        <color=red>\uAD34\uBB3C</color>\uB4E4\uC744 <color=red>\uC8FD\uC774\uC138\uC694"
       objectReference: {fileID: 0}
     - target: {fileID: 2180332280991817275, guid: 7b00d96bc6ddcf549b587de86f4b1802, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4840,10 +4839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8508410121898114699, guid: 82da7078dbf1dff47868356a293039f4, type: 3}
       propertyPath: m_text
-      value: "<color=green>\uC2DC\uBBFC\uB4E4 \uC0AC\uC774\uC5D0 \uC228\uC5B4\uC11C</color>
-        \uB2F9\uC2E0\uB4E4\uC744 \uC8FD\uC774\uB824\uB294 <color=red>\uBC30\uC2E0\uC790</color>\uB97C
-        \uD53C\uD574 <color=yellow>\uBC1C\uC804\uAE30</color>\uB97C \uB3CC\uB9AC\uACE0
-        \uD0C8\uCD9C\uD558\uC138\uC694!"
+      value: "<color=red>\uC2DC\uAC04\uC774 \uC9C0\uB098 \uAC15\uB825\uD55C \uBAAC\uC2A4\uD130\uAC00
+        \uD480\uB824\uB098\uAE30 \uC804\uC5D0</color> <color=green>\uC2DC\uBBFC\uB4E4
+        \uC0AC\uC774\uC5D0 \uC228\uC5B4\uC11C</color> \uB2F9\uC2E0\uB4E4\uC744 \uC8FD\uC774\uB824\uB294
+        <color=red>\uBC30\uC2E0\uC790</color>\uB97C \uD53C\uD574 <color=yellow>\uBC1C\uC804\uAE30</color>\uB97C
+        \uB3CC\uB9AC\uACE0 \uD0C8\uCD9C\uD558\uC138\uC694!"
       objectReference: {fileID: 0}
     - target: {fileID: 8567580708900210117, guid: 82da7078dbf1dff47868356a293039f4, type: 3}
       propertyPath: m_AnchorMax.y
