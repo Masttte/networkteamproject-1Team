@@ -17,6 +17,9 @@ namespace Player
         [SerializeField, Tooltip("Raycast 대상 레이어")]
         private LayerMask _interactableLayer;
         
+        [SerializeField, Tooltip("Raycast 차단 레이어 (벽, 바닥 등)")]
+        private LayerMask _blockingLayer;
+        
         [Header("References")]
         [SerializeField, Tooltip("Raycast 시작점 (카메라 ViewPoint 권장, 폴백용)")]
         private Transform _detectOrigin;
@@ -83,12 +86,18 @@ namespace Player
             
             Ray ray = new Ray(origin.position, origin.forward);
             
-            if (Physics.Raycast(ray, out RaycastHit hit, _interactRange, _interactableLayer))
+            // Interactable + Blocking 두 레이어 함께 검사
+            // 가장 가까운 콜라이더에 IInteractable 있는지 확인
+            LayerMask combinedMask = _interactableLayer | _blockingLayer;
+            
+            if (Physics.Raycast(ray, out RaycastHit hit, _interactRange, combinedMask))
             {
+                // 가장 가까운 콜라이더가 Interactable Layer인지 확인
                 if (hit.collider.TryGetComponent(out IInteractable interactable))
                 {
                     newTarget = interactable;
                 }
+                // Blocking Layer (벽 등)면 TryGetComponent 실패 → newTarget = null 유지
             }
             // Raycast 실패 시에도 비교
             if (newTarget != _currentTarget)
