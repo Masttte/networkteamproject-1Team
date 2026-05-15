@@ -1827,6 +1827,35 @@ PlayerInteractor의 Raycast가 Interactable Layer만 검사 → 벽 뒤의 IInte
 > Layer Mask 비트 OR로 합친 마스크 + Raycast의 거리 우선 정렬 +
 > TryGetComponent의 자연스러운 null 폴백 패턴 활용.
 
+### 관전 카메라 Target 변경 시각 미반영 — Cinemachine 3.x struct 패턴
+
+#### 증상
+스크립트에서 `_camera.Target.TrackingTarget = newTarget` 호출해도 시각상 카메라가 새 대상으로 전환 X. 인스펙터에서 수동으로 Target 변경하면 정상 동작.
+
+#### 원인
+Cinemachine 3.x의 `CinemachineCamera.Target`은 `CameraTarget` struct (값 타입).
+멤버 직접 할당 시 struct 복사본만 수정되어 원본에 반영 X.
+
+```csharp
+// 복사본 수정 (변경 안 됨)
+_camera.Target.TrackingTarget = playerCam.SpectatorRoot;
+
+// 전체 재할당
+_camera.Target = new CameraTarget
+{
+    TrackingTarget = playerCam.SpectatorRoot,
+    LookAtTarget = playerCam.SpectatorRoot
+};
+```
+
+#### 검증
+인스펙터 수동 변경 = 정상 → 시네머신 자체 OK.
+스크립트 변경 = 시각 X → 본인 코드의 할당 방식 문제.
+비대칭 증상으로 struct 가능성 진단.
+
+> C# 값 타입(struct) vs 참조 타입(class) 차이가 Unity API 호출 패턴에
+> 영향. Property가 struct 반환 시 멤버 직접 할당은 복사본만 수정.
+
 
 ### 최종 병합 및 itch.io 출시
 
