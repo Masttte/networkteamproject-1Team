@@ -69,7 +69,7 @@ namespace Battle
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
             // 인원 수에 따라 목표 발전기 수 설정
-            generatorRequiredCount = players.Count <= 3 ? 10 : players.Count <= 4 ? 16 : 19;
+            generatorRequiredCount = players.Count <= 4 ? 16 : 19;
 
             await UniTask.Delay(2300);
 
