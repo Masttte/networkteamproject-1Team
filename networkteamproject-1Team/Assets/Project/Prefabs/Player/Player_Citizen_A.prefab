@@ -4412,6 +4412,9 @@ MonoBehaviour:
   _interactableLayer:
     serializedVersion: 2
     m_Bits: 4096
+  _blockingLayer:
+    serializedVersion: 2
+    m_Bits: 8192
   _detectOrigin: {fileID: 5929064464354711609}
   _camera: {fileID: 0}
 --- !u!1 &6240414296530918941
