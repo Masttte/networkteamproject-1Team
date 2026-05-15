@@ -1856,6 +1856,89 @@ _camera.Target = new CameraTarget
 > C# 값 타입(struct) vs 참조 타입(class) 차이가 Unity API 호출 패턴에
 > 영향. Property가 struct 반환 시 멤버 직접 할당은 복사본만 수정.
 
+#### Alt+Enter ExclusiveFullScreen 회피
+
+##### 증상
+사용자가 Alt+Enter 입력 시 게임이 ExclusiveFullScreen 모드 진입 → 모니터  
+해상도 자체가 게임 해상도로 변경 → 바탕화면 + 다른 프로그램 윈도우  
+위치/크기 박살.  
+
+##### 원인
+Unity 기본 Alt+Enter 토글이 ExclusiveFullScreen으로 전환. 이 모드는 모니터  
+하드웨어 해상도 자체를 변경(Display Mode 변경)이라 OS 다른 프로그램 영향.  
+
+##### 해결 — Player Settings 차단
+
+##### Player Settings 추가 차단
+Edit → Project Settings → Player → Resolution and Presentation:
+- **Allow Fullscreen Switch: ❌ 체크 해제**
+
+Unity 기본 Alt+Enter 토글 차단.
+
+이미 UI 설정 창에서 모드 전환 구현되어있음.
+
+---
+
+### UI 모드 전환 시 해상도 미적용
+
+#### 증상
+UI에서 Borderless → Windowed 전환 시 윈도우 크기가 이전 Borderless 해상도
+그대로 유지. 사용자 저장 해상도 반영 X.
+
+#### 원인
+QualityManager의 WindowWindowed가 fullScreenMode만 변경 + SetResolution
+호출 X. Unity가 모드 전환 시 자동으로 적합한 해상도 적용 안 함.
+
+#### 해결 — Update에서 모드 변경 감지 + 저장 해상도 재적용
+
+```csharp
+private FullScreenMode _appliedMode;
+
+private void Update()
+{
+    if (Screen.fullScreenMode != _appliedMode)
+    {
+        _appliedMode = Screen.fullScreenMode;
+        ApplyResolutionFromPrefs();
+    }
+}
+```
+
+`_appliedMode` 캐싱으로 변경 감지 + 저장 해상도 재적용. UI 모드 전환과 독립적으로 보장.
+
+---
+
+### 코드 정리 — 중복 로직 메서드화
+
+#### 짚은 점
+ResolutionPersistence의 InitAsync와 ReapplyResolution에 PlayerPrefs 읽기 +
+Screen.SetResolution 호출 로직 중복. 작업 과정에서 InitAsync가 SetResolution을
+두 번 호출하는 미세 버그도 발견.
+
+#### 메서드 분리
+
+| 메서드 | 책임 |
+|---|---|
+| ApplyResolutionFromPrefs | PlayerPrefs 읽기 + SetResolution 호출 |
+| SyncDropdownIndexFromPrefs | UI 드롭다운 인덱스 동기화 |
+| FindMatchingResolutionIndex | w/h/주사율 매칭 인덱스 검색 |
+| SaveResolution | 드롭다운 변경 시 PlayerPrefs 저장 |
+
+#### InitAsync 단순화
+
+```csharp
+// 변경 후
+if (PlayerPrefs.HasKey(PREF_W) && PlayerPrefs.HasKey(PREF_H))
+{
+    ApplyResolutionFromPrefs();
+    SyncDropdownIndexFromPrefs();
+}
+```
+
+각 메서드가 PlayerPrefs 직접 읽기 → 호출자는 흐름만 명확.매개변수 전달  
+중복 제거.  
+
+
 
 ### 최종 병합 및 itch.io 출시
 

@@ -74,7 +74,7 @@ namespace Battle
             await UniTask.Delay(2300);
 
             OnNameSetup?.Invoke();
-            await UniTask.Delay(noStartDelay ? 0 : 7700);
+            await UniTask.Delay(noStartDelay ? 0 : 5700);
             AudioManager.Instance.PlaySfxDry(countSound);
             // ----- 발전기 배치 -----
             // 필요한 발전기 개수 초기화
