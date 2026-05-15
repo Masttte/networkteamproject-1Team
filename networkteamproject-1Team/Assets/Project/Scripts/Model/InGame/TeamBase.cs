@@ -29,6 +29,7 @@ public abstract class TeamBase : NetworkBehaviour
         if (IsOwner)
         {
             BattleManager.Instance.OnNameSetup += SetPlayerName;
+            BattleManager.Instance.OnNameSetup += ApplyCullingMask;
         }
     }
 
@@ -40,6 +41,7 @@ public abstract class TeamBase : NetworkBehaviour
         if (IsOwner)
         {
             BattleManager.Instance.OnNameSetup -= SetPlayerName;
+            BattleManager.Instance.OnNameSetup -= ApplyCullingMask;
         }
     }
 
@@ -81,6 +83,20 @@ public abstract class TeamBase : NetworkBehaviour
     {
         Camera cam = Camera.main;
         if (team == TeamType.B)
+        {
+            cam.cullingMask |= 1 << LAYER_B;
+            cam.cullingMask &= ~(1 << LAYER_A);
+        }
+        else
+        {
+            cam.cullingMask |= 1 << LAYER_A;
+            cam.cullingMask &= ~(1 << LAYER_B);
+        }
+    }
+    void ApplyCullingMask()
+    {
+        Camera cam = Camera.main;
+        if (LocalManager.Instance.IamB)
         {
             cam.cullingMask |= 1 << LAYER_B;
             cam.cullingMask &= ~(1 << LAYER_A);

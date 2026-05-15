@@ -154,10 +154,10 @@ MonoBehaviour:
   <MonsterData>k__BackingField:
     patrolPoints: []
     speed: 0
-    offset: {x: 0, y: 1, z: 0}
+    offset: {x: 0, y: 1.1, z: 0}
     idleTime: 5
     chaseRange: 8
-    attackRange: 3
+    attackRange: 3.2
     attackDamage: 40
     attackCooldown: 2.5
     isAttacking: 0
@@ -342,6 +342,7 @@ MonoBehaviour:
   _lockedIntervalMin: 7
   _lockedIntervalMax: 14
   _threatRange: 5
+  talkRange: 2.49
 --- !u!82 &6055192296469745613
 AudioSource:
   m_ObjectHideFlags: 0
