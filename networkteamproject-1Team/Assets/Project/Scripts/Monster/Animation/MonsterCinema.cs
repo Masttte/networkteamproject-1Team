@@ -29,7 +29,7 @@ namespace Monster
         [SerializeField] float _lockedIntervalMin = 7f;
         [SerializeField] float _lockedIntervalMax = 14f;
         [SerializeField] float _threatRange = 5f;
-        public float talkRange = 2.49f;
+        public float talkRange = 2.45f;
 
         NetworkVariable<bool> _isTalked = new NetworkVariable<bool>(false);
         MonsterController _monsterController;

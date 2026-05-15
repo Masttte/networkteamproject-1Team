@@ -110,13 +110,14 @@ MonoBehaviour:
   _monsterPrefab: {fileID: 9211612362082635193, guid: aa55be691a696564abf09a18d938060c, type: 3}
   _monsterSpawnPoint: {fileID: 4146070315991043871}
   cnt: 0
-  unlockTime: 284
+  unlockTime: 20
   IsSecondMonster: 1
   isUnlock:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  _openCage: {fileID: 8300000, guid: babcbf6192c21794a9be0ba29fcb227b, type: 3}
 --- !u!114 &4748053811678077192
 MonoBehaviour:
   m_ObjectHideFlags: 0

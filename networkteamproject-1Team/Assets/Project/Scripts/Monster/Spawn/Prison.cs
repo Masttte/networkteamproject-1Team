@@ -3,6 +3,7 @@ using System;
 using Player;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Monster
 {
@@ -14,10 +15,11 @@ namespace Monster
         private PressAction _pressAction;
         private MeshRenderer _monsterRenderer;
 
-        public int cnt = 0;
+        [HideInInspector] public int cnt = 0;
         private float _timer;
         public float unlockTime;
         public bool IsSecondMonster;
+        bool _isInteracting; // 로컬 플레이어가 현재 상호작용 중인지 여부
 
         public static event Action<Prison> OnPrisonSpawned;
 
@@ -26,6 +28,7 @@ namespace Monster
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
 
+        [SerializeField] AudioResource _openCage;
         public override void OnNetworkSpawn()
         {
             OnPrisonSpawned?.Invoke(this); // 추가
@@ -40,6 +43,8 @@ namespace Monster
             MonsterSpawn();
 
             _pressAction.IsPressAction += UnlockPrison;
+
+            isUnlock.OnValueChanged += OnIsUnlockChanged;
 
         }
 
@@ -71,10 +76,21 @@ namespace Monster
 
         public override void OnNetworkDespawn()
         {
+            isUnlock.OnValueChanged -= OnIsUnlockChanged;
+
             if (IsServer && _pressAction != null)
             {
                 _pressAction.IsPressAction -= UnlockPrison;
             }
+        }
+
+        private void OnIsUnlockChanged(bool prev, bool next)
+        {
+            if (!next) return;
+
+            // 상호작용 중이던 로컬 플레이어만 이동 복구 + 오디오 정지
+            if (_isInteracting)
+                StopLocalInteract();
         }
 
         private void UnlockPrison()
@@ -98,7 +114,9 @@ namespace Monster
         private void SyncUnlock()
         {
             Debug.Log("<color=red> 괴물이 풀려났다..! </color>");
+            gameObject.layer = 2;
             _monsterRenderer.enabled = false;
+            AudioManager.Instance.PlaySfxWet(_openCage, transform.position);
         }
 
 
@@ -112,21 +130,33 @@ namespace Monster
         public void InteractStart()
         {
             _pressAction.StartInteraction();
-            
+            _isInteracting = true;
+
             var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
             var input = playerObj.GetComponent<PlayerInputHandler>();
 
             input.DisableInput(InputCategory.Movement); // 발전기 상호작용 중에는 움직이지 못하게
+            AudioManager.Instance.PlayUnlockLoop().Forget();
         }
 
         public void InteractStop()
         {
-            _pressAction.StopInteraction();
-            
-            var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
+            if (_isInteracting)
+                _pressAction.StopInteraction();
+
+            StopLocalInteract();
+        }
+
+        void StopLocalInteract()
+        {
+            if (!_isInteracting) return;
+            _isInteracting = false;
+
+            var playerObj = NetworkManager.Singleton.LocalClient?.PlayerObject;
             var input = playerObj.GetComponent<PlayerInputHandler>();
-        
-            input.EnableInput(InputCategory.Movement); // 이동 복구
+            input.EnableInput(InputCategory.Movement);
+
+            AudioManager.Instance.StopUnlockLoop();
         }
     }
 }

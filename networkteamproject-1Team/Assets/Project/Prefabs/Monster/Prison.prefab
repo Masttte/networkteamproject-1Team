@@ -110,11 +110,15 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _monsterPrefab: {fileID: 7715287895704808701, guid: 22984e53faf959841b1dcdb60f254c14, type: 3}
   _monsterSpawnPoint: {fileID: 4146070315991043871}
+  cnt: 0
+  unlockTime: 0
+  IsSecondMonster: 0
   isUnlock:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  _openCage: {fileID: 8300000, guid: babcbf6192c21794a9be0ba29fcb227b, type: 3}
 --- !u!114 &4748053811678077192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressAction
   ShowTopMostFoldoutHeaderGroup: 1
   image: {fileID: 2802766458685972286}
-  _holdTime: 3
+  _holdTime: 4
 --- !u!65 &-5860407533462193135
 BoxCollider:
   m_ObjectHideFlags: 0
