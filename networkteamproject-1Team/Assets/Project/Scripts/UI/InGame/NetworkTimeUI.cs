@@ -1,10 +1,11 @@
 using Battle;
 using Monster;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 // Prison의 unlockTime을 기준으로 카운트다운하여 표시
-public class NetworkTimeUI : MonoBehaviour
+public class NetworkTimeUI : NetworkBehaviour, INetworkUpdateSystem
 {
     [SerializeField] TMP_Text _timerText;
 
@@ -17,19 +18,23 @@ public class NetworkTimeUI : MonoBehaviour
         Prison.OnPrisonSpawned += OnPrisonSpawned;
     }
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
         BattleManager.Instance.OnGameStart += OnGameStart;
     }
-    private void OnDisable()
+
+    public override void OnNetworkDespawn()
     {
         if (BattleManager.Instance != null)
             BattleManager.Instance.OnGameStart -= OnGameStart;
+
+        this.UnregisterNetworkUpdate(NetworkUpdateStage.Update);
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
         Prison.OnPrisonSpawned -= OnPrisonSpawned;
+        base.OnDestroy();
     }
 
     private void OnPrisonSpawned(Prison prison)
@@ -44,11 +49,12 @@ public class NetworkTimeUI : MonoBehaviour
     void OnGameStart()
     {
         running = true;
+        this.RegisterNetworkUpdate(NetworkUpdateStage.Update);
     }
 
-
-    private void Update()
+    public void NetworkUpdate(NetworkUpdateStage updateStage)
     {
+        if (updateStage != NetworkUpdateStage.Update) return;
         if (!running) return;
 
         _remaining -= Time.deltaTime;
