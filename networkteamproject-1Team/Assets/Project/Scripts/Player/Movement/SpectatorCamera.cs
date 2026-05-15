@@ -178,7 +178,13 @@ namespace Player
             }
             
             // 3인칭용 카메라 루트 추적 (애니메이션 영향 없는 안정적 Transform)
-            _camera.Target.TrackingTarget = playerCam.SpectatorRoot;
+            // CameraTarget struct 전체 새로 할당
+            _camera.Target = new CameraTarget
+            {
+                TrackingTarget = playerCam.SpectatorRoot,
+                LookAtTarget = playerCam.SpectatorRoot
+            };
+            // _camera.Target.TrackingTarget = playerCam.SpectatorRoot;
             Debug.Log($"[SpectatorCamera] 추적 시작: {playerCam.name}");
         }
         
