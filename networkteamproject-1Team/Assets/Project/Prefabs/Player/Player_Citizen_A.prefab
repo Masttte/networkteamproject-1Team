@@ -4408,7 +4408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerInteractor
   ShowTopMostFoldoutHeaderGroup: 1
-  _interactRange: 2.34
+  _interactRange: 1.6
   _interactableLayer:
     serializedVersion: 2
     m_Bits: 4096

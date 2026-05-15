@@ -29,7 +29,6 @@ public class AudioManager : MonoBehaviour
     [Header("감옥 클립")]
     [SerializeField] AudioClip _laugh;
     [SerializeField] AudioClip _unlockLoop; public bool isUnlocking; int _unlockLoopMs;
-    [SerializeField] AudioClip _openCage;
 
 #if UNITY_EDITOR
     private void Reset()
@@ -127,11 +126,6 @@ public class AudioManager : MonoBehaviour
         dryLoopSource.Stop();
         dryLoopSource.clip = null;
     }
-    public void PlayOpenCage()
-    {
-        drySfxSource.PlayOneShot(_openCage);
-    }
-
 
     void SetAudioVolume(AudioMixerType audioMixerType, float volume)
     {
