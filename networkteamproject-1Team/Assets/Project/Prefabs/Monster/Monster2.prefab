@@ -279,7 +279,7 @@ MonoBehaviour:
     speed: 10.66
     offset: {x: 0, y: 1, z: 0}
     idleTime: 3
-    chaseRange: 100
+    chaseRange: 50
     attackRange: 3.71
     attackDamage: 50
     attackCooldown: 0.66
@@ -342,6 +342,7 @@ MonoBehaviour:
   _lockedIntervalMin: 7
   _lockedIntervalMax: 14
   _threatRange: 5
+  talkRange: 3
 --- !u!82 &2658816341658712787
 AudioSource:
   m_ObjectHideFlags: 0
