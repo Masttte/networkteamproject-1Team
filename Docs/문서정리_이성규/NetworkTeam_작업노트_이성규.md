@@ -1706,6 +1706,110 @@ PlayStateAnimation은 모든 클라에서 호출되므로 사망 시 SetIKEnable
 - Initialize 호출에 _animation 전달
 - 스폰 직후 EnableInput(Camera | HeadTracking)으로 IK 함께 활성
 
+## Day 16 — 2026-05-15
+
+### 빌드본 해상도 PlayerPrefs 미설정 보완
+
+#### 발견된 문제
+빌드본 테스트 중 해상도 설정만 게임 재시작 시 빌드 기본값으로 복원되는
+이슈 발견. 다른 설정(볼륨, 풀스크린 모드, V-Sync)은 정상 유지.
+
+#### 원인 — 에셋의 영속화 누락
+
+Michsky Dark UI 에셋의 설정 컴포넌트별 영속화 패턴:
+
+| 설정 | 담당 컴포넌트 | 저장 |
+|---|---|---|
+| 볼륨 | SliderManager | `{tag}Slider` 키 자체 저장 |
+| 풀스크린 모드 | HorizontalSelector | `HorizontalSelector{tag}` 키 자체 저장 |
+| V-Sync | HorizontalSelector | 동일 |
+| **해상도** | QualityManager + TMP_Dropdown | **저장 X** |
+
+QualityManager.SetResolution은 Screen.SetResolution 호출만, 영속화 X.
+표준 TMP_Dropdown도 자동 저장 X.
+
+#### 결정 — 에셋 본체 수정 X, 외부 보완 컴포넌트
+
+에셋 본체 수정 시 업데이트 충돌. ResolutionPersistence 신규 컴포넌트로
+QualityManager에 부착 + 영속화 책임만 분리.
+
+#### 설계 결정
+
+##### Start + UniTask.NextFrame
+Awake에서 SetResolution 호출 시 HorizontalSelector.Start의 fullScreenMode
+복원보다 빨라서 디스플레이 두 번 전환 → 화면 깜빡임.
+
+NextFrame 대기로 모든 Start 사이드이펙트 완료 후 적용 → 한 번에 전환.
+
+##### SetValueWithoutNotify로 이벤트 재발동 방지
+복원 시 dropdown.value 직접 대입 시 onValueChanged 발동 → QualityManager
+SetResolution 재호출 + SaveResolution 재호출. WithoutNotify로 UI 표시만
+동기화.
+
+##### RemoveAll 안 하고 AddListener만
+RemoveAll로 기존 QualityManager 리스너 제거하면 적용 로직까지 본 컴포넌트
+책임 확장. AddListener만 사용 → 적용(에셋) + 저장(본 컴포넌트) 책임 분리.
+
+##### RefreshRate 분자/분모 분할 저장
+Unity 2022.2+ RefreshRate가 `{numerator, denominator}` 분수형.
+
+| 주사율 | 분수 |
+|---|---|
+| 60Hz | 60/1 |
+| 59.94Hz (NTSC) | 60000/1001 |
+| 144Hz | 144/1 |
+
+단일 정수 저장 시 60Hz/59.94Hz 뭉개짐. Screen.SetResolution의 RefreshRate
+오버로드 사용해야 144Hz 모니터에서 OS가 60Hz로 떨어뜨리는 현상도 방지.
+
+PlayerPrefs uint 미지원이라 int 캐스팅. 일반 주사율 값 int.MaxValue 한참
+안 넘어 안전.
+
+##### PlayerPrefs.Save 명시 호출
+기본 OnApplicationQuit 자동 flush. 강제 종료/크래시 시 유실 위험.
+설정 변경 같은 중요 이벤트는 즉시 flush. 사용자 드롭다운 조작 빈도라
+디스크 I/O 부담 X.
+
+#### 실행 흐름
+
+```
+게임 시작
+├─ QualityManager.Start: 드롭다운 채우기 + currentResolution 인덱스 설정
+├─ HorizontalSelector(WindowMode).Start: invokeAtStart → fullScreenMode 복원
+├─ ResolutionPersistence.Start: InitAsync().Forget()
+└─ [UniTask.NextFrame 대기]
+└─ InitAsync
+├─ PlayerPrefs에서 w/h/refreshRate 읽기
+├─ Screen.SetResolution (fullScreenMode 이미 복원된 상태)
+├─ SyncDropdownIndex (WithoutNotify로 표시만 동기화)
+└─ onValueChanged += SaveResolution
+사용자 드롭다운 변경
+├─ QualityManager.SetResolution (기존 리스너, 적용)
+└─ ResolutionPersistence.SaveResolution (추가 리스너, 저장)
+```
+
+#### 발견된 부수 이슈 — 비주얼 패널 첫 활성 시 화면 해상도
+
+##### 증상
+비주얼 패널을 첫 활성 시 화면이 갑자기 풀스크린으로 확장. 패널 닫고 다시
+열면 발생 X.
+
+##### 원인
+Unity의 Start가 GameObject 첫 활성 1회만 호출되는 라이프사이클.
+QualityManager.Start의 `defaultDropdown.value = currentResolutionIndex`
+직접 대입이 onValueChanged 발동 → SetResolution 호출 →
+`Screen.SetResolution(w, h, Screen.fullScreen)`의 bool 매개변수가
+fullScreenMode를 ExclusiveFullScreen으로 강제 변환.
+
+##### 해결 — Awake에서 fullScreenMode 백업
+
+Awake는 Start보다 먼저 호출되는 라이프사이클 보장 활용. 같은 GameObject의
+QualityManager.Start와 호출 순서가 불확정이라 InitAsync에서 백업하면
+이미 망쳐진 모드를 가져올 위험. Awake로 백업 시점 이동.
+
+
+### 최종 병합 및 itch.io 출시
+
 ---
 ## 작업 일지 양식
 
