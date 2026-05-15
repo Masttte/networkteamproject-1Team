@@ -2,9 +2,11 @@ using Battle;
 using Cysharp.Threading.Tasks;
 using Player;
 using System.Collections;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WinPanel : MonoBehaviour
 {
@@ -24,8 +26,12 @@ public class WinPanel : MonoBehaviour
     }
     #endregion
     public CanvasGroup citizenWinPanel;     // 시민팀 승리 패널
+    public TMP_Text citizenWinText;
     public CanvasGroup mafiaWinPanel;       // 마피아 승리 패널
+    public TMP_Text mafiaWinText;
     public float fadeDuration = 2.0f;       // 페이드인 되는시간
+    [SerializeField] Button _restartButtonA;
+    [SerializeField] Button _restartButtonB; // 호스트만 활성화
     private void Start()
     {
         if (BattleManager.Instance != null)
@@ -47,10 +53,22 @@ public class WinPanel : MonoBehaviour
         if (winner == TeamType.A)
         {
             StartCoroutine(FadeInRoutine(citizenWinPanel));
+            if (LocalManager.Instance.IamB)
+            {
+                citizenWinText.text = $"<color=red>당신은 패배 하였습니다.</color>";
+            }
+            else
+                citizenWinText.text = $"<color=green>당신은 승리 하였습니다!</color>";
         }
         else if (winner == TeamType.B)
         {
             StartCoroutine(FadeInRoutine(mafiaWinPanel));
+            if (LocalManager.Instance.IamB)
+            {
+                mafiaWinText.text = $"<color=green>당신은 승리 하였습니다!</color>";
+            }
+            else
+                mafiaWinText.text = $"<color=red>당신은 패배 하였습니다.</color>";
         }
     }
 
@@ -67,6 +85,10 @@ public class WinPanel : MonoBehaviour
         }
         target.alpha = 1f;
 
+        // 호스트만 재시작 버튼 활성화
+        if (_restartButtonA != null) _restartButtonA.interactable = NetworkManager.Singleton.IsServer;
+        if (_restartButtonB != null) _restartButtonB.interactable = NetworkManager.Singleton.IsServer;
+
         // 결과창 나오면 커서락 풀기
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -82,4 +104,9 @@ public class WinPanel : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    // 호스트만 호출. 버튼에 연결
+    public void RestartGame()
+    {
+        BattleManager.Instance.RestartGame();
+    }
 }

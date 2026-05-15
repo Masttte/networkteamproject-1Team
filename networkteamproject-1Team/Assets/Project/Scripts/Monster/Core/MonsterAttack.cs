@@ -27,7 +27,7 @@ namespace Monster
         
             _ray = new Ray(transform.position + _monsterController.MonsterData.offset, transform.forward);
         
-            if (Physics.Raycast(_ray, out RaycastHit hit, _monsterController.MonsterData.attackRange))
+            if (Physics.SphereCast(_ray, 0.3f, out RaycastHit hit, _monsterController.MonsterData.attackRange))
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {

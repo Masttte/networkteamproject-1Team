@@ -41,6 +41,7 @@ namespace Battle
         [Header("목표 발전기 수")] 
         public int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
 
+        public event Action OnNameSetup;
         public event Action OnGameStart;
         public event Action<TeamType> OnGameEnd;
 
@@ -67,15 +68,17 @@ namespace Battle
         // 모든 클라이언트에서 실행
         public async UniTaskVoid StartCountdown(List<TeamBase> players)
         {
+            await UniTask.Delay(300);
+            OnNameSetup?.Invoke();
+            await UniTask.Delay(noStartDelay ? 0 : 7700);
             AudioManager.Instance.PlaySfxDry(countSound);
-
             // ----- 발전기 배치 -----
             // 필요한 발전기 개수 초기화
             if (IsServer) repairedGenerators.Value = 0;
             // 발전기 스폰 (서버에서 실행)
             randomSpawnObject.SpawnObjects(spawnCount); 
 
-            await UniTask.Delay(noStartDelay ? 0 : 3000); // 시작 딜레이 (임시로 짧게)
+            await UniTask.Delay(noStartDelay ? 100 : 3000); // 오디오 싱크 시작 딜레이 
             OnGameStart?.Invoke();
             Debug.Log("게임을 시작하지");
         }
@@ -106,7 +109,7 @@ namespace Battle
             else if (aliveB == 0)
             {
                 // B팀 전멸: A팀 승리 (B 팀이 전멸해도 게임끝나지 않는 게임디자인 고려중)
-                DeclareResultRpc(TeamType.A);
+                //DeclareResultRpc(TeamType.A);
             }
             else if (aliveA == 0 && aliveB == 0)
             {
@@ -139,6 +142,26 @@ namespace Battle
             OnGameEnd?.Invoke(winner);
         }
 
+        public void RestartGame()
+        {
+            //if (!IsServer) return;
+
+            // 씬에 있는 모든 런타임 스폰 네트워크 오브젝트를 디스폰 (플레이어 포함)
+            // (씬 고유 오브젝트(In-Scene NetworkObjects)는 디스폰하지 않아야 씬 로드 시 복사되지 않음)
+            var networkObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);
+            foreach (var netObj in networkObjects)
+            {
+                // In-Scene 오브젝트가 아니고 스폰된 오브젝트라면 디스폰
+                if (netObj != null && netObj.IsSpawned && netObj.IsSceneObject == false)
+                {
+                    netObj.Despawn(true);
+                }
+            }
+            //if (tm.activePlayers != null)
+            //    tm.activePlayers.Clear();
+
+            SceneLoader.LoadNetworked(SceneId.Map1);
+        }
     }
 }
 
