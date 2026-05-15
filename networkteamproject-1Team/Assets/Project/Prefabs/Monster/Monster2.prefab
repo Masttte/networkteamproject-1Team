@@ -280,7 +280,7 @@ MonoBehaviour:
     offset: {x: 0, y: 1.1, z: 0}
     idleTime: 3
     chaseRange: 50
-    attackRange: 3.41
+    attackRange: 3.35
     attackDamage: 50
     attackCooldown: 0.66
     isAttacking: 0
