@@ -60,7 +60,6 @@ namespace Monster
         {
             BattleManager.Instance.OnGameStart -= OnGameSetup;
             _monsterController.OnPrisonSet -= OnPrisonSet;
-            _monsterController.Prison.isUnlock.OnValueChanged -= OnPrisonUnlocked;
         }
 
         private void OnGameSetup()

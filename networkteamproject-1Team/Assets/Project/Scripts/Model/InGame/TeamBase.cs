@@ -28,7 +28,7 @@ public abstract class TeamBase : NetworkBehaviour
 
         if (IsOwner)
         {
-            BattleManager.Instance.OnGameStart += SetPlayerName;
+            BattleManager.Instance.OnNameSetup += SetPlayerName;
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class TeamBase : NetworkBehaviour
 
         if (IsOwner)
         {
-            BattleManager.Instance.OnGameStart -= SetPlayerName;
+            BattleManager.Instance.OnNameSetup -= SetPlayerName;
         }
     }
 
