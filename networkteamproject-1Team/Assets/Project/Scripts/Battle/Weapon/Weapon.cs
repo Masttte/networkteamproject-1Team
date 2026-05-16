@@ -13,6 +13,7 @@ namespace Battle
         }
         State _state;
         public WeaponSO weaponSO;
+        TeamBase _teamBase;
 
         [SerializeField] Transform _attackPoint;
         float _lastAttackTime;
@@ -37,6 +38,8 @@ namespace Battle
 #endif
         public override void OnNetworkSpawn()
         {
+            _teamBase = GetComponent<TeamBase>();
+
             // 모든 인스턴스에서 OnGameStart 구독
             BattleManager.Instance.OnGameStart += Ready;
             if (!IsOwner) return;
@@ -103,6 +106,12 @@ namespace Battle
         void BroadcastMissClientRpc(Vector3 attackPoint)
         {
             AudioManager.Instance.PlaySfxWet(weaponSO.attackMiss, attackPoint);
+
+            // B팀의 경우 A가 공격하면 특이한 사운드 재생
+            if (LocalManager.Instance.IamB)
+            {
+                if (_teamBase is TeamA) AudioManager.Instance.PlaySfxWet(weaponSO.agro, attackPoint);
+            }
         }
 
         [ClientRpc]
