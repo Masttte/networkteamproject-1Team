@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &2498162130732030774
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Miss - WEAP - 2X4_Whoosh_2_{2498162130732030774}
+  m_AudioClip: {fileID: 8300000, guid: 1cdc9ada28692684fbd081e0d45e2811, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &6082467791614261888
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Miss - WEAP - 2X4_Whoosh_6_{6082467791614261888}
+  m_AudioClip: {fileID: 8300000, guid: 60e90f459f8e13341969e7602ca97319, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: _Hand_Miss
+  m_Volume: -2.1
+  m_Pitch: 0
+  m_AutomaticTriggerTime: 0
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: -0.9815979, y: 0}
+  m_PitchRandomizationRange: {x: -29.447937, y: 29.447933}
+  m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: 2498162130732030774}
+  - {fileID: 6725587686276419279}
+  - {fileID: 6082467791614261888}
+  m_AvoidRepeatingLast: 0
+  m_PlaybackMode: 1
+  m_TriggerMode: 0
+  m_AutomaticTriggerMode: 1
+  m_LoopMode: 2
+  m_VolumeRandomizationEnabled: 1
+  m_PitchRandomizationEnabled: 1
+  m_AutomaticTriggerTimeRandomizationEnabled: 0
+  m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &6725587686276419279
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Miss - WEAP - 2X4_Whoosh_4_{6725587686276419279}
+  m_AudioClip: {fileID: 8300000, guid: 70b6bbed45b72cf43a4529eba86cbd4d, type: 3}
+  m_Volume: 0
+  m_Enabled: 1

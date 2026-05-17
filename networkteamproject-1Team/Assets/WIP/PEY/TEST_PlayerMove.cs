@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
-using Unity.Cinemachine;
 using UnityEngine.Rendering;
+using UnityEngine.Audio;
 
 public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
 {
@@ -26,7 +26,7 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
     float _lastJumpTime;
 
     // 컴포넌트
-    Animator _animator;
+    Animator _ac;
     CharacterController _controller;
 
     // 내부 상태
@@ -63,10 +63,20 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
         }
     }
 #endif
+    private void Awake()
+    {
+        _controller = GetComponent<CharacterController>();
+    }
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+        _ac = GetComponent<Animator>();
+        _animIDSpeed = Animator.StringToHash("Speed");
+        _animIDGrounded = Animator.StringToHash("Grounded");
+        _animIDJump = Animator.StringToHash("Jump");
+        _animIDFreeFall = Animator.StringToHash("FreeFall");
+        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
 
         input.Enable();
         input.onMove += OnMove;
@@ -83,10 +93,10 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
     public override void OnNetworkDespawn()
     {
         if (!IsOwner) return;
+        _camObj.transform.SetParent(null); // 플레이어가 파괴될 때 시네머신/카메라가 같이 파괴되지 않도록 최상단으로 분리
 
         input.onMove -= OnMove;
         input.onJump -= OnJump;
-        input.Disable();
 
         this.UnregisterNetworkUpdate(NetworkUpdateStage.Update);
     }
@@ -100,41 +110,26 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
             MovePlayer();
             ApplyGravity();
             RotateCamera();
-
-            if (Keyboard.current.escapeKey.wasPressedThisFrame) // ESC 키로 게임 종료 (임시)
-            {
-                NetworkManager.Singleton.Shutdown();
-                LinkManager.Instance.isInGame = false;
-                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-            }
         }
     }
 
-    private void Awake()
-    {
-        _controller = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
-
-        _animIDSpeed = Animator.StringToHash("Speed");
-        _animIDGrounded = Animator.StringToHash("Grounded");
-        _animIDJump = Animator.StringToHash("Jump");
-        _animIDFreeFall = Animator.StringToHash("FreeFall");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-    }
 
     // ────────────────────────────────────────────
-    private void SetupCinemachineCamera()
+    GameObject _camObj;
+    void SetupCinemachineCamera()
     {
-        GameObject camObj = GameObject.FindWithTag("GameController");
-        camObj.TryGetComponent(out CinemachineCamera vcam);
-        camObj.transform.SetParent(_cameraPos.transform, false);
-        camObj.transform.localPosition = Vector3.zero;
-        camObj.transform.localRotation = Quaternion.identity;
-        
+        _camObj = GameObject.FindWithTag("GameController");
+
+        _camObj.transform.SetParent(_cameraPos.transform, false);
+        _camObj.transform.localPosition = Vector3.zero;
+        _camObj.transform.localRotation = Quaternion.identity;
+
         // 자기 머리 보이지 않도록 설정
         _headMesh.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
         //Cursor.lockState = CursorLockMode.Locked;
     }
+
+
 
     private void OnMove(Vector2 value) => _moveInput = value;
 
@@ -144,7 +139,7 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
         {
             _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
             _lastJumpTime = Time.time;
-            _animator.SetBool(_animIDJump, true);
+            _ac.SetBool(_animIDJump, true);
         }
     }
 
@@ -163,29 +158,29 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
         _controller.Move(inputDir * (targetSpeed * Time.deltaTime)
                          + Vector3.up * (_verticalVelocity * Time.deltaTime));
 
-        _animator.SetFloat(_animIDSpeed, targetSpeed);
-        
+        _ac.SetFloat(_animIDSpeed, targetSpeed);
+
         // 애니 블렌드 트리 속도 제어
         float MotionSpeed = _moveInput == Vector2.zero ? 0f : 1f;
-        _animator.SetFloat(_animIDMotionSpeed, MotionSpeed);
+        _ac.SetFloat(_animIDMotionSpeed, MotionSpeed);
     }
 
     private void ApplyGravity()
     {
         if (_controller.isGrounded && _verticalVelocity <= 0.0f)
         {
-            _animator.SetBool(_animIDGrounded, true);
-            _animator.SetBool(_animIDFreeFall, false);
-            _animator.SetBool(_animIDJump, false);
+            _ac.SetBool(_animIDGrounded, true);
+            _ac.SetBool(_animIDFreeFall, false);
+            _ac.SetBool(_animIDJump, false);
 
             if (_verticalVelocity < 0f)
                 _verticalVelocity = -2f;
         }
         else
         {
-            _animator.SetBool(_animIDGrounded, false);
+            _ac.SetBool(_animIDGrounded, false);
             if (_verticalVelocity < 0f)
-                _animator.SetBool(_animIDFreeFall, true);
+                _ac.SetBool(_animIDFreeFall, true);
 
             _verticalVelocity += _gravity * Time.deltaTime;
         }
@@ -194,7 +189,7 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
     private void RotateCamera()
     {
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
-        
+
         _yaw += mouseDelta.x * _mouseSensitivity;
         //_yaw = Mathf.Clamp(_yaw, _initialYaw + _leftClamp, _initialYaw + _rightClamp);
 
@@ -202,14 +197,5 @@ public class TEST_PlayerMove : NetworkBehaviour, INetworkUpdateSystem
         _pitch = Mathf.Clamp(_pitch, _upClamp, _downClamp);
 
         _cameraPos.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-    }
-
-    // 애니메이션 이벤트 리시버 (추후 사운드 재생 시)
-    private void OnFootstep(AnimationEvent animationEvent)
-    {
-    }
-
-    private void OnLand(AnimationEvent animationEvent)
-    {
     }
 }

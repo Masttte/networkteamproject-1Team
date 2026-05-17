@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &-5938137315626408342
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_6_{-5938137315626408342}
+  m_AudioClip: {fileID: 8300000, guid: eb51664d9d8641a418347eb8ee0221b3, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-5072386209247139755
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_2_{-5072386209247139755}
+  m_AudioClip: {fileID: 8300000, guid: 1cf848cd97a8c774b9fb4fefea47cbac, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &3150847973533915588
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hit - WEAP - 2X4_Whoosh_Impact_Gore_5_{3150847973533915588}
+  m_AudioClip: {fileID: 8300000, guid: 524d2501555e2aa42b62b947a1d2c89f, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: _Hand_Hit
+  m_Volume: -2.3
+  m_Pitch: 0
+  m_AutomaticTriggerTime: 0
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: -1.9631958, y: 0}
+  m_PitchRandomizationRange: {x: -29.447937, y: 29.447933}
+  m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: -5072386209247139755}
+  - {fileID: 3150847973533915588}
+  - {fileID: -5938137315626408342}
+  m_AvoidRepeatingLast: 0
+  m_PlaybackMode: 2
+  m_TriggerMode: 0
+  m_AutomaticTriggerMode: 1
+  m_LoopMode: 2
+  m_VolumeRandomizationEnabled: 1
+  m_PitchRandomizationEnabled: 1
+  m_AutomaticTriggerTimeRandomizationEnabled: 0
+  m_LoopCountRandomizationEnabled: 0

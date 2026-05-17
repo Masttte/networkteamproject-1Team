@@ -5,21 +5,23 @@ TagManager:
   serializedVersion: 3
   tags:
   - Monster
+  - VFX
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - IamB
   - Water
   - UI
   - Player
   - Monster
+  - Ground
   - 
-  - 
-  - 
+  - Average
   - Beautiful
-  - 
-  - 
+  - Interactable
+  - Wall
   - 
   - 
   - 

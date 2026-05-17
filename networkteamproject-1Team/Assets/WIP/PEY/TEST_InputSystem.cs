@@ -20,17 +20,27 @@ public class TEST_InputSystem : MonoBehaviour
 #endif
     private void OnEnable()
     {
+        // 김영빈이 Action Name 변경
+        // 변경점
+        // => onInteract -> onStartInteract
+        // => Interact -> onPerformedInteract
+        // => offInteract -> onCanceledInteract
         input.Enable();
-        input.onInteract += HandleInteractStart;
-        input.Interact += HandleInteractPerformed;
-        input.offInteract += HandleInteractCancel;
+        input.onStartInteract += HandleInteractStart;
+        input.onPerformedInteract += HandleInteractPerformed;
+        input.onCanceledInteract += HandleInteractCancel;
         input.onAttack += HandleAttack;
     }
     private void OnDisable()
     {
-        input.onInteract -= HandleInteractStart;
-        input.Interact -= HandleInteractPerformed;
-        input.offInteract -= HandleInteractCancel;
+        // 김영빈이 Action Name 변경
+        // 변경점
+        // => onInteract -> onStartInteract
+        // => Interact -> onPerformedInteract
+        // => offInteract -> onCanceledInteract
+        input.onStartInteract -= HandleInteractStart;
+        input.onPerformedInteract -= HandleInteractPerformed;
+        input.onCanceledInteract -= HandleInteractCancel;
         input.onAttack -= HandleAttack;
     }
 

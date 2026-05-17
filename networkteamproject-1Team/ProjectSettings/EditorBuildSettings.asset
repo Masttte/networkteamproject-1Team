@@ -6,11 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/WIP/PEY/_LOBBY_TEST.unity
-    guid: 628ad765dbbb8bf4b9dcb51f9710e0c3
+    path: Assets/Project/Scenes/Title.unity
+    guid: ac17c2b92179fb24692ad772668272e0
   - enabled: 1
-    path: Assets/WIP/PEY/Map1.unity
-    guid: b7c70d2a7a78c064ba47b5ff795794f4
+    path: Assets/Project/Scenes/Game.unity
+    guid: a8f4356b8ac193a4eb11fed2d016bc94
+  - enabled: 0
+    path: Assets/WIP/PEY/GameRule/Map1_GameTest.unity
+    guid: 28df31dab58931548bf2941b21b81076
+  - enabled: 0
+    path: Assets/WIP/KYB/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/WIP/KYB/Scenes/Show.unity
+    guid: aae472d23aef9d44a9abc3e9136cef36
+  - enabled: 0
+    path: Assets/WIP/PEY/MainTest/GamePEY.unity
+    guid: fb046d953bedb8949b6a3af3240fe5f8
+  - enabled: 0
+    path: Assets/WIP/KYB/Scenes/Game_UITestScene.unity
+    guid: 812cb7205da6b0b4aa5e28e0dbe4034d
+  - enabled: 0
+    path: Assets/WIP/KYB/Scenes/Game_2_UITest.unity
+    guid: 60ac917500a795446972c9a3f27b75ae
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: a986ca7082d39504f89279fc1d242f7d, type: 3}
   m_UseUCBPForAssetBundles: 0

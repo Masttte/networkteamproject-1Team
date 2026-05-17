@@ -9,11 +9,14 @@ public class BattleInputReader : ScriptableObject, IBattleActions
     public BattleInputAction inputAction;
 
     public event Action<Vector2> onMove;
-    public bool isSprint;
+    public event Action<bool> onSprintChanged;
+    public bool isSprint { get; private set; }
 
     public event Action onAttack;
-    public event Action onInteract; public event Action Interact; public event Action offInteract;
+    public event Action onStartInteract; public event Action onPerformedInteract; public event Action onCanceledInteract;
     public event Action onJump;
+    public event Action<Vector2> onLook;
+    public event Action onNextTarget;
 
     public event Action on1; public event Action on2; public event Action on3;
 
@@ -38,7 +41,13 @@ public class BattleInputReader : ScriptableObject, IBattleActions
     }
     public void OnSprint(InputAction.CallbackContext context)
     {
-        isSprint = context.ReadValueAsButton();
+        // 이전 호출 시점과 현재 상태를 비교해서 값이 변했으면 isSprint
+        bool newSprint = context.ReadValueAsButton();
+        if (newSprint != isSprint)
+        {
+            isSprint = newSprint;
+            onSprintChanged?.Invoke(isSprint);
+        }
     }
 
     void IBattleActions.OnAttack(InputAction.CallbackContext context)
@@ -47,14 +56,24 @@ public class BattleInputReader : ScriptableObject, IBattleActions
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started) onInteract?.Invoke();
-        if (context.performed) Interact?.Invoke();
-        if (context.canceled) offInteract?.Invoke();
+        if (context.started) onStartInteract?.Invoke();
+        if (context.performed) onPerformedInteract?.Invoke(); 
+        if (context.canceled) onCanceledInteract?.Invoke();  
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.started) onJump?.Invoke();
+    }
+    
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        onLook?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnNextTarget(InputAction.CallbackContext context)
+    {
+        if (context.performed) onNextTarget?.Invoke();
     }
 
     public void On_1(InputAction.CallbackContext context)
