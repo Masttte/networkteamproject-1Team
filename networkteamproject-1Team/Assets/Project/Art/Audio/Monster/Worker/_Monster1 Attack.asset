@@ -37,11 +37,11 @@ AudioRandomContainer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: _Monster1 Attack
-  m_Volume: -0.6
+  m_Volume: -4.7
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -2.5, y: 0}
+  m_VolumeRandomizationRange: {x: -3.4815884, y: 0}
   m_PitchRandomizationRange: {x: -88.34352, y: 88.34353}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}

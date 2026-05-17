@@ -6,7 +6,7 @@ public class GeneratorPresenter : MonoBehaviour
     [SerializeField] private BattleManager _battleManager;
     [SerializeField] private GeneratorView _view;
 
-    private void Awake()
+    private void Start()
     {
         _battleManager.repairedGenerators.OnValueChanged += OnGeneratorValue;
         _battleManager.OnGameStart += OnGameStart;
@@ -21,11 +21,11 @@ public class GeneratorPresenter : MonoBehaviour
     // StartCountdown에서 generatorRequiredCount가 확정된 이후 호출됨
     private void OnGameStart()
     {
-        _view.NecessaryGenerator(_battleManager.repairedGenerators.Value, _battleManager.generatorRequiredCount);
+        _view.NecessaryGenerator(_battleManager.repairedGenerators.Value, _battleManager.generatorRequiredCount.Value);
     }
 
     private void OnGeneratorValue(int previousValue, int newValue)
     {
-        _view.NecessaryGenerator(newValue, _battleManager.generatorRequiredCount);
+        _view.NecessaryGenerator(newValue, _battleManager.generatorRequiredCount.Value);
     }
 }

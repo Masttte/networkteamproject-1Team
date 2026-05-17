@@ -39,7 +39,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4100982647071416850}
   - {fileID: 3096195948252468338}
@@ -277,10 +277,10 @@ MonoBehaviour:
   <MonsterData>k__BackingField:
     patrolPoints: []
     speed: 10.36
-    offset: {x: 0, y: 1.1, z: 0}
+    offset: {x: 0, y: 1.1, z: -1.45}
     idleTime: 3
     chaseRange: 50
-    attackRange: 3.35
+    attackRange: 4.14
     attackDamage: 50
     attackCooldown: 0.66
     isAttacking: 0
@@ -1050,15 +1050,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3534965980440580442, guid: f4764a21bb3a8ca4084c8a31149ab67f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.18
+      value: 1.33
       objectReference: {fileID: 0}
     - target: {fileID: 3534965980440580442, guid: f4764a21bb3a8ca4084c8a31149ab67f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.18
+      value: 1.33
       objectReference: {fileID: 0}
     - target: {fileID: 3534965980440580442, guid: f4764a21bb3a8ca4084c8a31149ab67f, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.18
+      value: 1.33
       objectReference: {fileID: 0}
     - target: {fileID: 3534965980440580442, guid: f4764a21bb3a8ca4084c8a31149ab67f, type: 3}
       propertyPath: m_LocalPosition.x

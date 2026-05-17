@@ -14,6 +14,7 @@ public class WeaponSO : ScriptableObject
     public AudioResource attackMiss;
     public AudioResource attackHit;
     public AudioResource attackBlocked;
+    public AudioResource agro;
 
     // 총기류 확장시 사용
     // public int maxAmmo;

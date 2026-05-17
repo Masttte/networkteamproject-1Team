@@ -61,7 +61,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.76, y: 0.76, z: 0.76}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3829569436356949696}
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressAction
   ShowTopMostFoldoutHeaderGroup: 1
   image: {fileID: 2802766458685972286}
-  _holdTime: 10
+  _holdTime: 11
 --- !u!65 &-5860407533462193135
 BoxCollider:
   m_ObjectHideFlags: 0

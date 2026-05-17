@@ -47,11 +47,11 @@ AudioRandomContainer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: _Attack_Basement
-  m_Volume: 0
+  m_Volume: -1.6
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -1.963191, y: 0}
+  m_VolumeRandomizationRange: {x: -3.5, y: 0}
   m_PitchRandomizationRange: {x: -117.7914, y: 44.17176}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}

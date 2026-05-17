@@ -20,7 +20,8 @@ namespace Monster
             // 테스트를 위해 임시로 Player
         }
     
-        const int WallIgnoreMask = ~(1 << 13); // Wall 레이어 제외
+        //const int WallIgnoreMask = ~((1 << 13) | (1 << 12) | (1 << 8) | (1 << 7)); // Wall, Interactable, Ground, Monster 레이어 제외
+        const int PlayerMask = 1 << 6; // Player 레이어만 포함
 
         public void Attack()
         {
@@ -28,7 +29,7 @@ namespace Monster
 
             _ray = new Ray(transform.position + _monsterController.MonsterData.offset, transform.forward);
 
-            if (Physics.SphereCast(_ray, 1.2f, out RaycastHit hit, _monsterController.MonsterData.attackRange, WallIgnoreMask))
+            if (Physics.SphereCast(_ray, 1.2f, out RaycastHit hit, _monsterController.MonsterData.attackRange, PlayerMask))
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {

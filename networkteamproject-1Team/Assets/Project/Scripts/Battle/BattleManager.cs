@@ -1,9 +1,10 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Qos.V2.Models;
 using UnityEngine;
 using UnityEngine.Audio;
-using Cysharp.Threading.Tasks;
 using WIP.KYB.Scripts;
 
 public interface IDamageable
@@ -16,6 +17,7 @@ namespace Battle
     [RequireComponent(typeof(TeamManager))]
     public class BattleManager : NetworkBehaviour
     {
+        public bool isGameStarted;
         [SerializeField] bool noStartDelay; // 테스트 전용
 
         public static BattleManager Instance;
@@ -37,9 +39,12 @@ namespace Battle
         [Header("스폰 시스템 연결")]
         [SerializeField] private RandomSpawnObject randomSpawnObject;
         [SerializeField] private int spawnCount; // 스폰할 발전기 개수
-        
-        [Header("목표 발전기 수")] 
-        public int generatorRequiredCount; // 승리 조건에 대한 목표 발전기 개수
+
+        [Header("목표 발전기 수")]
+        public NetworkVariable<int> generatorRequiredCount = new NetworkVariable<int>(
+            0,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
 
         public event Action OnNameSetup;
         public event Action OnGameStart;
@@ -52,7 +57,7 @@ namespace Battle
             0,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
-        
+
         // 재시작 겸용
         public void StartGame() // 로비없이 실행하는 테스트 코드
         {
@@ -66,25 +71,41 @@ namespace Battle
         }
 
         // 모든 클라이언트에서 실행
-        public async UniTaskVoid StartCountdown(List<TeamBase> players)
+        public async UniTaskVoid StartCountdown()
         {
-            // 인원 수에 따라 목표 발전기 수 설정
-            generatorRequiredCount = players.Count <= 3 ? 10 : players.Count <= 4 ? 16 : 19;
-
-            await UniTask.Delay(2300);
+            await UniTask.Delay(2300, cancellationToken: destroyCancellationToken);
 
             OnNameSetup?.Invoke();
-            await UniTask.Delay(noStartDelay ? 0 : 5700);
+
+            await UniTask.Delay(noStartDelay ? 0 : 5700, cancellationToken: destroyCancellationToken);
             AudioManager.Instance.PlaySfxDry(countSound);
             // ----- 발전기 배치 -----
             // 필요한 발전기 개수 초기화
-            if (IsServer) repairedGenerators.Value = 0;
             // 발전기 스폰 (서버에서 실행)
-            randomSpawnObject.SpawnObjects(spawnCount); 
+            randomSpawnObject.SpawnObjects(spawnCount);
 
-            await UniTask.Delay(noStartDelay ? 100 : 3000); // 오디오 싱크 시작 딜레이 
+            await UniTask.Delay(noStartDelay ? 100 : 3000, cancellationToken: destroyCancellationToken);
             OnGameStart?.Invoke();
-            Debug.Log("게임을 시작하지");
+            isGameStarted = true;
+            //Debug.Log("게임을 시작하지");
+        }
+        public void StarGameGeneratorSetup(List<TeamBase> players)
+        {
+            // 인원 수에 따라 목표 발전기 수 설정
+            repairedGenerators.Value = 0;
+
+            if (players.Count <= 3)
+            {
+                generatorRequiredCount.Value = 10;
+            }
+            else if (players.Count == 4)
+            {
+                generatorRequiredCount.Value = 16;
+            }
+            else
+            {
+                generatorRequiredCount.Value = 19;
+            }
         }
 
         // 사망한 플레이어를 제거하고 승패 판정 실행 (서버만 호출)
@@ -103,7 +124,7 @@ namespace Battle
             int aliveA = tm.GetPlayersByTeam(TeamType.A).Count;
             int aliveB = tm.GetPlayersByTeam(TeamType.B).Count;
 
-            Debug.Log($"[BattleManager] 생존: A팀={aliveA}, B팀={aliveB}");
+            //Debug.Log($"[BattleManager] 생존: A팀={aliveA}, B팀={aliveB}");
 
             if (aliveA == 0)
             {
@@ -121,18 +142,18 @@ namespace Battle
                 DeclareResultRpc(TeamType.None);
             }
         }
-        
+
         public void OnGeneratorCondition()
         {
             if (!IsServer) return;
-            
+
             repairedGenerators.Value++;
-            Debug.Log($"발전기 개수 진행도 업데이트: {repairedGenerators.Value} / {generatorRequiredCount}");
-            
+            //Debug.Log($"발전기 개수 진행도 업데이트: {repairedGenerators.Value} / {generatorRequiredCount}");
+
             // A팀이 발전기를 모두 돌리면 즉시 게임 승리
-            if (repairedGenerators.Value >= generatorRequiredCount)
+            if (repairedGenerators.Value >= generatorRequiredCount.Value)
             {
-                Debug.Log("모든 발전기 가동 완료");
+                //Debug.Log("모든 발전기 가동 완료");
                 DeclareResultRpc(TeamType.A);
             }
         }
@@ -141,15 +162,15 @@ namespace Battle
         [Rpc(SendTo.Everyone)]
         void DeclareResultRpc(TeamType winner)
         {
-            string msg = winner == TeamType.None ? "무승부?!" : $"{winner}팀 승리!";
-            Debug.Log($"<color=green>[BattleManager] 게임 종료: {msg}</color>");
+            //string msg = winner == TeamType.None ? "무승부?!" : $"{winner}팀 승리!";
+            //Debug.Log($"<color=green>[BattleManager] 게임 종료: {msg}</color>");
             OnGameEnd?.Invoke(winner);
         }
 
         public void RestartGame()
         {
             //if (!IsServer) return;
-
+            isGameStarted = false;
             // 씬에 있는 모든 런타임 스폰 네트워크 오브젝트를 디스폰 (플레이어 포함)
             // (씬 고유 오브젝트(In-Scene NetworkObjects)는 디스폰하지 않아야 씬 로드 시 복사되지 않음)
             var networkObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);

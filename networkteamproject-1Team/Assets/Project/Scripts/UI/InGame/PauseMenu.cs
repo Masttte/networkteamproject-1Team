@@ -1,3 +1,4 @@
+using Battle;
 using Cysharp.Threading.Tasks;
 using Player;
 using Unity.Netcode;
@@ -84,7 +85,7 @@ public class PauseMenu : MonoBehaviour
 
         // 관전 카메라 입력 차단
         _spectator?.SetInputEnabled(false);
-        
+
         pauseMenu.SetActive(true);
         confirmPanel.SetActive(false);
         isPaused = true;
@@ -104,9 +105,16 @@ public class PauseMenu : MonoBehaviour
 
         if (_playerInputHandler != null)
         {
-            _playerInputHandler.EnableInput(PauseBlock);
+            if (BattleManager.Instance.isGameStarted)
+            {
+                _playerInputHandler.EnableInput(PauseBlock);
+            }
+            else
+            {
+                _playerInputHandler.EnableInput(InputCategory.Camera);
+            }
         }
-        
+
         // 관전 카메라 입력 복원
         _spectator?.SetInputEnabled(true);
 
@@ -147,7 +155,7 @@ public class PauseMenu : MonoBehaviour
         {
             _playerInputHandler.EnableInput(PauseBlock);
         }
-        
+
         _spectator?.SetInputEnabled(true);  // 씬 전환 전 관전 카메라 입력 복원
 
         Cursor.lockState = CursorLockMode.None;

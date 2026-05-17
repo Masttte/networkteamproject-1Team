@@ -120,14 +120,13 @@ public class TeamManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void GameStartRpc()
     {
-        HideWaitingUIClientRpc();
-        BattleManager.Instance.StartCountdown(activePlayers).Forget();
-    }
-    [ClientRpc]
-    void HideWaitingUIClientRpc()
-    {
-        if (GameWaitingUI.Instance != null)
-            GameWaitingUI.Instance.HideWaitingPanel().Forget();
+        if (IsServer) BattleManager.Instance.StarGameGeneratorSetup(activePlayers);
+        BattleManager.Instance.StartCountdown().Forget();
+        GameWaitingUI.Instance.HideWaitingPanel().Forget();
+
+        // 커서 락
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Shuffle(List<ulong> list)
