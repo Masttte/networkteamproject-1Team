@@ -277,10 +277,10 @@ MonoBehaviour:
   <MonsterData>k__BackingField:
     patrolPoints: []
     speed: 10.36
-    offset: {x: 0, y: 1.1, z: -0.87}
+    offset: {x: 0, y: 1.1, z: -1.45}
     idleTime: 3
     chaseRange: 50
-    attackRange: 4.01
+    attackRange: 4.14
     attackDamage: 50
     attackCooldown: 0.66
     isAttacking: 0
