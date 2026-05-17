@@ -20,7 +20,7 @@ namespace Monster
             // 테스트를 위해 임시로 Player
         }
     
-        const int WallIgnoreMask = ~(1 << 13); // Wall 레이어 제외
+        const int WallIgnoreMask = ~((1 << 13) | (1 << 12)); // Wall, Interactable 레이어 제외
 
         public void Attack()
         {
@@ -30,6 +30,8 @@ namespace Monster
 
             if (Physics.SphereCast(_ray, 1.2f, out RaycastHit hit, _monsterController.MonsterData.attackRange, WallIgnoreMask))
             {
+                // 콜라이더 정보 로그 표시
+                Debug.Log($"콜라이더:{hit.collider},,{hit}");
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
                     damageable.TakeDamage(_monsterController.MonsterData.attackDamage);
