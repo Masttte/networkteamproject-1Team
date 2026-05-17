@@ -27,11 +27,11 @@ AudioRandomContainer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: _Attack_Rabbit
-  m_Volume: -2.6
+  m_Volume: -3.7
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -2.944789, y: 0}
+  m_VolumeRandomizationRange: {x: -5.8895826, y: 0}
   m_PitchRandomizationRange: {x: -73.61963, y: 0}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
