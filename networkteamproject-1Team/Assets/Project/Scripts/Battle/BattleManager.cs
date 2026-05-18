@@ -171,6 +171,7 @@ namespace Battle
         {
             //if (!IsServer) return;
             isGameStarted = false;
+            LocalManager.Instance.IamB = false;
             // 씬에 있는 모든 런타임 스폰 네트워크 오브젝트를 디스폰 (플레이어 포함)
             // (씬 고유 오브젝트(In-Scene NetworkObjects)는 디스폰하지 않아야 씬 로드 시 복사되지 않음)
             var networkObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);

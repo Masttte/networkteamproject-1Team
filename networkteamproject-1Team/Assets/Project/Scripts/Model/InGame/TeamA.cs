@@ -42,6 +42,7 @@ public class TeamA : TeamBase
         
         // NGO 등록 완료 후 적합한 모델만 활성
         SwitchToNormalModel();
+        LocalManager.Instance.OnIamASet += SwitchToNormalModel;
     }
 
     protected override void OnTeamSetup() // 팀 배정 시 모든 클라이언트에서 호출됨
@@ -58,6 +59,7 @@ public class TeamA : TeamBase
     {
         base.OnNetworkDespawn();
         LocalManager.Instance.OnIamBSet -= SwitchToMonsterModel;
+        LocalManager.Instance.OnIamASet -= SwitchToNormalModel;
     }
 
     protected override void UpdateNameText(string newName)
